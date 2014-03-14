@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 1013 - 1013, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2010, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 1013 - 1013, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -17,9 +17,7 @@
  * @package 	ratings
  * @subpackage 	ratings.tests.cases.models
  */
-
-App::uses('Model', 'Model');
-class RatingTestCase extends CakeTestCase {
+class RatingTest extends CakeTestCase {
 
 /**
  * Rating Model
@@ -52,7 +50,7 @@ class RatingTestCase extends CakeTestCase {
  * @return void
  */
 	public function startTest($method) {
-		Configure::write('App.UserClass', null); 
+		Configure::write('App.UserClass', null);
 		parent::startTest($method);
 		$this->Rating = ClassRegistry::init('Ratings.Rating');
 	}

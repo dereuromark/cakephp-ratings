@@ -8,6 +8,7 @@
  * @copyright Copyright 2010 - 1013 - 1013, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+App::uses('ModelBehavior', 'Model');
 
 /**
  * CakePHP Ratings Plugin
@@ -230,7 +231,7 @@ class RatableBehavior extends ModelBehavior {
  */
 	public function decrementRating(Model $Model, $foreignKey = null, $oldRating, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'),$mode));
+			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'), $mode));
 		}
 
 		$data = $Model->find('first', array(
@@ -288,7 +289,7 @@ class RatableBehavior extends ModelBehavior {
  */
 	public function incrementRating(Model $Model, $foreignKey = null, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'),$mode));
+			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'), $mode));
 		}
 
 		$data = $Model->find('first', array(
@@ -357,10 +358,7 @@ class RatableBehavior extends ModelBehavior {
 			'conditions' => array(
 				'Rating.foreign_key' => $foreignKey,
 				'Rating.model' => $Model->alias
-			),
-			'group' => array(
-				$Model->alias . '.id',
-			),
+			)
 		));
 
 		if (empty($result[0][0]['rating'])) {
