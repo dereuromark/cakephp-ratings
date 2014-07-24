@@ -1,0 +1,132 @@
+/*!
+ * jQuery UI Stars v3.0.1
+ * http://plugins.jquery.com/project/Star_Rating_widget
+ *
+ * Copyright (c) 2010 Marek "Orkan" Zajac (orkans@gmail.com)
+ * Dual licensed under the MIT and GPL licenses.
+ * http://docs.jquery.com/License
+ *
+ * $Rev: 164 $
+ * $Date:: 2010-05-01 #$
+ * $Build: 35 (2010-05-01)
+ *
+ */
+ 
+ /* js */
+.ui-stars-star,
+.ui-stars-cancel {
+  float: left;
+  display: block;
+  overflow: hidden;
+  text-indent: -999em;
+  cursor: pointer;
+  height: 19px;
+}
+
+.ui-stars-star a,
+.ui-stars-cancel a {
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: url(/ratings/css/stars/stars_medium.gif) no-repeat 0 0;
+  border-bottom: none !important;
+}
+.ui-stars-star a {
+  background-position: 0 -32px;	
+  text-decoration: none;
+}
+.ui-stars-star-on a {
+  background-position: 0 -48px;
+  border: none;
+  text-decoration: none;
+}
+.ui-stars-star-hover a {
+  background-position: 0 -64px;
+  border: none;
+}
+.ui-stars-cancel-hover a {
+  background-position: 0 -16px;
+  border: none;
+}
+.ui-stars-star-disabled,
+.ui-stars-star-disabled a,
+.ui-stars-cancel-disabled a {
+  cursor: default !important;
+  border: none;
+  text-decoration: none;
+}
+
+/* large images */
+.ui-stars-star-large {
+  float: left;
+  display: block;
+  overflow: hidden;
+  text-indent: -999em;
+  height: 26px;
+}
+.ui-stars-star-large a {
+  width: 28px;
+  height: 26px;
+  display: block;
+  background: url(/ratings/css/stars/stars_large.png) no-repeat 0 0;
+  border-bottom: none !important;
+  background-position: 0 -56px;	
+  text-decoration: none;
+  border: none;
+}
+.ui-stars-star-large-on a {
+  background-position: 0 -84px;
+}
+
+.ui-stars-star-large-disabled a {
+}
+
+/* medium images */
+.ui-stars-star-medium {
+  float: left;
+  display: block;
+  overflow: hidden;
+  text-indent: -999em;
+  height: 16px;
+}
+.ui-stars-star-medium a {
+  width: 16px;
+  height: 16px;
+  display: block;
+  background: url(/ratings/css/stars/stars_medium.gif) no-repeat 0 0;
+  border-bottom: none !important;
+  background-position: 0 -32px;	
+  text-decoration: none;
+  border: none;
+}
+.ui-stars-star-medium-on a {
+  background-position: 0 -48px;
+}
+
+.ui-stars-star-medium-disabled a {
+}
+
+/* small images */
+.ui-stars-star-small {
+  float: left;
+  display: block;
+  overflow: hidden;
+  text-indent: -999em;
+  height: 12px;
+}
+.ui-stars-star-small a {
+  width: 12px;
+  height: 12px;
+  display: block;
+  background: url(/ratings/css/stars/stars_small.gif) no-repeat 0 0;
+  border-bottom: none !important;
+  background-position: 0 -24px;	
+  text-decoration: none;
+  border: none;
+}
+.ui-stars-star-small-on a {
+  background-position: 0 -36px;
+}
+
+.ui-stars-star-small-disabled a {
+}
