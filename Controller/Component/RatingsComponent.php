@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 1013 - 1013, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2010, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 1013 - 1013, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -47,7 +47,7 @@ class RatingsComponent extends Component {
  *
  * @var string $modelName
  */
-	public $modelName = ''; // 2011-06-08 ms fix
+	public $modelName = ''; # 2011-06-08 ms fix
 
 /**
  * Name of association for ratings
