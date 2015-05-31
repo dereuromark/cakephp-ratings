@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2014, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2010, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2014, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -69,8 +69,7 @@ class RatingFixture extends CakeTestFixture {
 			'model' => 'Article',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12'
-		),
+			'modified' => '2009-01-01 12:12:12'),
 		array(
 			'id' => 2,
 			'user_id' => '1',
@@ -78,8 +77,7 @@ class RatingFixture extends CakeTestFixture {
 			'model' => 'Post',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12'
-		),
+			'modified' => '2009-01-01 12:12:12'),
 		array(
 			'id' => 3,
 			'user_id' => '1',
@@ -87,6 +85,5 @@ class RatingFixture extends CakeTestFixture {
 			'model' => 'Post',
 			'value' => 3,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12')
-	);
+			'modified' => '2009-01-01 12:12:12'));
 }

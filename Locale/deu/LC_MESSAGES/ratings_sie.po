@@ -25,19 +25,19 @@ msgstr ""
 
 #: /controllers/components/ratings.php:130
 msgid "Your rate was successfull."
-msgstr "Deine Wertung wurde gespeichert."
+msgstr "Ihre Wertung war erfolgreich."
 
 #: /controllers/components/ratings.php:133
 msgid "You have already rated."
-msgstr "Du hast bereits abgestimmt."
+msgstr "Sie haben bereits gewertet."
 
 #: /controllers/components/ratings.php:137
 msgid "Invalid rate."
-msgstr "Ungültiger Wert"
+msgstr "Ungültige Wertung"
 
 #: /models/behaviors/ratable.php:208;265;326
 msgid "Invalid rating mode %s."
-msgstr "Ungültiger Bewertungsmodus %s"
+msgstr "Ungültiger Bewertungsmodus %s."
 
 #: /models/behaviors/ratable.php:429
 msgid "Invalid Rating"
@@ -49,17 +49,17 @@ msgstr "Ungültiger Eintrag"
 
 #: /models/behaviors/ratable.php:441
 msgid "You can not vote on your own records"
-msgstr "Du kannst nicht deinen eigenen Einträge bewerten"
+msgstr "Sie können nicht Ihre eigenen Beiträge bewerten"
 
 #: /models/behaviors/ratable.php:449
 msgid "You have already rated this record"
-msgstr "Du hast diesen Eintrag bereits bewertet"
+msgstr "Sie haben diesen Beitrag bereits gewertet"
 
 #: /views/helpers/rating.php:63;154
 msgid "You must set the id of the item you want to rate."
-msgstr "Du musst die ID des Eintrags angeben, den du bewerten möchtest."
+msgstr "Sie müssen die Id des Items setzen das Sie berwerten wollen"
 
 #: /views/helpers/rating.php:169
 msgid "Rate!"
-msgstr "Abstimmen!"
+msgstr "Bewerte!"
 

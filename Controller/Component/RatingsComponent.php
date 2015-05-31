@@ -1,24 +1,20 @@
 <?php
 /**
- * Copyright 2010 - 2014, Cake Development Corporation (http://cakedc.com)
+ * Copyright 2010, Cake Development Corporation (http://cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2014, Cake Development Corporation (http://cakedc.com)
+ * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-/**
- * CakePHP Ratings Plugin
- *
- * Ratings component
- *
- * @package 	ratings
- * @subpackage 	ratings.controllers.components
- */
 App::uses('Component', 'Controller');
 
+/**
+ * Ratings component
+ *
+ */
 class RatingsComponent extends Component {
 
 /**
@@ -26,12 +22,7 @@ class RatingsComponent extends Component {
  *
  * @var array $components
  */
-	public $components = array(
-		'Cookie',
-		'Session',
-		'Auth',
-		'RequestHandler'
-	);
+	public $components = array('Cookie', 'Session', 'RequestHandler');
 
 /**
  * Enabled / disable the component
@@ -47,9 +38,7 @@ class RatingsComponent extends Component {
  *
  * @var array $actionNames
  */
-	public $actionNames = array(
-		'view'
-	);
+	public $actionNames = array('view');
 
 /**
  * Name of 'rateable' model
@@ -58,7 +47,7 @@ class RatingsComponent extends Component {
  *
  * @var string $modelName
  */
-	public $modelName = null;
+	public $modelName = ''; # 2011-06-08 ms fix
 
 /**
  * Name of association for ratings
@@ -70,31 +59,20 @@ class RatingsComponent extends Component {
 	public $assocName = 'Rating';
 
 /**
- * List of query args used in component
+ * List of query string params used in component
  *
  * @var array $parameters
  */
-	public $parameters = array(
-		'rate' => true,
-		'rating' => true,
-		'redirect' => true
-	);
+	public $parameters = array('rate' => true, 'rating' => true, 'redirect' => true);
 
 /**
- * Used named parameters or query string
- *
- * @return array
- */
-	public $named = true;
-
-/**
- * Constructor. 
+ * Constructor.
  *
  * @throws CakeException when Acl.classname could not be loaded.
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
- 		if ($this->enabled === true) {
+ 		if ($this->enabled) {
 			foreach ($settings as $setting => $value) {
 				if (isset($this->{$setting})) {
 					$this->{$setting} = $value;
@@ -106,20 +84,16 @@ class RatingsComponent extends Component {
 /**
  * Callback
  *
- * @param Controller $Controller
- * @return void
+ * @param object Controller object
  */
 	public function initialize(Controller $Controller) {
 		$this->Controller = $Controller;
- 		if ($this->enabled === true) {
+ 		if ($this->enabled) {
 			$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['ext']) && $this->Controller->request->params['url']['ext'] === 'json');
-			if ($this->Controller->request->params['isJson']) {
-				Configure::write('debug', 0);
-			}
 			if (empty($this->modelName)) {
 				$this->modelName = $Controller->modelClass;
 			}
-			if (!$Controller->{$this->modelName}->Behaviors->attached('Ratable')) {
+			if (!$Controller->{$this->modelName}->Behaviors->loaded('Ratable')) {
 				$Controller->{$this->modelName}->Behaviors->load('Ratings.Ratable', $this->settings);
 			}
 			$Controller->helpers[] = 'Ratings.Rating';
@@ -129,20 +103,20 @@ class RatingsComponent extends Component {
 /**
  * Callback
  *
- * @param Controller $Controller
+ * @param object Controller object
  */
 	public function startup(Controller $Controller) {
+		$message = '';
 		$rating = null;
-		if ($this->named === true) {
+		$params = $Controller->request->query;
+		if (!$params) {
 			$params = $Controller->request->params['named'];
-		} else {
-			$params = $Controller->request->query;
 		}
 		if (empty($params['rating']) && !empty($Controller->request->data[$Controller->modelClass]['rating'])) {
 			$params['rating'] = $Controller->request->data[$Controller->modelClass]['rating'];
 		}
 		if (!method_exists($Controller, 'rate')) {
-			if (isset($params['rate']) && isset($params['rating']) && $this->enabled == true) {
+			if (isset($params['rate']) && isset($params['rating']) && $this->enabled) {
 				$this->rate($params['rate'], $params['rating'], $Controller->Auth->user('id'), !empty($params['redirect']));
 			}
 		}
@@ -151,16 +125,17 @@ class RatingsComponent extends Component {
 /**
  * Adds as user rating for a model record
  *
- * @param string $rate The model record id
+ * @param string $rate the model record id
  * @param string $rating
- * @param string $user
- * @param mixed $redirect Boolean to redirect to same url or string or array to use it for Router::url()
- * @return array
+ * @param mixed $redirect boolean to redirect to same url or string or array to use it for Router::url()
  */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
 		$Controller->{$this->modelName}->id = $rate;
-		if ($Controller->{$this->modelName}->exists(null)) {
+		if (!$user) {
+			$message = __d('ratings', 'Not logged in');
+			$status = 'error';
+		} elseif ($Controller->{$this->modelName}->exists(null)) {
 			if ($Controller->{$this->modelName}->saveRating($rate, $user, $rating)) {
 				$rating = round($Controller->{$this->modelName}->newRating);
 				$message = __d('ratings', 'Your rate was successfull.');
@@ -177,13 +152,11 @@ class RatingsComponent extends Component {
 		$this->Controller->set($result);
 		if (!empty($redirect)) {
 			if (is_bool($redirect)) {
-				$this->redirect($this->removeRatingParamsFromUrl());
-			} else {
-				$this->redirect($redirect);
+				return $this->redirect($this->buildUrl());
 			}
-		} else {
-			return $result;
+			return $this->redirect($redirect);
 		}
+		return $result;
 	}
 
 /**
@@ -191,26 +164,15 @@ class RatingsComponent extends Component {
  *
  * @return array
  */
-	public function removeRatingParamsFromUrl() {
-		if ($this->named === true) {
-			$queryParams = $this->Controller->request->params['named'];
-		} else {
-			$queryParams = $this->Controller->request->query;
-		}
-
-		foreach ($queryParams as $name => $value) {
-			if (isset($this->parameters[$name])) {
-				unset($queryParams[$name]);
+	public function buildUrl() {
+		$params = array('plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']);
+		$params = array_merge($params, $this->Controller->request->params['pass']);
+		foreach ($this->Controller->request->query as $name => $value) {
+			if (!isset($this->parameters[$name])) {
+				$params['?'][$name] = $value;
 			}
 		}
-
-		if ($this->named === true) {
-			$this->Controller->request->params['named'] = $queryParams;
-		} else {
-			$this->Controller->request->query = $queryParams;
-		}
-
-		return Router::reverse($this->Controller->request);
+		return $params;
 	}
 
 /**
@@ -233,17 +195,14 @@ class RatingsComponent extends Component {
 			$this->Session->setFlash($this->viewVars['authMessage']);
 		}
 		if (!empty($this->Controller->request->params['isAjax']) || !empty($this->Controller->request->params['isJson'])) {
-			if ($this->named === true) {
-				$rate = $this->Controller->request->params['named']['rate'];
-			} else {
-				$rate = $this->Controller->request->query['rate'];
-			}
-			$this->Controller->setAction('rated', $rate);
+			$this->Controller->setAction('rated', $this->Controller->request->params['named']['rate']);
 			return $this->Controller->render('rated');
-		} else if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
+		}
+		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
 			$this->Controller->Session->setFlash($this->Controller->viewVars['message'], 'default', array(), $this->Controller->viewVars['status']);
 		}
 
-		$this->Controller->redirect($url, $code, $exit);
+		return $this->Controller->redirect($url, $code, $exit);
 	}
+
 }
