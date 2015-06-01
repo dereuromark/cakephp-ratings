@@ -22,21 +22,14 @@ use Cake\TestSuite\TestCase;
  * @package 	ratings
  * @subpackage 	ratings.tests.cases.models
  */
-class RatingTest extends TestCase {
+class RatingsTableTest extends TestCase {
 
 /**
  * Rating Model
  *
  * @var Rating
  */
-	public $Rating = null;
-
-/**
- * Plugin name
- *
- * @var string
- */
-	public $plugin = 'ratings';
+	public $Ratings = null;
 
 /**
  * Fixtures
@@ -58,7 +51,7 @@ class RatingTest extends TestCase {
 	public function startTest($method) {
 		Configure::write('App.UserClass', null);
 		parent::startTest($method);
-		$this->Rating = ClassRegistry::init('Ratings.Rating');
+		$this->Ratings = TableRegistry::get('Ratings.Ratings');
 	}
 
 /**
@@ -67,6 +60,6 @@ class RatingTest extends TestCase {
  * @return void
  */
 	public function testRatingInstance() {
-		$this->assertTrue(is_a($this->Rating, 'Rating'));
+		$this->assertInstanceOf('Ratings\Model\Table\Ratings', $this->Ratings);
 	}
 }
