@@ -8,8 +8,12 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Controller\Component;
 
-App::uses('Component', 'Controller');
+use Cake\Controller\Component;
+use Cake\Controller\Controller;
+use Cake\Routing\Router;
+use Cake\Event\Event;
 
 /**
  * Ratings component
@@ -22,102 +26,64 @@ class RatingsComponent extends Component {
  *
  * @var array $components
  */
-	public $components = array('Cookie', 'Session', 'RequestHandler');
+	public $components = array('RequestHandler', 'Flash');
 
-/**
- * Enabled / disable the component
- *
- * @var boolean
- */
-	public $enabled = true;
-
-/**
- * Name of actions this component should use
- *
- * Customizable in beforeFilter()
- *
- * @var array $actionNames
- */
-	public $actionNames = array('view');
-
-/**
- * Name of 'rateable' model
- *
- * Customizable in beforeFilter(), or default controller's model name is used
- *
- * @var string $modelName
- */
-	public $modelName = ''; # 2011-06-08 ms fix
-
-/**
- * Name of association for ratings
- *
- * Customizable in beforeFilter()
- *
- * @var string $assocName
- */
-	public $assocName = 'Rating';
-
-/**
- * List of query string params used in component
- *
- * @var array $parameters
- */
-	public $parameters = array('rate' => true, 'rating' => true, 'redirect' => true);
-
-/**
- * Constructor.
- *
- * @throws CakeException when Acl.classname could not be loaded.
- */
-	public function __construct(ComponentCollection $collection, $settings = array()) {
-		parent::__construct($collection, $settings);
- 		if ($this->enabled) {
-			foreach ($settings as $setting => $value) {
-				if (isset($this->{$setting})) {
-					$this->{$setting} = $value;
-				}
-			}
-		}
-	}
+	protected $_defaultConfig = [
+		'enabled' => true,
+		'actions' => [], // Empty: all
+		'modelName' => null, // Empty: auto-detect
+		//'assocName' => 'Ratings',
+		//'params' => array('rate' => true, 'rating' => true, 'redirect' => true)
+	];
 
 /**
  * Callback
  *
  * @param object Controller object
  */
-	public function initialize(Controller $Controller) {
-		$this->Controller = $Controller;
- 		if ($this->enabled) {
-			$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['ext']) && $this->Controller->request->params['url']['ext'] === 'json');
-			if (empty($this->modelName)) {
-				$this->modelName = $Controller->modelClass;
-			}
-			if (!$Controller->{$this->modelName}->Behaviors->loaded('Ratable')) {
-				$Controller->{$this->modelName}->Behaviors->load('Ratings.Ratable', $this->settings);
-			}
-			$Controller->helpers[] = 'Ratings.Rating';
-		}
+	public function initialize(array $config) {
+		parent::initialize($config);
 	}
 
 /**
  * Callback
  *
  * @param object Controller object
+ * @return void
  */
-	public function startup(Controller $Controller) {
+	public function beforeFilter(Event $event) {
+		$this->Controller = $event->subject();
+
+		if (!$this->config('enabled')) {
+			return;
+		}
+
+		if ($actions = $this->config('actions')) {
+			if (!in_array($this->Controller->request->params['action'], $actions)) {
+				return;
+			}
+		}
+
+		$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['_ext']) && $this->Controller->request->params['url']['_ext'] === 'json');
+		$modelName = $this->config('modelName');
+		if (empty($modelName)) {
+			$modelName = $this->Controller->modelClass;
+		}
+		if (!$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
+			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
+		}
+		$this->Controller->helpers[] = 'Ratings.Rating';
+
 		$message = '';
 		$rating = null;
-		$params = $Controller->request->query;
-		if (!$params) {
-			$params = $Controller->request->params['named'];
+		$params = $this->request->query;
+
+		if (empty($params['rating']) && !empty($this->request->data[$this->Controller->modelClass]['rating'])) {
+			$params['rating'] = $this->request->data[$this->Controller->modelClass]['rating'];
 		}
-		if (empty($params['rating']) && !empty($Controller->request->data[$Controller->modelClass]['rating'])) {
-			$params['rating'] = $Controller->request->data[$Controller->modelClass]['rating'];
-		}
-		if (!method_exists($Controller, 'rate')) {
-			if (isset($params['rate']) && isset($params['rating']) && $this->enabled) {
-				$this->rate($params['rate'], $params['rating'], $Controller->Auth->user('id'), !empty($params['redirect']));
+		if (!method_exists($this->Controller, 'rate')) {
+			if (isset($params['rate']) && isset($params['rating']) && $this->config('enabled')) {
+				$this->rate($params['rate'], $params['rating'], $this->Controller->Auth->user('id'), !empty($params['redirect']));
 			}
 		}
 	}
@@ -131,14 +97,14 @@ class RatingsComponent extends Component {
  */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
-		$Controller->{$this->modelName}->id = $rate;
+		//$Controller->{$this->config('modelName')}->id = $rate;
 		if (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->{$this->modelName}->exists(null)) {
-			if ($Controller->{$this->modelName}->saveRating($rate, $user, $rating)) {
-				$rating = round($Controller->{$this->modelName}->newRating);
-				$message = __d('ratings', 'Your rate was successfull.');
+		} elseif ($Controller->{$this->config('modelName')}->findById($rate)) {
+			if ($newRating = $Controller->{$this->config('modelName')}->saveRating($rate, $user, $rating)) {
+				$rating = round($newRating->newRating);
+				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
 			} else {
 				$message = __d('ratings', 'You have already rated.');
@@ -180,11 +146,10 @@ class RatingsComponent extends Component {
  * require a list of current favorites to be returned.
  *
  * @param string $url
- * @param unknown $code
- * @param boolean $exit
- * @return void
+ * @param string|null $code
+ * @return void|Response
  */
-	public function redirect($url, $code = null, $exit = true) {
+	public function redirect($url, $status = null) {
 		if (!empty($this->Controller->viewVars['authMessage']) && !empty($this->Controller->request->params['isJson'])) {
 			$this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->set('message', $this->Controller->viewVars['authMessage']);
@@ -192,17 +157,17 @@ class RatingsComponent extends Component {
 			echo $this->Controller->render('rate');
 			$this->_stop();
 		} elseif (!empty($this->viewVars['authMessage'])) {
-			$this->Session->setFlash($this->viewVars['authMessage']);
+			$this->Flash->error($this->viewVars['authMessage']);
 		}
 		if (!empty($this->Controller->request->params['isAjax']) || !empty($this->Controller->request->params['isJson'])) {
 			$this->Controller->setAction('rated', $this->Controller->request->params['named']['rate']);
 			return $this->Controller->render('rated');
 		}
 		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
-			$this->Controller->Session->setFlash($this->Controller->viewVars['message'], 'default', array(), $this->Controller->viewVars['status']);
+			$this->Flash->success($this->Controller->viewVars['message']);
 		}
 
-		return $this->Controller->redirect($url, $code, $exit);
+		return $this->Controller->redirect($url, $status);
 	}
 
 }

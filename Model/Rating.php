@@ -8,7 +8,10 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('RatingsAppModel', 'Ratings.Model');
+namespace Ratings\Model\Table;
+
+use Cake\Core\Configure;
+use Cake\ORM\Table;
 
 /**
  * CakePHP Ratings Plugin
@@ -18,7 +21,7 @@ App::uses('RatingsAppModel', 'Ratings.Model');
  * @package 	ratings
  * @subpackage 	ratings.models
  */
-class Rating extends RatingsAppModel {
+class RatingsTable extends Table {
 
 /**
  * Validation rules
@@ -27,27 +30,27 @@ class Rating extends RatingsAppModel {
  */
 	public $validate = array();
 
-/**
- * Constructor
- *
- * Set the translateable validation messages in the constructor.
- *
- */
-	public function __construct($id = false, $table = null, $ds = null) {
-		$userClass = Configure::read('App.UserClass');
+
+	public function initialize(array $config) {
+		$userClass = Configure::read('App.userClass');
 		if (empty($userClass)) {
-			$userClass = 'User';
+			$userClass = 'Users';
 		}
 
-		$this->belongsTo['User'] = array(
-			'className' => $userClass,
-			'foreignKey' => 'user_id');
-		parent::__construct($id, $table, $ds);
+		$this->belongsTo('Users', array(
+				'className' => $userClass, 'foreignKey' => 'user_id'
+			)
+		);
+
+
+
+	}
+
+	public function buildValidator() {
 		$rules = array(
 			'notEmpty' => array(
 				'required' => true,
 				'rule' => 'notEmpty'));
-
 		$this->validate = array(
 			'user_id' => array(
 				'required' => $rules['notEmpty']),
@@ -58,4 +61,5 @@ class Rating extends RatingsAppModel {
 			'value' => array(
 				'required' => $rules['notEmpty']));
 	}
+
 }

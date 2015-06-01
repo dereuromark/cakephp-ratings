@@ -8,21 +8,16 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\TestCase\Controller\Component;
 
-App::uses('Controller', 'Controller');
-App::uses('RatingsComponent', 'Ratings.Controller/Component');
-App::uses('CakeSession', 'Model/Datasource');
-App::uses('Session', 'Controller/Component');
-App::uses('Auth', 'Controller/Component');
-
-/**
- * Test Article Model
- *
- * @package ratings
- * @subpackage ratings.tests.cases.components
- */
-class Article extends CakeTestModel {
-}
+use App\Controller\Component\Auth;
+use Cake\Network\Session;
+use Cake\Controller\Controller;
+use Ratings\Controller\Component\RatingsComponent;
+use Cake\TestSuite\TestCase;
+use Cake\Network\Request;
+use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
 
 /**
  * Test ArticlesTestController
@@ -37,21 +32,21 @@ class ArticlesTestController extends Controller {
  *
  * @var array
  */
-	public $uses = array('Article');
+	public $modelClass = 'Articles';
 
 /**
  * Helpers used
  *
  * @var array
  */
-	public $helpers = array('Session', 'Html', 'Form');
+	public $helpers = array('Html', 'Form');
 
 /**
  * Components used
  *
  * @var array
  */
-	public $components = array('Ratings.Ratings', 'Session', 'Auth');
+	public $components = array('Ratings.Ratings', 'Auth', 'Flash');
 
 /**
  * test method
@@ -70,7 +65,7 @@ class ArticlesTestController extends Controller {
  * @param string $exit
  * @return void
  */
-	public function redirect($url, $status = null, $exit = true) {
+	public function redirect($url, $status = null) {
 		$this->redirect = $url;
 	}
 }
@@ -81,7 +76,7 @@ class ArticlesTestController extends Controller {
  * @package ratings
  * @subpackage ratings.tests.cases.components
  */
-class RatingsComponentTest extends CakeTestCase {
+class RatingsComponentTest extends TestCase {
 
 /**
  * Controller using the tested component
@@ -98,22 +93,16 @@ class RatingsComponentTest extends CakeTestCase {
 	public $AuthComponent;
 
 /**
- * Mock SessionComponent object
- *
- * @var MockSessionComponent
- */
-	public $SessionComponent;
-
-/**
  * Fixtures
  *
  * @var array
  */
 	public $fixtures = array(
-		'core.cake_session',
-		'plugin.ratings.rating',
-		'plugin.ratings.article',
-		'plugin.ratings.user');
+		'core.cake_sessions',
+		'plugin.ratings.ratings',
+		'plugin.ratings.articles',
+		'plugin.ratings.users'
+	);
 
 /**
  * startTest method
@@ -123,29 +112,25 @@ class RatingsComponentTest extends CakeTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		CakeSession::write('foo', 'bar');
-		CakeSession::delete('foo');
+		$this->session = new Session();
 
-		$this->Controller = new ArticlesTestController(new CakeRequest());
-		$this->Controller->modelClass = 'Article';
-		$this->Controller->constructClasses();
+		$this->session->write('foo', 'bar');
+		$this->session->delete('foo');
 
-		$this->Collection = $this->getMock('ComponentCollection');
+		$this->Controller = new ArticlesTestController(new Request());
+		//$this->Controller->constructClasses();
 
+		//$this->Collection = $this->getMock('ComponentRegistry');
+
+		/*
 		if (!class_exists('MockAuthComponent')) {
- 		$this->getMock('AuthComponent', array('user'), array($this->Collection), "MockAuthComponent");
-		}
-		if (!class_exists('MockSessionComponent')) {
- 		$this->getMock('SessionComponent', array('destroy'), array($this->Collection), "MockSessionComponent");
+ 			$this->getMock('AuthComponent', array('user'), array($this->Collection), "MockAuthComponent");
 		}
 
 		$this->AuthComponent = new MockAuthComponent($this->Collection);
 		$this->AuthComponent->enabled = true;
 		$this->Controller->Auth = $this->AuthComponent;
-
-		$this->SessionComponent = new MockSessionComponent($this->Collection);
-		$this->SessionComponent->enabled = true;
-		$this->Controller->Session = $this->SessionComponent;
+		*/
 	}
 
 /**
@@ -155,9 +140,9 @@ class RatingsComponentTest extends CakeTestCase {
  */
 	public function tearDown() {
 		parent::tearDown();
-		$this->Controller->Session->destroy();
+		$this->session->destroy();
 		unset($this->Controller);
-		ClassRegistry::flush();
+		TableRegistry::clear();
 	}
 
 /**
@@ -167,9 +152,9 @@ class RatingsComponentTest extends CakeTestCase {
  */
 	public function testInitialize() {
 		$this->_initControllerAndRatings(array(), false);
-		$this->assertEquals(array('Session', 'Html', 'Form', 'Ratings.Rating'), $this->Controller->helpers);
+		$this->assertEquals(array('Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Article->Behaviors->loaded('Ratable'), 'Ratable behavior should attached.');
-		$this->assertEquals('Article', $this->Controller->Ratings->modelName);
+		$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
 /**
@@ -181,15 +166,14 @@ class RatingsComponentTest extends CakeTestCase {
 		$this->Controller->components = array(
 			'Ratings.Ratings' => array(
 				'update' => true),
-			'Session',
 			'Auth');
 
 		$this->_initControllerAndRatings(array(), false);
-		$this->assertEquals($this->Controller->helpers, array(
-			'Session', 'Html', 'Form', 'Ratings.Rating'));
+		$this->assertEquals(array(
+			'Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Article->Behaviors->loaded('Ratable'), 'Ratable behavior should attached.');
 		$this->assertTrue($this->Controller->Article->Behaviors->Ratable->settings['Article']['update'], 'Ratable behavior should be updatable.');
-		$this->assertEquals('Article', $this->Controller->Ratings->modelName);
+		$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
 /**
@@ -201,14 +185,13 @@ class RatingsComponentTest extends CakeTestCase {
 		$this->Controller->components = array(
 			'Ratings.Ratings' => array(
 				'actionNames' => array('show')),
-			'Session',
 			'Auth');
 
 		$this->_initControllerAndRatings(array(), false);
-		$this->assertEquals(array('Session', 'Html', 'Form', 'Ratings.Rating'), $this->Controller->helpers);
+		$this->assertEquals(array('Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Article->Behaviors->loaded('Ratable'), 'Ratable behavior should attached.');
 		$this->assertEquals(array('show'), $this->Controller->Ratings->actionNames);
-		$this->assertEquals('Article', $this->Controller->Ratings->modelName);
+		$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
 /**
@@ -217,15 +200,17 @@ class RatingsComponentTest extends CakeTestCase {
  * @return void
  */
 	public function testStartup() {
+		/*
 		$this->AuthComponent
 			->expects($this->any())
 			->method('user')
 			->with('id')
 			->will($this->returnValue(array('1')));
+		*/
 
 		$params = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test',
 			'pass' => array(),
 			'?' => array(
@@ -234,7 +219,7 @@ class RatingsComponentTest extends CakeTestCase {
 				'redirect' => true));
 		$expectedRedirect = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test');
 /*
 		$this->Controller->Session->expectCallCount('setFlash', 3);
@@ -264,15 +249,17 @@ class RatingsComponentTest extends CakeTestCase {
  * @return void
  */
 	public function testStartupAcceptPost() {
+		/*
 		$this->AuthComponent
 			->expects($this->any())
 			->method('user')
 			->with('id')
 			->will($this->returnValue(1));
+		*/
 
 		$params = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test',
 			'pass' => array(),
 			'?' => array(
@@ -280,13 +267,13 @@ class RatingsComponentTest extends CakeTestCase {
 				'redirect' => true));
 		$expectedRedirect = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test');
-		$this->Controller->data = array('Article' => array('rating' => 2));
+		$this->Controller->data = array('rating' => 2);
 
 		//$this->Controller->Session->write('Message', null);
 
-		$this->Controller->Session->expects($this->any())->method('setFlash');
+		//$this->Controller->Session->expects($this->any())->method('setFlash');
 		$this->_initControllerAndRatings($params);
 		$this->assertEquals($expectedRedirect, $this->Controller->redirect);
 	}
@@ -299,7 +286,7 @@ class RatingsComponentTest extends CakeTestCase {
 	public function testBuildUrl() {
 		$params = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test',
 			'pass' => array(),
 			'?' => array(
@@ -310,11 +297,13 @@ class RatingsComponentTest extends CakeTestCase {
 		$this->_initControllerAndRatings($params);
 
 		$result = $this->Controller->Ratings->buildUrl();
-		$this->assertEquals(array(
+		$expected = array(
 			'plugin' => null,
-			'controller' => 'articles',
+			'controller' => 'Articles',
 			'action' => 'test',
-			'?' => array('foo' => 'bar')), $result);
+			'?' => array('foo' => 'bar')
+		);
+		$this->assertEquals($expected, $result);
 	}
 
 /**
@@ -331,11 +320,13 @@ class RatingsComponentTest extends CakeTestCase {
 			$this->Controller->request->query = $this->Controller->request->params['?'];
 		}
 
-		$this->Controller->Components->unload('Ratings');
-		$this->Controller->Components->init($this->Controller);
-		$this->Controller->Components->trigger('initialize', array(&$this->Controller));
-		$this->Controller->Auth = $this->AuthComponent;
-		$this->Controller->Ratings->startup($this->Controller);
+		$this->Controller->components()->unload('Ratings');
+		$this->Controller->loadComponent('Ratings.Ratings');
+		$event = new Event('beforeFilter', $this->Controller);
+		$this->Controller->Ratings->beforeFilter($event);
+		//$this->Controller->Components->trigger('initialize', array(&$this->Controller));
+		//$this->Controller->Auth = $this->AuthComponent;
+		//$this->Controller->Ratings->beforeFilter($this->Controller);
 	}
 
 }

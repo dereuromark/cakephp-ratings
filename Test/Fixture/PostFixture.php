@@ -8,6 +8,10 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\Fixture;
+
+use Cake\TestSuite\Fixture\TestFixture;
+
 
 /**
  * CakePHP Ratings Plugin
@@ -17,7 +21,7 @@
  * @package 	ratings
  * @subpackage 	ratings.tests.fixtures
  */
-class PostFixture extends CakeTestFixture {
+class PostsFixture extends TestFixture {
 
 /**
  * fields property
@@ -26,12 +30,14 @@ class PostFixture extends CakeTestFixture {
  * @access public
  */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'title' => array('type' => 'string', 'null' => false),
-		'rating' => array('type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'),
-		'rating_sum' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'),
-		'rating_count' => array('type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'),
-		'integer_rating' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5));
+		'id' => ['type' => 'integer'],
+		'title' => ['type' => 'string', 'null' => false],
+		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
+		'rating_sum' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'],
+		'rating_count' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'],
+		'integer_rating' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+	);
 
 /**
  * records property

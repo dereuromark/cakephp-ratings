@@ -8,10 +8,13 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('HtmlHelper', 'View/Helper');
-App::uses('FormHelper', 'View/Helper');
-App::uses('RatingHelper', 'Ratings.View/Helper');
-App::uses('Controller', 'Controller');
+namespace Ratings\Test\TestCase\View\Helper;
+
+use App\View\Helper\FormHelper;
+use App\View\Helper\HtmlHelper;
+use Cake\Controller\Controller;
+use Cake\TestSuite\TestCase;
+use Ratings\View\Helper\RatingHelper;
 
 /**
  * CakePHP Ratings Plugin
@@ -21,7 +24,7 @@ App::uses('Controller', 'Controller');
  * @package 	ratings
  * @subpackage 	ratings.tests.cases.helpers
  */
-class RatingHelperTest extends CakeTestCase {
+class RatingHelperTest extends TestCase {
 
 /**
  * Helper being tested
@@ -32,7 +35,7 @@ class RatingHelperTest extends CakeTestCase {
 
 /**
  * (non-PHPdoc)
- * @see cake/tests/lib/CakeTestCase#startTest($method)
+ * @see cake/tests/lib/TestCase#startTest($method)
  */
 	public function setUp() {
 		parent::setUp();
@@ -77,7 +80,7 @@ class RatingHelperTest extends CakeTestCase {
  * Test display method exception
  *
  * @return void
- * @expectedException CakeException
+ * @expectedException \Exception
  */
 	public function testDisplayException() {
 		$this->Rating->display();
@@ -148,7 +151,7 @@ class RatingHelperTest extends CakeTestCase {
 
 /**
  * (non-PHPdoc)
- * @see cake/tests/lib/CakeTestCase#endTest($method)
+ * @see cake/tests/lib/TestCase#endTest($method)
  */
 	public function tearDown() {
 		parent::tearDown();

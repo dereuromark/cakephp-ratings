@@ -8,6 +8,10 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\Fixture;
+
+use Cake\TestSuite\Fixture\TestFixture;
+
 
 /**
  * CakePHP Ratings Plugin
@@ -17,23 +21,7 @@
  * @package 	ratings
  * @subpackage 	ratings.tests.fixtures
  */
-class RatingFixture extends CakeTestFixture {
-
-/**
- * Name
- *
- * @var string
- * @access pulbic
- */
-	public $name = 'Rating';
-
-/**
- * Table
- *
- * @var string
- * @access public
- */
-	public $table = 'ratings';
+class RatingsFixture extends TestFixture {
 
 /**
  * Fields
@@ -42,17 +30,14 @@ class RatingFixture extends CakeTestFixture {
  * @access public
  */
 	public $fields = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'),
-		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-		'model' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'index'),
-		'value' => array('type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'UNIQUE_RATING' => array('column' => array('user_id', 'foreign_key', 'model'), 'unique' => 1)
-		)
+		'id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+		'user_id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+		'foreign_key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+		'model' => ['type' => 'string', 'null' => false, 'default' => null],
+		'value' => ['type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'],
+		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_RATING' => ['type' => 'unique', 'columns' => ['user_id', 'foreign_key', 'model']]]
 	);
 
 /**

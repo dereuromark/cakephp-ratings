@@ -1,15 +1,21 @@
 {
-	"name": "cakedc/ratings",
+	"name": "dereuromark/cakephp-ratings",
 	"type": "cakephp-plugin",
 	"description": "Ratings Plugin for CakePHP.",
-	"homepage": "http://github.com/CakeDC/ratings",
+	"homepage": "http://github.com/dereuromark/cakephp-ratings",
 	"keywords": ["cakephp", "ratings", "plugin"],
 	"license": "MIT",
 	"authors": [
 		{
+			"name": "Mark Scherer",
+			"email": "euromark@web.de",
+			"homepage": "https://github.com/dereuromark/cakephp-ratings",
+			"role": "maintainer"
+		}, {
 			"name": "Cake Development Corporation",
 			"email": "team@cakedc.com",
-			"homepage": "http://cakedc.com"
+			"homepage": "http://cakedc.com",
+			"role": "original maintainer"
 		}
 	],
 	"support": {
@@ -20,11 +26,20 @@
 		"irc": "irc://irc.freenode.org/cakephp",
 		"source": "https://github.com/CakeDC/ratings"
 	},
-	"require": {
-		"php": ">=5.2.8",
-		"composer/installers": "*"
+	"require":{
+		"php": ">=5.4",
+		"cakephp/cakephp": "~3.0"
 	},
-	"extra": {
-		"installer-name": "Ratings"
+	"autoload": {
+		"psr-4": {
+			"Ratings\\": "src"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Ratings\\Test\\": "tests",
+			"Cake\\Test\\": "vendor/cakephp/cakephp/tests",
+			"TestApp\\": "tests/TestApp/src"
+		}
 	}
 }

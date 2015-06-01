@@ -11,7 +11,7 @@ msgstr ""
 "X-Poedit-Language: French\n"
 
 #: /controllers/components/ratings.php:130
-msgid "Your rate was successfull."
+msgid "Your rate was successful."
 msgstr "Votre note a été prise en compte."
 
 #: /controllers/components/ratings.php:133

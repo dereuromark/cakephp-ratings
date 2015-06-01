@@ -8,6 +8,11 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\TestCase\Model;
+
+use Cake\Core\Configure;
+use Cake\TestSuite\TestCase;
+
 
 /**
  * CakePHP Ratings Plugin
@@ -17,7 +22,7 @@
  * @package 	ratings
  * @subpackage 	ratings.tests.cases.models
  */
-class RatingTest extends CakeTestCase {
+class RatingTest extends TestCase {
 
 /**
  * Rating Model
@@ -39,9 +44,10 @@ class RatingTest extends CakeTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'plugin.ratings.user',
-		'plugin.ratings.rating',
-		'plugin.ratings.article');
+		'plugin.ratings.users',
+		'plugin.ratings.ratings',
+		'plugin.ratings.articles'
+	);
 
 /**
  * Start Test callback

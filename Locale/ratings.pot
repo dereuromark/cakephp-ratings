@@ -20,7 +20,7 @@
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: /controllers/components/ratings.php:130
-msgid "Your rate was successfull."
+msgid "Your rate was successful."
 msgstr ""
 
 #: /controllers/components/ratings.php:133

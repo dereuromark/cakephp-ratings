@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: /controllers/components/ratings.php:130
-msgid "Your rate was successfull."
+msgid "Your rate was successful."
 msgstr "Deine Wertung wurde gespeichert."
 
 #: /controllers/components/ratings.php:133

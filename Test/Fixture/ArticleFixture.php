@@ -8,6 +8,10 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\Fixture;
+
+use Cake\TestSuite\Fixture\TestFixture;
+
 
 /**
  * CakePHP Ratings Plugin
@@ -17,7 +21,7 @@
  * @package 	ratings
  * @subpackage 	ratings.tests.fixtures
  */
-class ArticleFixture extends CakeTestFixture {
+class ArticlesFixture extends TestFixture {
 
 /**
  * fields property
@@ -26,16 +30,18 @@ class ArticleFixture extends CakeTestFixture {
  * @access public
  */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'user_id' => array('type' => 'integer', 'null' => false, 'length' => 10),
-		'title' => array('type' => 'string', 'null' => false),
-		'rating' => array('type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'),
-		'integer_rating' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5),
-		'rating_1' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5),
-		'rating_2' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5),
-		'rating_3' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5),
-		'rating_4' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5),
-		'rating_5' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5));
+		'id' => ['type' => 'integer'],
+		'user_id' => ['type' => 'integer', 'null' => false, 'length' => 10],
+		'title' => ['type' => 'string', 'null' => false],
+		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
+		'integer_rating' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'rating_1' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'rating_2' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'rating_3' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'rating_4' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'rating_5' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+	);
 
 /**
  * records property

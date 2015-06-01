@@ -21,7 +21,7 @@ msgstr ""
 #
 #
 #: /controllers/components/ratings.php:130
-msgid "Your rate was successfull."
+msgid "Your rate was successful."
 msgstr "Tu calificación fue guardada"
 
 #: /controllers/components/ratings.php:133

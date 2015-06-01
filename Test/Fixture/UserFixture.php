@@ -8,6 +8,10 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace Ratings\Test\Fixture;
+
+use Cake\Model\Model;
+use Cake\Utility\Security;
 
 /**
  * CakePHP Ratings Plugin
@@ -22,23 +26,7 @@ if (!class_exists('User')) {
 	class User extends Model {
 	}
 }
-class UserFixture extends CakeTestFixture {
-
-/**
- * Name
- *
- * @var string $name
- * @access public
- */
-	public $name = 'User';
-
-/**
- * Table
- *
- * @var array $table
- * @access public
- */
-	public $table = 'users';
+class UsersFixture extends TestFixture {
 
 /**
  * Fields
@@ -47,29 +35,26 @@ class UserFixture extends CakeTestFixture {
  * @access public
  */
 	public $fields = array(
-		'id' => array('type' => 'string', 'null' => false, 'length' => 36, 'key' => 'primary'),
-		'account_type' => array('type' => 'string', 'null' => false, 'length' => 8),
-		'url' => array('type' => 'string', 'null' => false, 'key' => 'unique'),
-		'slug' => array('type' => 'string', 'null' => false),
-		'username' => array('type' => 'string', 'null' => false),
-		'email' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255),
-		'email_verified' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'email_token' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255),
-		'email_token_expires' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'passwd' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128),
-		'password_token' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 128),
-		'tos' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'active' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'public_master_key' => array('type' => 'text', 'null' => true, 'default' => null),
-		'public_session_key' => array('type' => 'text', 'null' => true, 'default' => null),
-		'private_session_key' => array('type' => 'text', 'null' => true, 'default' => null),
-		'last_activity' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'UNIQUE_URL' => array('column' => 'url', 'unique' => 1)
-		)
+		'id' => ['type' => 'string', 'null' => false, 'length' => 36],
+		'account_type' => ['type' => 'string', 'null' => false, 'length' => 8],
+		'url' => ['type' => 'string', 'null' => false],
+		'slug' => ['type' => 'string', 'null' => false],
+		'username' => ['type' => 'string', 'null' => false],
+		'email' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255],
+		'email_verified' => ['type' => 'boolean', 'null' => false, 'default' => '0'],
+		'email_token' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 255],
+		'email_token_expires' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'passwd' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 128],
+		'password_token' => ['type' => 'string', 'null' => true, 'default' => null, 'length' => 128],
+		'tos' => ['type' => 'boolean', 'null' => false, 'default' => '0'],
+		'active' => ['type' => 'boolean', 'null' => false, 'default' => '0'],
+		'public_master_key' => ['type' => 'text', 'null' => true, 'default' => null],
+		'public_session_key' => ['type' => 'text', 'null' => true, 'default' => null],
+		'private_session_key' => ['type' => 'text', 'null' => true, 'default' => null],
+		'last_activity' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_URL' => ['type' => 'unique', 'columns' => 'url']]
 	);
 
 /**
@@ -170,7 +155,6 @@ class UserFixture extends CakeTestFixture {
  */
 	public function __construct() {
 		parent::__construct();
-		App::uses('Security', 'Utility');
 		foreach ($this->records as &$record) {
 			$record['passwd'] = Security::hash($record['passwd'], null, true);
 		}

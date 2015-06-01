@@ -1,5 +1,9 @@
 <?php
 
+namespace Ratings\Test\TestCase;
+
+use Cake\Core\App;
+
 class AllRatingsTest extends PHPUnit_Framework_TestSuite {
 
 /**

@@ -23,7 +23,7 @@ msgstr ""
 "X-Poedit-Country: BRAZIL\n"
 
 #: /controllers/components/ratings.php:130
-msgid "Your rate was successfull."
+msgid "Your rate was successful."
 msgstr "Sua classificação foi salva."
 
 #: /controllers/components/ratings.php:133

@@ -8,7 +8,9 @@
  * @copyright Copyright 2010, Cake Development Corporation (http://cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('AppHelper', 'View/Helper');
+namespace Ratings\View\Helper;
+
+use App\View\Helper\AppHelper;
 
 /**
  * CakePHP Ratings Plugin
@@ -116,13 +118,13 @@ class RatingHelper extends AppHelper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= String::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= Text::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= String::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= Text::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
 			}
 		}
 
@@ -179,13 +181,13 @@ class RatingHelper extends AppHelper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= String::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= Text::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= String::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= Text::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
 			}
 		}
 
@@ -213,7 +215,7 @@ class RatingHelper extends AppHelper {
 	public function display($options = array(), $urlHtmlAttributes = array()) {
 		$options = array_merge($this->defaults, $options);
 		if (empty($options['item'])) {
-			throw new CakeException(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
+			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
 		}
 
 		if ($options['type'] == 'radio' || $options['type'] == 'select') {
