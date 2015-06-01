@@ -10,8 +10,7 @@
  */
 namespace Ratings\Test\Fixture;
 
-use Cake\Model\Model;
-use Cake\Utility\Security;
+use Cake\TestSuite\Fixture\TestFixture;
 
 /**
  * CakePHP Ratings Plugin
@@ -22,10 +21,6 @@ use Cake\Utility\Security;
  * @subpackage 	ratings.tests.fixtures
  */
 
-if (!class_exists('User')) {
-	class User extends Model {
-	}
-}
 class UsersFixture extends TestFixture {
 
 /**
@@ -156,7 +151,7 @@ class UsersFixture extends TestFixture {
 	public function __construct() {
 		parent::__construct();
 		foreach ($this->records as &$record) {
-			$record['passwd'] = Security::hash($record['passwd'], null, true);
+			$record['passwd'] = sha1($record['passwd']); //, null, true
 		}
 	}
 

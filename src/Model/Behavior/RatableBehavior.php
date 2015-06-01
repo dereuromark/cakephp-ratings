@@ -10,9 +10,9 @@
  */
 namespace Ratings\Model\Behavior;
 
-use App\Model\ModelBehavior;
-use Cake\Model\Model;
+use Cake\ORM\Behavior;
 use Cake\Utility\Hash;
+
 /**
  * CakePHP Ratings Plugin
  *
@@ -21,7 +21,7 @@ use Cake\Utility\Hash;
  * @package 	ratings
  * @subpackage 	ratings.models.behaviors
  */
-class RatableBehavior extends ModelBehavior {
+class RatableBehavior extends Behavior {
 
 /**
  * Settings array
