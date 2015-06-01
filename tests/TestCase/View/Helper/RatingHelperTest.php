@@ -47,7 +47,7 @@ class RatingHelperTest extends TestCase {
 		$this->Rating->Form->Html = $this->Rating->Html;
 		//$this->Rating->Form->params['action'] = 'add';
 
-		ClassRegistry::addObject('view', $this->View);
+		//ClassRegistry::addObject('view', $this->View);
 	}
 
 /**
