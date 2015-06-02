@@ -221,7 +221,7 @@ class RatableBehavior extends Behavior {
  */
 	public function decrementRating($foreignKey = null, $oldRating, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'), $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
 		$data = $this->_table->find('all', array(
@@ -279,7 +279,7 @@ class RatableBehavior extends Behavior {
  */
 	public function incrementRating($foreignKey = null, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'), $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
 		$data = $this->_table->find('all', array(
@@ -339,7 +339,7 @@ class RatableBehavior extends Behavior {
  */
 	public function calculateRating($foreignKey = null, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(sprintf(__d('ratings', 'Invalid rating mode %s.'), $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
 		$result = $this->_table->Rating->find('all', array(
