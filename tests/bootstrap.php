@@ -59,7 +59,7 @@ $cache = [
 ];
 Cake\Cache\Cache::config($cache);
 
-Cake\Core\Plugin::load('Ratings', ['path' => ROOT . DS]);
+Cake\Core\Plugin::load('Ratings', ['path' => ROOT . DS, 'autoload' => true]);
 
 // Ensure default test connection is defined
 if (!getenv('db_class')) {

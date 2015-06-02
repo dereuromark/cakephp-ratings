@@ -10,11 +10,14 @@
  */
 namespace Ratings\Test\TestCase\View\Helper;
 
-use App\View\Helper\FormHelper;
-use App\View\Helper\HtmlHelper;
+use Cake\View\Helper\FormHelper;
+use Cake\View\Helper\HtmlHelper;
 use Cake\Controller\Controller;
 use Cake\TestSuite\TestCase;
 use Ratings\View\Helper\RatingHelper;
+use Cake\View\View;
+use Cake\Network\Request;
+use Cake\Routing\Router;
 
 /**
  * CakePHP Ratings Plugin
@@ -39,15 +42,17 @@ class RatingHelperTest extends TestCase {
  */
 	public function setUp() {
 		parent::setUp();
+		$this->request = new Request();
 		$this->Controller = new Controller();
-		$this->View = new View($this->Controller);
+		$this->View = new View($this->request);
 		$this->Rating = new RatingHelper($this->View);
-		$this->Rating->Form = new FormHelper($this->View);
-		$this->Rating->Html = new HtmlHelper($this->View);
-		$this->Rating->Form->Html = $this->Rating->Html;
+		//$this->Rating->Form = new FormHelper($this->View);
+		//$this->Rating->Html = new HtmlHelper($this->View);
+		//$this->Rating->Form->Html = $this->Rating->Html;
 		//$this->Rating->Form->params['action'] = 'add';
 
 		//ClassRegistry::addObject('view', $this->View);
+		Router::reload();
 	}
 
 /**
@@ -94,7 +99,7 @@ class RatingHelperTest extends TestCase {
 	public function testDisplay() {
 		$options = array(
 			'item' => '42',
-			'url' => array('controller' => 'articles', 'action' => 'rate'),
+			'url' => array('controller' => 'Articles', 'action' => 'rate'),
 			'stars' => 5);
 		$result = $this->Rating->display($options);
 		$expected =
@@ -131,7 +136,7 @@ class RatingHelperTest extends TestCase {
 		$options = array(
 			'item' => '42',
 			'type' => 'radio',
-			'url' => array('controller' => 'articles', 'action' => 'rate'),
+			'url' => array('controller' => 'Articles', 'action' => 'rate'),
 			'stars' => 2);
 		$result = $this->Rating->display($options);
 
@@ -141,7 +146,7 @@ class RatingHelperTest extends TestCase {
 		$options = array(
 			'item' => '42',
 			'type' => 'radio',
-			'url' => array('controller' => 'articles', 'action' => 'rate'),
+			'url' => array('controller' => 'Articles', 'action' => 'rate'),
 			'stars' => 2);
 		$result = $this->Rating->display($options);
 
@@ -156,6 +161,6 @@ class RatingHelperTest extends TestCase {
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Rating);
-		ClassRegistry::flush();
+		//TableRegistry::flush();
 	}
 }

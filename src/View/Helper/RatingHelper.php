@@ -10,21 +10,21 @@
  */
 namespace Ratings\View\Helper;
 
-use App\View\Helper\AppHelper;
+use Cake\View\Helper;
 
 /**
  * CakePHP Ratings Plugin
  *
  * Rating helper
  */
-class RatingHelper extends AppHelper {
+class RatingHelper extends Helper {
 
 /**
  * helpers variable
  *
  * @var array
  */
-	public $helpers = array ('Html', 'Form', 'Js' => 'Jquery');
+	public $helpers = array ('Html', 'Form');
 
 /**
  * Allowed types of html list elements
@@ -95,7 +95,7 @@ class RatingHelper extends AppHelper {
 		if ($value <= 0) {
 			$roundedValue = 0;
 			if (empty($attr['title'])) {
-				$attr['title'] = __('Noch keine Bewertung vorhanden');
+				$attr['title'] = __d('ratings', 'No rating available yet.');
 			}
 		} else {
 			$roundedValue = $this->round($value, $steps, 1, $stars);
@@ -135,7 +135,7 @@ class RatingHelper extends AppHelper {
 			$precision = 1;
 		}
 		$defaults = array(
-			'title' => number_format($roundedValue, $precision, ',', '.') . ' ' . __('von') . ' ' . $stars . ' ' . __('Sternen'),
+			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $stars),
 		);
 		$attr = array_merge($defaults, $attr);
 		return $this->Html->div('ratingStars clearfix', $res, $attr);
@@ -218,7 +218,7 @@ class RatingHelper extends AppHelper {
 			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
 		}
 
-		if ($options['type'] == 'radio' || $options['type'] == 'select') {
+		if ($options['type'] === 'radio' || $options['type'] === 'select') {
 			return $this->starForm($options, $urlHtmlAttributes);
 		}
 
@@ -234,6 +234,7 @@ class RatingHelper extends AppHelper {
 				if ($options['redirect']) {
 					$url['?']['redirect'] = 1;
 				}
+
 				$link = $this->Html->link($i, $url, $urlHtmlAttributes);
 			}
 			$stars .= $this->Html->tag('li', $link, array('class' => 'star' . $i));
@@ -270,8 +271,7 @@ class RatingHelper extends AppHelper {
 		$percentage = $this->percentage($value, $total);
 
 		if (!empty($options['element'])) {
-			$View = ClassRegistry:: getObject('view');
-			return $View->element($options['element'], array(
+			return $this->_View->element($options['element'], array(
 				'value' => $value,
 				'percentage' => $percentage,
 				'total' => $total));
@@ -333,7 +333,7 @@ class RatingHelper extends AppHelper {
 		if ($options['js']) {
 			$inputOptions['type'] = 'select';
 		}
-		$inputOptions = am($inputOptions, $htmlAttributes);
+		$inputOptions = array_merge($inputOptions, $htmlAttributes);
 
 		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
 		$result .= $this->Form->input($inputField, $inputOptions);

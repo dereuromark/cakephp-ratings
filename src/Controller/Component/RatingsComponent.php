@@ -33,7 +33,7 @@ class RatingsComponent extends Component {
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
 		//'assocName' => 'Ratings',
-		//'params' => array('rate' => true, 'rating' => true, 'redirect' => true)
+		'params' => array('rate' => true, 'rating' => true, 'redirect' => true)
 	];
 
 /**
@@ -59,7 +59,8 @@ class RatingsComponent extends Component {
 		}
 
 		if ($actions = $this->config('actions')) {
-			if (!in_array($this->Controller->request->params['action'], $actions)) {
+			$action = !empty($this->Controller->request->params['action']) ? $this->Controller->request->params['action'] : '';
+			if (!in_array($action, $actions)) {
 				return;
 			}
 		}
@@ -78,12 +79,13 @@ class RatingsComponent extends Component {
 		$rating = null;
 		$params = $this->request->query;
 
-		if (empty($params['rating']) && !empty($this->request->data[$this->Controller->modelClass]['rating'])) {
-			$params['rating'] = $this->request->data[$this->Controller->modelClass]['rating'];
+		if (empty($params['rating']) && !empty($this->request->data['rating'])) {
+			$params['rating'] = $this->request->data['rating'];
 		}
+
 		if (!method_exists($this->Controller, 'rate')) {
-			if (isset($params['rate']) && isset($params['rating']) && $this->config('enabled')) {
-				$this->rate($params['rate'], $params['rating'], $this->Controller->Auth->user('id'), !empty($params['redirect']));
+			if (isset($params['rate']) && isset($params['rating'])) {
+				return $this->rate($params['rate'], $params['rating'], $this->Controller->Auth->user('id'), !empty($params['redirect']));
 			}
 		}
 	}
@@ -117,7 +119,7 @@ class RatingsComponent extends Component {
 		$result = compact('status', 'message', 'rating');
 		$this->Controller->set($result);
 		if (!empty($redirect)) {
-			if (is_bool($redirect)) {
+			if ($redirect === true) {
 				return $this->redirect($this->buildUrl());
 			}
 			return $this->redirect($redirect);
@@ -134,7 +136,7 @@ class RatingsComponent extends Component {
 		$params = array('plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']);
 		$params = array_merge($params, $this->Controller->request->params['pass']);
 		foreach ($this->Controller->request->query as $name => $value) {
-			if (!isset($this->parameters[$name])) {
+			if (!isset($this->_config['params'][$name])) {
 				$params['?'][$name] = $value;
 			}
 		}
