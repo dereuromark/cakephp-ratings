@@ -12,7 +12,7 @@ namespace Ratings\Test\TestCase\Model;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-
+use Cake\ORM\TableRegistry;
 
 /**
  * CakePHP Ratings Plugin
@@ -48,9 +48,10 @@ class RatingsTableTest extends TestCase {
  * @param string $method
  * @return void
  */
-	public function startTest($method) {
-		Configure::write('App.UserClass', null);
-		parent::startTest($method);
+	public function setUp() {
+		Configure::write('App.userClass', null);
+		parent::setUp();
+
 		$this->Ratings = TableRegistry::get('Ratings.Ratings');
 	}
 
@@ -60,6 +61,6 @@ class RatingsTableTest extends TestCase {
  * @return void
  */
 	public function testRatingInstance() {
-		$this->assertInstanceOf('Ratings\Model\Table\Ratings', $this->Ratings);
+		$this->assertInstanceOf('Ratings\Model\Table\RatingsTable', $this->Ratings);
 	}
 }

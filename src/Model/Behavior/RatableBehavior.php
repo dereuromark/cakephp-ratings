@@ -24,13 +24,6 @@ use Cake\Utility\Hash;
 class RatableBehavior extends Behavior {
 
 /**
- * Settings array
- *
- * @var array
- */
-	public $settings = array();
-
-/**
  * Default settings
  *
  * modelClass		- must be set in the case of a plugin model to make the behavior work with plugin models like 'Plugin.Model'
@@ -121,7 +114,7 @@ class RatableBehavior extends Behavior {
 			$data['Rating']['model'] = $this->_table->alias();
 			$data['Rating']['user_id'] = $userId;
 			$data['Rating']['value'] = $value;
-			if ($this->_config['update'] == true) {
+			if ($this->_config['update']) {
 				$update = true;
 				$this->oldRating = $oldRating;
 				if (!empty($oldRating)) {
@@ -410,9 +403,11 @@ class RatableBehavior extends Behavior {
 			)
 		));
 
-		if ($findMethod == 'all') {
+		if ($findMethod === 'all') {
 			return Hash::extract($entry, '{n}.Rating.foreign_key');
 		}
+
+		$entry = $entry->toArray();
 
 		if (empty($entry)) {
 			return false;

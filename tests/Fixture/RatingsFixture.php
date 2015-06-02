@@ -18,8 +18,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  *
  * Rating fixture
  *
- * @package 	ratings
- * @subpackage 	ratings.tests.fixtures
  */
 class RatingsFixture extends TestFixture {
 
@@ -27,13 +25,12 @@ class RatingsFixture extends TestFixture {
  * Fields
  *
  * @var array
- * @access public
  */
 	public $fields = array(
-		'id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
-		'user_id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
-		'foreign_key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
-		'model' => ['type' => 'string', 'null' => false, 'default' => null],
+		'id' => ['type' => 'integer', 'null' => false],
+		'user_id' => ['type' => 'integer', 'null' => true, 'default' => null],
+		'foreign_key' => ['type' => 'string', 'null' => true, 'default' => null],
+		'model' => ['type' => 'string', 'null' => true, 'default' => null],
 		'value' => ['type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'],
 		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
@@ -44,29 +41,28 @@ class RatingsFixture extends TestFixture {
  * Records
  *
  * @var array
- * @access public
  */
 	public $records = array(
 		array(
 			'id' => 1,
-			'user_id' => '1',
-			'foreign_key' => '1', // first article
+			'user_id' => 1,
+			'foreign_key' => 1, // first article
 			'model' => 'Article',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12'),
 		array(
 			'id' => 2,
-			'user_id' => '1',
-			'foreign_key' => '1', // first post
+			'user_id' => 1,
+			'foreign_key' => 1, // first post
 			'model' => 'Post',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12'),
 		array(
 			'id' => 3,
-			'user_id' => '1',
-			'foreign_key' => '2', // second post
+			'user_id' => 1,
+			'foreign_key' => 2, // second post
 			'model' => 'Post',
 			'value' => 3,
 			'created' => '2009-01-01 12:12:12',
