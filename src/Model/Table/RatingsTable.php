@@ -48,9 +48,10 @@ class RatingsTable extends Table {
 
 	public function buildValidator() {
 		$rules = array(
-			'notEmpty' => array(
+			'notBlank' => array(
 				'required' => true,
-				'rule' => 'notEmpty'));
+				'rule' => 'notBlank'));
+
 		$this->validate = array(
 			'user_id' => array(
 				'required' => $rules['notEmpty']),
