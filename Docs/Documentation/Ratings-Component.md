@@ -5,7 +5,7 @@ As the component starts up, it attaches the Ratable behavior to the default cont
 
 It will handle the ```rate```, ```rating```, and ```redirect``` query parameters.
 
-When rate and rating parameters are passed and the current controller action is inside ```$actionNames``` list (that by default contains only ```view```), the ```rate``` action of component is executed. It is possible to redefine it in the controller if more customization is needed.
+When rate and rating parameters are passed and the current controller action is inside ```$actions``` list (that by default allows all), the ```rate``` action of component is executed. It is possible to redefine it in the controller if more customization is needed.
 
 Component settings
 ------------------

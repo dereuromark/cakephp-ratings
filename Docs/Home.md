@@ -8,8 +8,8 @@ The core part of this plugin is the ratable behavior that is attached to your mo
 Requirements
 ------------
 
-* CakePHP 2.5+
-* PHP 5.2.8+
+* CakePHP 3.0+
+* PHP 5.4+
 
 Documentation
 -------------

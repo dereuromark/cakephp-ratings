@@ -14,10 +14,10 @@ class PostsController extends AppController {
 
 	public function view($postId = null) {
 		if (!$this->Post->exists($id)) {
-			throw new NotFoundException(__('Invalid post'));
+			throw new \NotFoundException(__('Invalid post'));
 		}
-		$options = array('conditions' => array('Post.' . $this->Post->primaryKey => $id));
-		$this->set('post', $this->Post->find('first', $options));
+		$options = array('conditions' => array('Post.' . $this->Post->primaryKey() => $id));
+		$this->set('post', $this->Post->find('all', $options)->first());
 		$this->set('isRated', $this->Post->isRatedBy($id, $this->Auth->user('id')));
 	}
 }
@@ -38,8 +38,8 @@ In your ```view.ctp``` add this.
 ```php
 if ($isRated === false) {
 	echo $this->Rating->display(array(
-		'item' => $post['Post']['id'],
-		'url' => array($post['Post']['id'])
+		'item' => $post['id'],
+		'url' => array($post['id'])
 	));
 } else {
 	echo __('You have already rated.');
