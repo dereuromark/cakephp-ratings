@@ -32,7 +32,12 @@ class RatingsTable extends Table {
 
 
 	public function initialize(array $config) {
-		$userClass = Configure::read('App.userClass');
+		$table = Configure::read('Ratings.table');
+		if ($table) {
+			$this->table($table);
+		}
+
+		$userClass = Configure::read('Ratings.userClass');
 		if (empty($userClass)) {
 			$userClass = 'Users';
 		}
@@ -41,9 +46,6 @@ class RatingsTable extends Table {
 				'className' => $userClass, 'foreignKey' => 'user_id'
 			)
 		);
-
-
-
 	}
 
 	public function buildValidator() {

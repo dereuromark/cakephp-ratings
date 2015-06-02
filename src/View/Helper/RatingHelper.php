@@ -11,6 +11,7 @@
 namespace Ratings\View\Helper;
 
 use Cake\View\Helper;
+use Cake\Utility\Text;
 
 /**
  * CakePHP Ratings Plugin
@@ -213,7 +214,7 @@ class RatingHelper extends Helper {
  * @return string markup that displays the rating options
  */
 	public function display($options = array(), $urlHtmlAttributes = array()) {
-		$options = array_merge($this->defaults, $options);
+		$options += $this->defaults;
 		if (empty($options['item'])) {
 			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
 		}
@@ -266,7 +267,7 @@ class RatingHelper extends Helper {
 			'outerClass' => 'barRating',
 			'outerOptions' => array(),
 			'element' => null);
-		$options = array_merge($defaultOptions, $options);
+		$options += $defaultOptions;
 
 		$percentage = $this->percentage($value, $total);
 
@@ -308,7 +309,7 @@ class RatingHelper extends Helper {
  * @return string markup that displays the rating options
  */
 	public function starForm($options = array(), $htmlAttributes = array()) {
-		$options = array_merge($this->defaults, $options);
+		$options += $this->defaults;
 		$flush = false;
 		if (empty($options['item'])) {
 			trigger_error(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
@@ -333,7 +334,7 @@ class RatingHelper extends Helper {
 		if ($options['js']) {
 			$inputOptions['type'] = 'select';
 		}
-		$inputOptions = array_merge($inputOptions, $htmlAttributes);
+		$inputOptions += $htmlAttributes;
 
 		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
 		$result .= $this->Form->input($inputField, $inputOptions);

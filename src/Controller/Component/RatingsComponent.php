@@ -32,8 +32,9 @@ class RatingsComponent extends Component {
 		'enabled' => true,
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
-		//'assocName' => 'Ratings',
-		'params' => array('rate' => true, 'rating' => true, 'redirect' => true)
+		'params' => array('rate' => true, 'rating' => true, 'redirect' => true),
+		'userId' => 'id', // or bool
+		''
 	];
 
 /**
@@ -70,6 +71,8 @@ class RatingsComponent extends Component {
 		if (empty($modelName)) {
 			$modelName = $this->Controller->modelClass;
 		}
+		list(, $modelName) = pluginSplit($modelName);
+		$this->config('modelName', $modelName);
 		if (!$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
 			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
 		}
@@ -85,7 +88,8 @@ class RatingsComponent extends Component {
 
 		if (!method_exists($this->Controller, 'rate')) {
 			if (isset($params['rate']) && isset($params['rating'])) {
-				return $this->rate($params['rate'], $params['rating'], $this->Controller->Auth->user('id'), !empty($params['redirect']));
+				$userId = !is_string($this->config('userId')) ? $this->config('userId') : $this->Controller->Auth->user($this->config('userId'));
+				return $this->rate($params['rate'], $params['rating'], $userId, !empty($params['redirect']));
 			}
 		}
 	}

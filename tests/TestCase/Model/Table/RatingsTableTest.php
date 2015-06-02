@@ -49,7 +49,7 @@ class RatingsTableTest extends TestCase {
  * @return void
  */
 	public function setUp() {
-		Configure::write('App.userClass', null);
+		Configure::delete('Ratings');
 		parent::setUp();
 
 		$this->Ratings = TableRegistry::get('Ratings.Ratings');

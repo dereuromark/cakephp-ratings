@@ -47,7 +47,7 @@ class RatingsFixture extends TestFixture {
 			'id' => 1,
 			'user_id' => 1,
 			'foreign_key' => 1, // first article
-			'model' => 'Article',
+			'model' => 'Articles',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12'),
@@ -55,7 +55,7 @@ class RatingsFixture extends TestFixture {
 			'id' => 2,
 			'user_id' => 1,
 			'foreign_key' => 1, // first post
-			'model' => 'Post',
+			'model' => 'Posts',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12'),
@@ -63,7 +63,7 @@ class RatingsFixture extends TestFixture {
 			'id' => 3,
 			'user_id' => 1,
 			'foreign_key' => 2, // second post
-			'model' => 'Post',
+			'model' => 'Posts',
 			'value' => 3,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12'));
