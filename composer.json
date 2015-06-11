@@ -1,5 +1,5 @@
 {
-	"name": "cakedc/ratings",
+	"name": "dereuromark/cakephp-ratings",
 	"type": "cakephp-plugin",
 	"description": "Ratings Plugin for CakePHP.",
 	"homepage": "http://github.com/CakeDC/ratings",
