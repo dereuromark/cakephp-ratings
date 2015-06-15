@@ -85,7 +85,7 @@ class RatingHelper extends Helper {
  * @param array $attributes for div container (id, style, ...)
  * @return string $divContainer with rating images
  */
-	public function ratingImage($value, $options = array(), $attr = array()) {
+	public function ratingImage($value, array $options = array(), array $attr = array()) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -151,7 +151,47 @@ class RatingHelper extends Helper {
  * @param array $attributes for div container (id, style, ...)
  * @return string $divContainer with rating images
  */
-	public function image($value, $options = array(), $attr = array()) {
+	public function image($value, array $options = array(), array $attr = array()) {
+		$defaults = [
+			//'type' => 'bootstrap',
+			'data-symbol' => '&#xf005;',
+			'escape' => false,
+			'data-rating-class' => 'rating-fa',
+			'stars' => 5,
+			'steps' => 4,
+		];
+		$options += $defaults;
+
+		if ($value <= 0) {
+			$roundedValue = 0;
+		} else {
+			$roundedValue = round($value * $options['steps']) / $options['steps'];
+		}
+		$percent = $this->percentage($roundedValue, $options['stars']);
+
+		$precision = 2;
+		if ((int)$roundedValue == $roundedValue) {
+			$precision = 0;
+		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
+			$precision = 1;
+		}
+		$title = __d('ratings', '{0} of {1} stars', number_format(min($roundedValue, $options['stars']), $precision, ',', '.'), $options['stars']);
+
+		$attrContent = [
+			'class' => 'rating-stars', 'data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape'],
+			'style' => 'width: ' . $percent . '%'
+		];
+		$content = $this->Html->div(null, '', $attrContent);
+
+		//<div class="rating-container rating-fa" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" title="x of y stars">
+		//	<div class="rating-stars" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" style="width: 20%;"></div>
+		//</div>
+
+		$attr += ['title' => $title];
+		$attr = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attr;
+		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attr);
+
+
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -205,22 +245,36 @@ class RatingHelper extends Helper {
 		return $this->Html->div('ratingStars clearfix', $res, $attr);
 	}
 
+	/**
+	 * @param array $options
+	 * @param array $htmlAttributes
+	 * @return string HTML
+	 */
+	public function input($field, array $options = array(), array $htmlAttributes = array()) {
+
+		$htmlAttributes += $options;
+		return $this->Form->input($field, $htmlAttributes);
+	}
 
 /**
  * Displays a bunch of rating links wrapped into a list element of your choice
  *
  * @param array $options
- * @param array $urlHtmlAttributes Attributes for the rating links inside the list
+ * @param array $htmlAttributes Attributes for the rating links inside the list
  * @return string markup that displays the rating options
  */
-	public function display($options = array(), $urlHtmlAttributes = array()) {
+	public function display(array $options = array(), array $htmlAttributes = array()) {
 		$options += $this->defaults;
 		if (empty($options['item'])) {
 			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
 		}
 
+		if ($options['type'] === 'bootstrap') {
+			return $this->input($options, $htmlAttributes);
+		}
+
 		if ($options['type'] === 'radio' || $options['type'] === 'select') {
-			return $this->starForm($options, $urlHtmlAttributes);
+			return $this->starForm($options, $htmlAttributes);
 		}
 
 		$stars = null;
@@ -236,7 +290,7 @@ class RatingHelper extends Helper {
 					$url['?']['redirect'] = 1;
 				}
 
-				$link = $this->Html->link($i, $url, $urlHtmlAttributes);
+				$link = $this->Html->link($i, $url, $htmlAttributes);
 			}
 			$stars .= $this->Html->tag('li', $link, array('class' => 'star' . $i));
 		}
@@ -259,7 +313,7 @@ class RatingHelper extends Helper {
  * @param array options
  * @return string
  */
-	public function bar($value = 0, $total = 0, $options = array()) {
+	public function bar($value, $total, array $options = array()) {
 		$defaultOptions = array(
 			'innerClass' => 'inner',
 			'innerHtml' => '<span>%value%</span>',
@@ -294,8 +348,8 @@ class RatingHelper extends Helper {
  * @param integer precision of rounding
  * @return mixed float or integer based on the precision value
  */
-	public function percentage($value = 0, $total = 0, $precision = 2) {
-		if ($total) {
+	public function percentage($value, $total, $precision = 2) {
+		if ($total > 0) {
 			return (round($value / $total, $precision) * 100);
 		}
 		return 0;
