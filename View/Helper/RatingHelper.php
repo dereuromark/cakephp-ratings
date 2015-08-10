@@ -9,6 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('AppHelper', 'View/Helper');
+App::uses('CakeText', 'Utility');
 
 /**
  * CakePHP Ratings Plugin
@@ -116,13 +117,13 @@ class RatingHelper extends AppHelper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= String::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= CakeText::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= String::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= CakeText::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
 			}
 		}
 
@@ -179,13 +180,13 @@ class RatingHelper extends AppHelper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= String::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= CakeText::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= String::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= CakeText::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
 			}
 		}
 
