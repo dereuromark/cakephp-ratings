@@ -76,7 +76,7 @@ class RatingHelperTest extends TestCase {
 		$expected = '<div class="barRating"><div style="width: 50%" class="inner"><span>1</span></div></div>';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Rating->bar(1, 4, array('innerHtml' => '<span>%percentage%</span>'));
+		$result = $this->Rating->bar(1, 4, ['innerHtml' => '<span>%percentage%</span>']);
 		$expected = '<div class="barRating"><div style="width: 25%" class="inner"><span>25</span></div></div>';
 		$this->assertEquals($expected, $result);
 	}
@@ -97,10 +97,10 @@ class RatingHelperTest extends TestCase {
  * @return void
  */
 	public function testDisplay() {
-		$options = array(
+		$options = [
 			'item' => '42',
-			'url' => array('controller' => 'Articles', 'action' => 'rate'),
-			'stars' => 5);
+			'url' => ['controller' => 'Articles', 'action' => 'rate'],
+			'stars' => 5];
 		$result = $this->Rating->display($options);
 		$expected =
 		'<ul class="rating rating-0">' .
@@ -112,11 +112,11 @@ class RatingHelperTest extends TestCase {
 		'</ul>';
 		$this->assertEquals($expected, $result);
 
-		$options = array_merge($options, array(
+		$options = array_merge($options, [
 			'type' => 'ol',
 			'redirect' => false,
 			'value' => '2.25',
-			'stars' => '1'));
+			'stars' => '1']);
 		$result = $this->Rating->display($options);
 		$expected =
 		'<ol class="rating rating-2">' .
@@ -124,8 +124,8 @@ class RatingHelperTest extends TestCase {
 		'</ol>';
 		$this->assertEquals($expected, $result);
 
-		$options = array_merge($options, array(
-			'type' => 'div'));
+		$options = array_merge($options, [
+			'type' => 'div']);
 		$result = $this->Rating->display($options);
 		$expected =
 		'<ul class="rating rating-2">' .
@@ -133,21 +133,21 @@ class RatingHelperTest extends TestCase {
 		'</ul>';
 		$this->assertEquals($expected, $result);
 
-		$options = array(
+		$options = [
 			'item' => '42',
 			'type' => 'radio',
-			'url' => array('controller' => 'Articles', 'action' => 'rate'),
-			'stars' => 2);
+			'url' => ['controller' => 'Articles', 'action' => 'rate'],
+			'stars' => 2];
 		$result = $this->Rating->display($options);
 
 		$expected = '<div class="input radio"><input type="radio" name="data[rating]" id="Rating1" value="1" /><label for="Rating1">1</label><input type="radio" name="data[rating]" id="Rating2" value="2" /><label for="Rating2">2</label></div>';
 		//$this->assertEquals($expected, $result);
 
-		$options = array(
+		$options = [
 			'item' => '42',
 			'type' => 'radio',
-			'url' => array('controller' => 'Articles', 'action' => 'rate'),
-			'stars' => 2);
+			'url' => ['controller' => 'Articles', 'action' => 'rate'],
+			'stars' => 2];
 		$result = $this->Rating->display($options);
 
 		$expected = '<div class="input radio"><input type="radio" name="data[rating]" id="Rating1" value="1" /><label for="Rating1">1</label><input type="radio" name="data[rating]" id="Rating2" value="2" /><label for="Rating2">2</label></div>';

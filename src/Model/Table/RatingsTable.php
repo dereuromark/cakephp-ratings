@@ -28,7 +28,7 @@ class RatingsTable extends Table {
  *
  * @var array $validate
  */
-	public $validate = array();
+	public $validate = [];
 
 
 	public function initialize(array $config) {
@@ -42,27 +42,27 @@ class RatingsTable extends Table {
 			$userClass = 'Users';
 		}
 
-		$this->belongsTo('Users', array(
+		$this->belongsTo('Users', [
 				'className' => $userClass, 'foreignKey' => 'user_id'
-			)
+			]
 		);
 	}
 
 	public function buildValidator() {
-		$rules = array(
-			'notBlank' => array(
+		$rules = [
+			'notBlank' => [
 				'required' => true,
-				'rule' => 'notBlank'));
+				'rule' => 'notBlank']];
 
-		$this->validate = array(
-			'user_id' => array(
-				'required' => $rules['notEmpty']),
-			'model' => array(
-				'required' => $rules['notEmpty']),
-			'foreign_key' => array(
-				'required' => $rules['notEmpty']),
-			'value' => array(
-				'required' => $rules['notEmpty']));
+		$this->validate = [
+			'user_id' => [
+				'required' => $rules['notEmpty']],
+			'model' => [
+				'required' => $rules['notEmpty']],
+			'foreign_key' => [
+				'required' => $rules['notEmpty']],
+			'value' => [
+				'required' => $rules['notEmpty']]];
 	}
 
 }

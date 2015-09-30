@@ -38,28 +38,28 @@ class InitializeRatingsSchema extends CakeMigration {
  * @var array $migration
  * @access public
  */
-	public $migration = array(
-		'up' => array(
-			'create_table' => array(
-				'ratings' => array(
-					'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'),
-					'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-					'foreign_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-					'model' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'index'),
-					'value' => array('type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'),
-					'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-					'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-					'indexes' => array(
-						'PRIMARY' => array('column' => 'id', 'unique' => 1),
-						'UNIQUE_RATING' => array('column' => array('user_id', 'foreign_key', 'model'), 'unique' => 1)
-					)
-				)
-			)
-		),
-		'down' => array(
-			'drop_table' => array('ratings')
-		)
-	);
+	public $migration = [
+		'up' => [
+			'create_table' => [
+				'ratings' => [
+					'id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'],
+					'user_id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+					'foreign_key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+					'model' => ['type' => 'string', 'null' => false, 'default' => null, 'key' => 'index'],
+					'value' => ['type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'],
+					'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
+					'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
+					'indexes' => [
+						'PRIMARY' => ['column' => 'id', 'unique' => 1],
+						'UNIQUE_RATING' => ['column' => ['user_id', 'foreign_key', 'model'], 'unique' => 1]
+					]
+				]
+			]
+		],
+		'down' => [
+			'drop_table' => ['ratings']
+		]
+	];
 
 /**
  * Before migration callback

@@ -26,13 +26,13 @@ class RatingsComponent extends Component {
  *
  * @var array $components
  */
-	public $components = array('RequestHandler', 'Flash');
+	public $components = ['RequestHandler', 'Flash'];
 
 	protected $_defaultConfig = [
 		'enabled' => true,
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
-		'params' => array('rate' => true, 'rating' => true, 'redirect' => true),
+		'params' => ['rate' => true, 'rating' => true, 'redirect' => true],
 		'userId' => 'id', // or bool
 		''
 	];
@@ -137,7 +137,7 @@ class RatingsComponent extends Component {
  * @return array
  */
 	public function buildUrl() {
-		$params = array('plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']);
+		$params = ['plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']];
 		$params = array_merge($params, $this->Controller->request->params['pass']);
 		foreach ($this->Controller->request->query as $name => $value) {
 			if (!isset($this->_config['params'][$name])) {

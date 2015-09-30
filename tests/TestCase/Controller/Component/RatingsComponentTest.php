@@ -39,14 +39,14 @@ class ArticlesTestController extends Controller {
  *
  * @var array
  */
-	public $helpers = array('Html', 'Form');
+	public $helpers = ['Html', 'Form'];
 
 /**
  * Components used
  *
  * @var array
  */
-	public $components = array('Ratings.Ratings', 'Auth', 'Flash');
+	public $components = ['Ratings.Ratings', 'Auth', 'Flash'];
 
 /**
  * test method
@@ -97,12 +97,12 @@ class RatingsComponentTest extends TestCase {
  *
  * @var array
  */
-	public $fixtures = array(
+	public $fixtures = [
 		'core.cake_sessions',
 		'plugin.ratings.ratings',
 		'plugin.ratings.articles',
 		'plugin.ratings.users'
-	);
+	];
 
 /**
  * startTest method
@@ -151,8 +151,8 @@ class RatingsComponentTest extends TestCase {
  * @return void
  */
 	public function testInitialize() {
-		$this->_initControllerAndRatings(array(), false);
-		$this->assertEquals(array('Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
+		$this->_initControllerAndRatings([], false);
+		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		//$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
@@ -163,14 +163,14 @@ class RatingsComponentTest extends TestCase {
  * @return void
  */
 	public function testInitializeWithParamsForBehavior() {
-		$this->Controller->components = array(
-			'Ratings.Ratings' => array(
-				'update' => true),
-			'Auth');
+		$this->Controller->components = [
+			'Ratings.Ratings' => [
+				'update' => true],
+			'Auth'];
 
-		$this->_initControllerAndRatings(array());
-		$this->assertEquals(array(
-			'Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
+		$this->_initControllerAndRatings([]);
+		$this->assertEquals([
+			'Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		$this->assertTrue($this->Controller->Articles->behaviors()->Ratable->config('update'), 'Ratable behavior should be updatable.');
 		//$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
@@ -182,15 +182,15 @@ class RatingsComponentTest extends TestCase {
  * @return void
  */
 	public function testInitializeWithParamsForComponent() {
-		$this->Controller->components = array(
-			'Ratings.Ratings' => array(
-				'actions' => array('show')),
-			'Auth');
+		$this->Controller->components = [
+			'Ratings.Ratings' => [
+				'actions' => ['show']],
+			'Auth'];
 
-		$this->_initControllerAndRatings(array('action' => 'show'));
-		$this->assertEquals(array('Html' => null, 'Form' => null, 'Ratings.Rating'), $this->Controller->helpers);
+		$this->_initControllerAndRatings(['action' => 'show']);
+		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
-		$this->assertEquals(array('show'), $this->Controller->Ratings->config('actions'));
+		$this->assertEquals(['show'], $this->Controller->Ratings->config('actions'));
 		//$this->assertEquals('Articles', $this->Controller->Ratings->config('modelName'));
 	}
 
@@ -208,19 +208,19 @@ class RatingsComponentTest extends TestCase {
 			->will($this->returnValue(array('1')));
 		*/
 
-		$params = array(
+		$params = [
 			'plugin' => null,
 			'controller' => 'Articles',
 			'action' => 'test',
-			'pass' => array(),
-			'?' => array(
+			'pass' => [],
+			'?' => [
 				'rating' => '5',
 				'rate' => '2',
-				'redirect' => true));
-		$expectedRedirect = array(
+				'redirect' => true]];
+		$expectedRedirect = [
 			'plugin' => null,
 			'controller' => 'Articles',
-			'action' => 'test');
+			'action' => 'test'];
 /*
 		$this->Controller->Session->expectCallCount('setFlash', 3);
 
@@ -258,19 +258,19 @@ class RatingsComponentTest extends TestCase {
 			->will($this->returnValue(1));
 		*/
 
-		$params = array(
+		$params = [
 			'plugin' => null,
 			'controller' => 'Articles',
 			'action' => 'test',
-			'pass' => array(),
-			'?' => array(
+			'pass' => [],
+			'?' => [
 				'rate' => '2',
-				'redirect' => true));
-		$expectedRedirect = array(
+				'redirect' => true]];
+		$expectedRedirect = [
 			'plugin' => null,
 			'controller' => 'Articles',
-			'action' => 'test');
-		$this->Controller->request->data = array('rating' => 2);
+			'action' => 'test'];
+		$this->Controller->request->data = ['rating' => 2];
 
 		//$this->Controller->Session->write('Message', null);
 
@@ -285,25 +285,25 @@ class RatingsComponentTest extends TestCase {
  * @return void
  */
 	public function testBuildUrl() {
-		$params = array(
+		$params = [
 			'plugin' => null,
 			'controller' => 'Articles',
 			'action' => 'test',
-			'pass' => array(),
-			'?' => array(
+			'pass' => [],
+			'?' => [
 				'foo' => 'bar',
 				'rating' => 'test',
 				'rate' => '5',
-				'redirect' => true));
+				'redirect' => true]];
 		$this->_initControllerAndRatings($params);
 
 		$result = $this->Controller->Ratings->buildUrl();
-		$expected = array(
+		$expected = [
 			'plugin' => null,
 			'controller' => 'Articles',
 			'action' => 'test',
-			'?' => array('foo' => 'bar')
-		);
+			'?' => ['foo' => 'bar']
+		];
 		$this->assertEquals($expected, $result);
 	}
 
@@ -313,8 +313,8 @@ class RatingsComponentTest extends TestCase {
  * @param array $params Controller params
  * @return void
  */
-	protected function _initControllerAndRatings($params = array()) {
-		$_default = array('?' => array(), 'pass' => array());
+	protected function _initControllerAndRatings($params = []) {
+		$_default = ['?' => [], 'pass' => []];
 		$this->Controller->request->params = array_merge($_default, $params);
 		if (!empty($this->Controller->request->params['?'])) {
 			$this->Controller->request->query = $this->Controller->request->params['?'];

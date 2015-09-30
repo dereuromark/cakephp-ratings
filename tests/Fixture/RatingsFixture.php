@@ -26,7 +26,7 @@ class RatingsFixture extends TestFixture {
  *
  * @var array
  */
-	public $fields = array(
+	public $fields = [
 		'id' => ['type' => 'integer', 'null' => false],
 		'user_id' => ['type' => 'integer', 'null' => true, 'default' => null],
 		'foreign_key' => ['type' => 'string', 'null' => true, 'default' => null],
@@ -35,36 +35,36 @@ class RatingsFixture extends TestFixture {
 		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_RATING' => ['type' => 'unique', 'columns' => ['user_id', 'foreign_key', 'model']]]
-	);
+	];
 
 /**
  * Records
  *
  * @var array
  */
-	public $records = array(
-		array(
+	public $records = [
+		[
 			'id' => 1,
 			'user_id' => 1,
 			'foreign_key' => 1, // first article
 			'model' => 'Articles',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12'),
-		array(
+			'modified' => '2009-01-01 12:12:12'],
+		[
 			'id' => 2,
 			'user_id' => 1,
 			'foreign_key' => 1, // first post
 			'model' => 'Posts',
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12'),
-		array(
+			'modified' => '2009-01-01 12:12:12'],
+		[
 			'id' => 3,
 			'user_id' => 1,
 			'foreign_key' => 2, // second post
 			'model' => 'Posts',
 			'value' => 3,
 			'created' => '2009-01-01 12:12:12',
-			'modified' => '2009-01-01 12:12:12'));
+			'modified' => '2009-01-01 12:12:12']];
 }

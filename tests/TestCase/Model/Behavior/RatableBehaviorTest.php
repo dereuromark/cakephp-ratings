@@ -36,12 +36,12 @@ class RatableBehaviorTest extends TestCase {
  *
  * @var array
  */
-	public $fixtures = array(
+	public $fixtures = [
 		'plugin.ratings.ratings',
 		'plugin.ratings.articles',
 		'plugin.ratings.posts',
 		'plugin.ratings.users'
-	);
+	];
 
 /**
  * startTest
@@ -74,7 +74,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testCalculateRating() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$result = $this->Articles->calculateRating(1);
 		$this->assertEquals('1.0000', $result['rating']);
 
@@ -87,11 +87,11 @@ class RatableBehaviorTest extends TestCase {
 		$result = $this->Articles->calculateRating(2);
 		$this->assertEquals($result['rating'], '0');
 
-		$data = array(
+		$data = [
 			'foreign_key' => 1,
 			'model' => 'Articles',
 			'user_id' => '3',
-			'value' => 2.5000);
+			'value' => 2.5000];
 		$rating = $this->Articles->Ratings->newEntity($data);
 		$this->Articles->Ratings->save($rating);
 		$result = $this->Articles->calculateRating(1);
@@ -114,7 +114,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testIncrementRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1)->toArray();
 		$this->assertEquals($result['rating'], '1.0000');
 		$this->assertEquals($result['rating_count'], 2);
@@ -122,13 +122,13 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testIncrementRatingCalc() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1, false);
 		$this->assertEquals($result, '1.0000');
 	}
 
 	public function testIncrementRatingOtherField() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1, 'title')->toArray();
 		$this->assertEquals($result['title'], '1.0000');
 		$this->assertEquals($result['rating_count'], 2);
@@ -136,18 +136,18 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testIncrementRatingCalc2() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(2, 1)->toArray();
 		$this->assertEquals($result['rating'], '2');
 	}
 
 	public function testIncrementRatingNewRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
-		$data = array(
+		$this->Posts->addBehavior('Ratings.Ratable', []);
+		$data = [
 			'foreign_key' => '1',
 			'model' => 'Posts',
 			'user_id' => '3',
-			'value' => 2.5000);
+			'value' => 2.5000];
 		$rating = $this->Posts->Ratings->newEntity($data);
 		$this->Posts->Ratings->save($rating);
 		$result = $this->Posts->incrementRating(1, 2.5)->toArray();
@@ -158,7 +158,7 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testDecrementRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1);
 		$this->assertEquals($result['rating'], '0.0000');
 		$this->assertEquals($result['rating_count'], 0);
@@ -166,13 +166,13 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testDecrementRatingCalc() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, false);
 		$this->assertEquals($result, '0.0000');
 	}
 
 	public function testDecrementRatingOtherField() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, 'title');
 		$this->assertEquals($result['title'], '0.0000');
 		$this->assertEquals($result['rating_count'], 0);
@@ -180,18 +180,18 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testDecrementRatingCalc2() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(2, 1);
 		$this->assertEquals($result['rating'], '0');
 	}
 
 	public function testDecrementRatingNewRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
-		$data = array(
+		$this->Posts->addBehavior('Ratings.Ratable', []);
+		$data = [
 			'foreign_key' => 1,
 			'model' => 'Posts',
 			'user_id' => '3',
-			'value' => 2.5);
+			'value' => 2.5];
 		$rating = $this->Posts->Ratings->newEntity($data);
 		$this->Posts->Ratings->save($rating);
 
@@ -218,7 +218,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testSaveRating() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Articles->saveRating(1, $userId, 4)->toArray();
 		$this->assertInternalType('array', $result);
@@ -234,7 +234,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testSaveRatingWithAdditionalFields() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Posts->saveRating(1, $userId, 4)->toArray();
 		$this->assertInternalType('array', $result);
@@ -252,8 +252,8 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testSaveUpdatedRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array(
-			'update' => true));
+		$this->Posts->addBehavior('Ratings.Ratable', [
+			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
@@ -264,8 +264,8 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testSaveUpdatedRatingForNewRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array(
-			'update' => true));
+		$this->Posts->addBehavior('Ratings.Ratable', [
+			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
 
@@ -281,7 +281,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testRemoveRating() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Articles->saveRating(1, $userId, 4)->toArray();
 		$this->assertInternalType('array', $result);
@@ -301,7 +301,7 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testRemoveRatingWithAdditionalFields() {
-		$this->Posts->addBehavior('Ratings.Ratable', array());
+		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Posts->saveRating(1, $userId, 4)->toArray();
 		$this->assertInternalType('array', $result);
@@ -325,8 +325,8 @@ class RatableBehaviorTest extends TestCase {
  * @return void
  */
 	public function testRemoveUpdatedRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array(
-			'update' => true));
+		$this->Posts->addBehavior('Ratings.Ratable', [
+			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
@@ -344,8 +344,8 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testRemoveUpdatedRatingForNewRating() {
-		$this->Posts->addBehavior('Ratings.Ratable', array(
-			'update' => true));
+		$this->Posts->addBehavior('Ratings.Ratable', [
+			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
 
@@ -366,7 +366,7 @@ class RatableBehaviorTest extends TestCase {
  *
  */
 	public function testIsRatedBy() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = 1; // phpnut
 		$foreignKey = 1;
 		$result = $this->Articles->isRatedBy($foreignKey, $userId);
@@ -376,19 +376,19 @@ class RatableBehaviorTest extends TestCase {
 
 		unset($result['created']);
 		unset($result['modified']);
-		$expected = array(
+		$expected = [
 			'id' => 1,
 			'user_id' => 1,
 			'foreign_key' => '1',
 			'model' => 'Articles',
 			'value' => 1.0,
-		);
+		];
 		$this->assertEquals($expected, $result);
 
 		$userId = 1; // phpnut
-		$foreignKey = array(1, 2);
+		$foreignKey = [1, 2];
 		$result = $this->Articles->isRatedBy($foreignKey, $userId);
-		$this->assertEquals(array(1), $result);
+		$this->assertEquals([1], $result);
 	}
 
 /**
@@ -396,7 +396,7 @@ class RatableBehaviorTest extends TestCase {
  *
  */
 	public function testRate() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '3'; // phpnut
 		$foreignKey = 1;
 		$result = $this->Articles->rate($foreignKey, $userId, 'up');
@@ -420,19 +420,19 @@ class RatableBehaviorTest extends TestCase {
  *
  */
 	public function testCacheRatingStatistics() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$this->Articles->saveRating(1, 4, 3);
 
-		$data = array(
+		$data = [
 			'type' => 'saveRating',
 			'foreignKey' => 1,
 			'userId' => 4,
 			'value' => 3,
 			'update' => false,
 			'oldRating' => false,
-			'result' => array(
+			'result' => [
 				'rating' => 2.00000000,
-				'id' => 1));
+				'id' => 1]];
 
 		$result = $this->Articles->cacheRatingStatistics($data);
 		$this->assertTrue(!empty($result));
@@ -443,40 +443,40 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testCacheRatingStatisticsForRemove() {
-		$this->Articles->addBehavior('Ratings.Ratable', array());
+		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$this->Articles->saveRating(1, 4, 3);
 
-		$oldRating = $this->Articles->Ratings->find('all', array(
+		$oldRating = $this->Articles->Ratings->find('all', [
 			'recursive' => -1,
-			'conditions' => array(
+			'conditions' => [
 				'Ratings.model' => 'Articles',
 				'Ratings.foreign_key' => 1,
-				'Ratings.user_id' => 4)))->first();
+				'Ratings.user_id' => 4]])->first();
 		$result = $this->Articles->removeRating(1, 4);
 
-		$data = array(
+		$data = [
 			'type' => 'saveRating',
 			'foreignKey' => 1,
 			'userId' => 4,
 			'value' => 3,
 			'update' => false,
 			'oldRating' => false,
-			'result' => array(
+			'result' => [
 				'rating' => 2.00000000,
-				'id' => 1));
+				'id' => 1]];
 
 		$result = $this->Articles->cacheRatingStatistics($data);
 
-		$data = array(
+		$data = [
 			'type' => 'removeRating',
 			'foreignKey' => 1,
 			'userId' => 4,
 			'value' => 3,
 			'update' => false,
 			'oldRating' => $oldRating,
-			'result' => array(
+			'result' => [
 				'rating' => 1.00000000,
-				'id' => 1));
+				'id' => 1]];
 
 		$result = $this->Articles->cacheRatingStatistics($data);
 		$this->assertTrue(!empty($result));

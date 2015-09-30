@@ -25,39 +25,39 @@ class RatingHelper extends Helper {
  *
  * @var array
  */
-	public $helpers = array ('Html', 'Form');
+	public $helpers = ['Html', 'Form'];
 
 /**
  * Allowed types of html list elements
  *
  * @var array $allowedTypes
  */
-	public $allowedTypes = array('ul', 'ol', 'radio');
+	public $allowedTypes = ['ul', 'ol', 'radio'];
 
 /**
  * Default settings
  *
  * @var array $defaults
  */
-	public $defaults = array(
+	public $defaults = [
 		'stars' => 5,
 		'item' => null,
 		'value' => 0,
 		'type' => 'ul',
 		'createForm' => false,
-		'url' => array(),
+		'url' => [],
 		'link' => true,
 		'redirect' => true,
 		'class' => 'rating',
 		'js' => false,
-	);
+	];
 
 /**
  * Sizes for rating image
  *
  * @var array
  */
-	public $sizes = array('large' => 28, 'medium' => 16, 'small' => 12);
+	public $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
 /**
  * Rounds the value according to the steps used (between min/max inclusivly)
@@ -85,7 +85,7 @@ class RatingHelper extends Helper {
  * @param array $attributes for div container (id, style, ...)
  * @return string $divContainer with rating images
  */
-	public function ratingImage($value, array $options = array(), array $attr = array()) {
+	public function ratingImage($value, array $options = [], array $attr = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -102,10 +102,10 @@ class RatingHelper extends Helper {
 			$roundedValue = $this->round($value, $steps, 1, $stars);
 		}
 
-		$array = array(
+		$array = [
 			0 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-on" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
 			1 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-disabled" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
-		);
+		];
 
 		$res = '';
 		$disable = 0;
@@ -119,13 +119,13 @@ class RatingHelper extends Helper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= Text::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= Text::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= Text::insert($v, ['margin' => $margin, 'width' => $pixels / $steps], ['before' => '{', 'after' => '}']);
 			}
 		}
 
@@ -135,9 +135,9 @@ class RatingHelper extends Helper {
 		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
 			$precision = 1;
 		}
-		$defaults = array(
+		$defaults = [
 			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $stars),
-		);
+		];
 		$attr = array_merge($defaults, $attr);
 		return $this->Html->div('ratingStars clearfix', $res, $attr);
 	}
@@ -151,7 +151,7 @@ class RatingHelper extends Helper {
  * @param array $attributes for div container (id, style, ...)
  * @return string $divContainer with rating images
  */
-	public function image($value, array $options = array(), array $attr = array()) {
+	public function image($value, array $options = [], array $attr = []) {
 		$defaults = [
 			//'type' => 'bootstrap',
 			'data-symbol' => '&#xf005;',
@@ -205,10 +205,10 @@ class RatingHelper extends Helper {
 		}
 		$stars = !empty($options['stars']) ? $options['stars'] : 5;
 
-		$array = array(
+		$array = [
 			0 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-on" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
 			1 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-disabled" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
-		);
+		];
 
 		$res = '';
 		$disable = 0;
@@ -222,13 +222,13 @@ class RatingHelper extends Helper {
 				if ($j === 0) {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= Text::insert($v, array('margin' => 0, 'width' => $pixels), array('before' => '{', 'after' => '}'));
+						$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
 						break;
 					}
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= Text::insert($v, array('margin' => $margin, 'width' => $pixels / $steps), array('before' => '{', 'after' => '}'));
+				$res .= Text::insert($v, ['margin' => $margin, 'width' => $pixels / $steps], ['before' => '{', 'after' => '}']);
 			}
 		}
 
@@ -238,9 +238,9 @@ class RatingHelper extends Helper {
 		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
 			$precision = 1;
 		}
-		$defaults = array(
+		$defaults = [
 			'title' => number_format(min($roundedValue, $stars), $precision, ',', '.') . ' ' . __('von') . ' ' . $stars . ' ' . __('Sternen'),
-		);
+		];
 		$attr = array_merge($defaults, $attr);
 		return $this->Html->div('ratingStars clearfix', $res, $attr);
 	}
@@ -250,7 +250,7 @@ class RatingHelper extends Helper {
 	 * @param array $htmlAttributes
 	 * @return string HTML
 	 */
-	public function input($field, array $options = array(), array $htmlAttributes = array()) {
+	public function input($field, array $options = [], array $htmlAttributes = []) {
 
 		$htmlAttributes += $options;
 		return $this->Form->input($field, $htmlAttributes);
@@ -263,7 +263,7 @@ class RatingHelper extends Helper {
  * @param array $htmlAttributes Attributes for the rating links inside the list
  * @return string markup that displays the rating options
  */
-	public function display(array $options = array(), array $htmlAttributes = array()) {
+	public function display(array $options = [], array $htmlAttributes = []) {
 		$options += $this->defaults;
 		if (empty($options['item'])) {
 			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
@@ -283,16 +283,16 @@ class RatingHelper extends Helper {
 			if ($options['link']) {
 				$url = $options['url'];
 				if (!isset($url['?'])) {
-					$url['?'] = array();
+					$url['?'] = [];
 				}
-				$url['?'] = array_merge($url['?'], array('rate' => $options['item'], 'rating' => $i));
+				$url['?'] = array_merge($url['?'], ['rate' => $options['item'], 'rating' => $i]);
 				if ($options['redirect']) {
 					$url['?']['redirect'] = 1;
 				}
 
 				$link = $this->Html->link($i, $url, $htmlAttributes);
 			}
-			$stars .= $this->Html->tag('li', $link, array('class' => 'star' . $i));
+			$stars .= $this->Html->tag('li', $link, ['class' => 'star' . $i]);
 		}
 
 		if (in_array($options['type'], $this->allowedTypes)) {
@@ -301,7 +301,7 @@ class RatingHelper extends Helper {
 			$type = 'ul';
 		}
 
-		$stars = $this->Html->tag($type, $stars, array('class' => $options['class'] . ' ' . 'rating-' . round($options['value'], 0)));
+		$stars = $this->Html->tag($type, $stars, ['class' => $options['class'] . ' ' . 'rating-' . round($options['value'], 0)]);
 		return $stars;
 	}
 
@@ -313,23 +313,23 @@ class RatingHelper extends Helper {
  * @param array options
  * @return string
  */
-	public function bar($value, $total, array $options = array()) {
-		$defaultOptions = array(
+	public function bar($value, $total, array $options = []) {
+		$defaultOptions = [
 			'innerClass' => 'inner',
 			'innerHtml' => '<span>%value%</span>',
-			'innerOptions' => array(),
+			'innerOptions' => [],
 			'outerClass' => 'barRating',
-			'outerOptions' => array(),
-			'element' => null);
+			'outerOptions' => [],
+			'element' => null];
 		$options += $defaultOptions;
 
 		$percentage = $this->percentage($value, $total);
 
 		if (!empty($options['element'])) {
-			return $this->_View->element($options['element'], array(
+			return $this->_View->element($options['element'], [
 				'value' => $value,
 				'percentage' => $percentage,
-				'total' => $total));
+				'total' => $total]);
 		}
 
 		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
@@ -362,7 +362,7 @@ class RatingHelper extends Helper {
  * @param array $htmlAttributes Attributes for the rating links inside the list
  * @return string markup that displays the rating options
  */
-	public function starForm($options = array(), $htmlAttributes = array()) {
+	public function starForm($options = [], $htmlAttributes = []) {
 		$options += $this->defaults;
 		$flush = false;
 		if (empty($options['item'])) {
@@ -379,12 +379,12 @@ class RatingHelper extends Helper {
 			$inputField = $options['inputField'];
 		}
 
-		$inputOptions = array(
-			'type' => in_array($options['type'], array('radio', 'select')) ? $options['type'] : 'radio',
+		$inputOptions = [
+			'type' => in_array($options['type'], ['radio', 'select']) ? $options['type'] : 'radio',
 			'id' => 'starelement_' . $id,
 			'value' => isset($options['value']) ? round($options['value']) : 0,
 			'options' => array_combine(range(1, $options['stars']), range(1, $options['stars']))
-		);
+		];
 		if ($options['js']) {
 			$inputOptions['type'] = 'select';
 		}
@@ -395,7 +395,7 @@ class RatingHelper extends Helper {
 		$result .= '</div>';
 		if ($options['createForm']) {
 			if (!empty($options['target']) && !empty($options['createForm']['url']) && !empty($options['createForm']['ajaxOptions'])) {
-				$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(array('url' => $options['createForm']['url']), $options['createForm']['ajaxOptions'])) . "\n";
+				$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
 				$flush = true;
 			} else {
 				$result .= $this->Form->submit(__d('ratings', 'Rate!')) . "\n";

@@ -29,7 +29,7 @@ class PostsFixture extends TestFixture {
  * @var array
  * @access public
  */
-	public $fields = array(
+	public $fields = [
 		'id' => ['type' => 'integer'],
 		'title' => ['type' => 'string', 'null' => false],
 		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
@@ -37,7 +37,7 @@ class PostsFixture extends TestFixture {
 		'rating_count' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'],
 		'integer_rating' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
-	);
+	];
 
 /**
  * records property
@@ -45,28 +45,28 @@ class PostsFixture extends TestFixture {
  * @var array
  * @access public
  */
-	public $records = array(
-		array(
+	public $records = [
+		[
 			'id' => 1,
 			'title' => 'First Post',
 			'rating' => 1.0,
 			'rating_sum' => 1,
 			'rating_count' => 1,
-			'integer_rating' => 1),
-		array(
+			'integer_rating' => 1],
+		[
 			'id' => 2,
 			'title' => 'Second Post',
 			'rating' => 3.0,
 			'rating_sum' => 3,
 			'rating_count' => 1,
-			'integer_rating' => -3),
-		array(
+			'integer_rating' => -3],
+		[
 			'id' => 3,
 			'title' => '3rd Post',
 			'rating' => 0.0,
 			'rating_sum' => 0,
 			'rating_count' => 0,
-			'integer_rating' => 0),
-	);
+			'integer_rating' => 0],
+	];
 
 }

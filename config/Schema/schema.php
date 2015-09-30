@@ -31,7 +31,7 @@ class RatingsSchema extends CakeSchema {
  * @return boolean
  * @access public
  */
-	public function before($event = array()) {
+	public function before($event = []) {
 		return true;
 	}
 
@@ -41,7 +41,7 @@ class RatingsSchema extends CakeSchema {
  * @return void
  * @access public
  */
-	public function after($event = array()) {
+	public function after($event = []) {
 	}
 
 /**
@@ -50,17 +50,17 @@ class RatingsSchema extends CakeSchema {
  * @var array
  * @access public
  */
-	public $ratings = array(
-		'id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'),
-		'user_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36),
-		'model' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'index'),
-		'value' => array('type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'UNIQUE_RATING' => array('column' => array('user_id', 'foreign_key', 'model'), 'unique' => 1)
-		)
-	);
+	public $ratings = [
+		'id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'],
+		'user_id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+		'foreign_key' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],
+		'model' => ['type' => 'string', 'null' => false, 'default' => null, 'key' => 'index'],
+		'value' => ['type' => 'float', 'null' => true, 'default' => '0', 'length' => '8,4'],
+		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
+		'indexes' => [
+			'PRIMARY' => ['column' => 'id', 'unique' => 1],
+			'UNIQUE_RATING' => ['column' => ['user_id', 'foreign_key', 'model'], 'unique' => 1]
+		]
+	];
 }

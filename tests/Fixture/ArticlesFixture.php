@@ -29,7 +29,7 @@ class ArticlesFixture extends TestFixture {
  * @var array
  * @access public
  */
-	public $fields = array(
+	public $fields = [
 		'id' => ['type' => 'integer'],
 		'user_id' => ['type' => 'integer', 'null' => false, 'length' => 10],
 		'title' => ['type' => 'string', 'null' => false],
@@ -41,7 +41,7 @@ class ArticlesFixture extends TestFixture {
 		'rating_4' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'rating_5' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
-	);
+	];
 
 /**
  * records property
@@ -49,8 +49,8 @@ class ArticlesFixture extends TestFixture {
  * @var array
  * @access public
  */
-	public $records = array(
-		array(
+	public $records = [
+		[
 			'id' => 1,
 			'user_id' => 0,
 			'title' => 'First Article',
@@ -60,8 +60,8 @@ class ArticlesFixture extends TestFixture {
 			'rating_2' => 0,
 			'rating_3' => 0,
 			'rating_4' => 0,
-			'rating_5' => 0),
-		array(
+			'rating_5' => 0],
+		[
 			'id' => 2,
 			'user_id' => 0,
 			'title' => 'First Article',
@@ -71,6 +71,6 @@ class ArticlesFixture extends TestFixture {
 			'rating_2' => 0,
 			'rating_3' => 0,
 			'rating_4' => 0,
-			'rating_5' => 0));
+			'rating_5' => 0]];
 
 }

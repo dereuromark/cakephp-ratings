@@ -29,7 +29,7 @@ class UsersFixture extends TestFixture {
  * @var array $fields
  * @access public
  */
-	public $fields = array(
+	public $fields = [
 		'id' => ['type' => 'string', 'null' => false, 'length' => 36],
 		'account_type' => ['type' => 'string', 'null' => false, 'length' => 8],
 		'url' => ['type' => 'string', 'null' => false],
@@ -50,7 +50,7 @@ class UsersFixture extends TestFixture {
 		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_URL' => ['type' => 'unique', 'columns' => 'url']]
-	);
+	];
 
 /**
  * Records
@@ -58,8 +58,8 @@ class UsersFixture extends TestFixture {
  * @var array $records
  * @access public
  */
-	public $records = array(
-		array(
+	public $records = [
+		[
 			'id' => '1',
 			'account_type' => 'local',
 			'url' => '/user/phpnut',
@@ -79,8 +79,8 @@ class UsersFixture extends TestFixture {
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
 			'modified' => '2008-03-25 02:45:46'
-		),
-		array(
+		],
+		[
 			'id' => '2',
 			'account_type' => 'remote',
 			'url' => '/user/floriank',
@@ -100,8 +100,8 @@ class UsersFixture extends TestFixture {
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
 			'modified' => '2008-03-25 02:45:46'
-		),
-		array(
+		],
+		[
 			'id' => '3',
 			'account_type' => 'remote',
 			'url' => '/user/user1',
@@ -121,8 +121,8 @@ class UsersFixture extends TestFixture {
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
 			'modified' => '2008-03-25 02:45:46'
-		),
-		array(
+		],
+		[
 			'id' => '4',
 			'account_type' => 'local',
 			'url' => '/user/oidtest',
@@ -142,8 +142,8 @@ class UsersFixture extends TestFixture {
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
 			'modified' => '2008-03-25 02:45:46'
-		)
-	);
+		]
+	];
 
 /**
  *

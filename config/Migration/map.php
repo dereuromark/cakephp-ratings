@@ -22,6 +22,6 @@
  * @subpackage	config.migrations
  */
 
-$map = array(
-	1 => array('001_initialize_ratings_schema' => 'InitializeRatingsSchema')
-);
+$map = [
+	1 => ['001_initialize_ratings_schema' => 'InitializeRatingsSchema']
+];
