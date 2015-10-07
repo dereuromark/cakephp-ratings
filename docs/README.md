@@ -14,7 +14,6 @@ Requirements
 Documentation
 -------------
 
-* [Overview](Documentation/Overview.md)
 * [Installation](Documentation/Installation.md)
 * [Ratings Component](Documentation/Ratings-Component.md)
 * [Ratable Behavior](Documentation/Ratable-Behavior.md)

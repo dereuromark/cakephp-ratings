@@ -14,9 +14,7 @@ The core part of this plugin is the ratable behavior that is attached to your mo
 * CakePHP 3.0+
 * PHP 5.4+
 
-This cake3 branch only works for **CakePHP3.x** - please use the master branch for CakePHP 2.x!
-**It is still dev** (no stable release yet), please be careful with using it.
-
+This branch only works for **CakePHP3.x** - please use the respective branch for CakePHP 2.x!
 
 ## Documentation
 
