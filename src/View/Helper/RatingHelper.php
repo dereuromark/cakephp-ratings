@@ -85,7 +85,7 @@ class RatingHelper extends Helper {
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string $divContainer with rating images
 	 */
-	public function ratingImage($value, array $options = [], array $attr = []) {
+	public function ratingImage($value, array $options = [], array $attributes = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -95,8 +95,8 @@ class RatingHelper extends Helper {
 		$stars = !empty($options['stars']) ? $options['stars'] : 5;
 		if ($value <= 0) {
 			$roundedValue = 0;
-			if (empty($attr['title'])) {
-				$attr['title'] = __d('ratings', 'No rating available yet.');
+			if (empty($attributes['title'])) {
+				$attributes['title'] = __d('ratings', 'No rating available yet.');
 			}
 		} else {
 			$roundedValue = $this->round($value, $steps, 1, $stars);
@@ -138,8 +138,8 @@ class RatingHelper extends Helper {
 		$defaults = [
 			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $stars),
 		];
-		$attr = array_merge($defaults, $attr);
-		return $this->Html->div('ratingStars clearfix', $res, $attr);
+		$attributes += $defaults;
+		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
 	/**
@@ -151,7 +151,7 @@ class RatingHelper extends Helper {
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string $divContainer with rating images
 	 */
-	public function image($value, array $options = [], array $attr = []) {
+	public function image($value, array $options = [], array $attributes = []) {
 		$defaults = [
 			//'type' => 'bootstrap',
 			'data-symbol' => '&#xf005;',
@@ -187,10 +187,11 @@ class RatingHelper extends Helper {
 		//	<div class="rating-stars" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" style="width: 20%;"></div>
 		//</div>
 
-		$attr += ['title' => $title];
-		$attr = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attr;
-		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attr);
+		$attributes += ['title' => $title];
+		$attributes = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
+		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 
+		//FIXME or remove
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -240,8 +241,8 @@ class RatingHelper extends Helper {
 		$defaults = [
 			'title' => number_format(min($roundedValue, $stars), $precision, ',', '.') . ' ' . __('von') . ' ' . $stars . ' ' . __('Sternen'),
 		];
-		$attr = array_merge($defaults, $attr);
-		return $this->Html->div('ratingStars clearfix', $res, $attr);
+		$attributes += $defaults;
+		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
 	/**
@@ -284,7 +285,7 @@ class RatingHelper extends Helper {
 				if (!isset($url['?'])) {
 					$url['?'] = [];
 				}
-				$url['?'] = array_merge($url['?'], ['rate' => $options['item'], 'rating' => $i]);
+				$url['?'] = ['rate' => $options['item'], 'rating' => $i] + $url['?'];
 				if ($options['redirect']) {
 					$url['?']['redirect'] = 1;
 				}
