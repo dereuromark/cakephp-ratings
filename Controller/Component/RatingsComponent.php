@@ -72,7 +72,7 @@ class RatingsComponent extends Component {
  */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
- 		if ($this->enabled) {
+		if ($this->enabled) {
 			foreach ($settings as $setting => $value) {
 				if (isset($this->{$setting})) {
 					$this->{$setting} = $value;
@@ -88,7 +88,7 @@ class RatingsComponent extends Component {
  */
 	public function initialize(Controller $Controller) {
 		$this->Controller = $Controller;
- 		if ($this->enabled) {
+		if ($this->enabled) {
 			$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['ext']) && $this->Controller->request->params['url']['ext'] === 'json');
 			if (empty($this->modelName)) {
 				$this->modelName = $Controller->modelClass;

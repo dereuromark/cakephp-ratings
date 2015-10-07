@@ -133,10 +133,10 @@ class RatingsComponentTest extends CakeTestCase {
 		$this->Collection = $this->getMock('ComponentCollection');
 
 		if (!class_exists('MockAuthComponent')) {
- 		$this->getMock('AuthComponent', array('user'), array($this->Collection), "MockAuthComponent");
+			$this->getMock('AuthComponent', array('user'), array($this->Collection), "MockAuthComponent");
 		}
 		if (!class_exists('MockSessionComponent')) {
- 		$this->getMock('SessionComponent', array('destroy'), array($this->Collection), "MockSessionComponent");
+			$this->getMock('SessionComponent', array('destroy'), array($this->Collection), "MockSessionComponent");
 		}
 
 		$this->AuthComponent = new MockAuthComponent($this->Collection);

@@ -34,7 +34,7 @@ class RatableBehavior extends ModelBehavior {
  * rateClass		- name of the rate class model
  * foreignKey		- foreign key field
  * saveToField		- boolean, true if the calculated result should be saved in the rated model
- * field 			- name of the field that is updated with the calculated rating
+ * field			- name of the field that is updated with the calculated rating
  * fieldSummary		- optional cache field that will store summary of all ratings that allow to implement quick rating calculation
  * fieldCounter		- optional cache field that will store count of all ratings that allow to implement quick rating calculation
  * calculation		- 'average' or 'sum', default is average
@@ -300,7 +300,7 @@ class RatableBehavior extends ModelBehavior {
 		$fieldSummary = $this->settings[$Model->alias]['fieldSummary'];
 		$fieldCounter = $this->settings[$Model->alias]['fieldCounter'];
 
- 		if ($update == true && !empty($this->oldRating)) {
+		if ($update == true && !empty($this->oldRating)) {
 			$ratingSumNew = $data[$Model->alias][$fieldSummary] - $this->oldRating['Rating']['value'] + $value;
 			$ratingCountNew = $data[$Model->alias][$fieldCounter];
 		} else {
