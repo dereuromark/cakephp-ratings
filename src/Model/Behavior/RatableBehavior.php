@@ -236,8 +236,8 @@ class RatableBehavior extends Behavior {
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
 
-		if ($update && !empty($this->oldRating)) {
-			throw new \Exception();
+		if (false && $update && !empty($this->oldRating)) {
+			//FIXME
 			$ratingSumNew = $data[$fieldSummary] - $this->oldRating['value'] - $value;
 			$ratingCountNew = $data[$fieldCounter];
 		} else {
@@ -398,19 +398,21 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Method to check if an entry is rated by a certain user
 	 *
-	 * @param mixed Single foreign key as uuid or int or array of foreign keys
-	 * @param mixed Boolean true or false if a single foreign key was supplied else an array of already voted keys
+	 * @param int|string|array $foreignKey foreign key as uuid or int or array of foreign keys
+	 * @param int|string $userId
 	 * @return mixed Array of related foreignKeys when querying for multiple entries, entry or false otherwise
 	 */
 	public function isRatedBy($foreignKey, $userId = null) {
 		$findMethod = 'first';
 		if (is_array($foreignKey)) {
 			$findMethod = 'all';
+		} else {
+			$foreignKey = (array)$foreignKey;
 		}
 
 		$entry = $this->_table->Ratings->find('all', [
 			'conditions' => [
-				'Ratings.foreign_key' => $foreignKey,
+				'Ratings.foreign_key IN' => $foreignKey,
 				'Ratings.user_id' => $userId,
 				'Ratings.model' => $this->_table->alias()
 			]
@@ -428,11 +430,12 @@ class RatableBehavior extends Behavior {
 		}
 
 		if ($findMethod === 'all') {
-			return Hash::extract($entry, '{n}.foreign_key');
-		}
-
-		if (empty($entry)) {
-			return false;
+			//return Hash::extract($entry, '{n}.foreign_key');
+			$ids = [];
+			foreach ($entry as $row) {
+				$ids[] = $row['foreign_key'];
+			}
+			return $ids;
 		}
 
 		return $entry;

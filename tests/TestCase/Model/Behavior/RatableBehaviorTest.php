@@ -370,9 +370,6 @@ class RatableBehaviorTest extends TestCase {
 		$userId = 1; // phpnut
 		$foreignKey = 1;
 		$result = $this->Articles->isRatedBy($foreignKey, $userId);
-		if ($result) {
-			//$result = $result->toArray();
-		}
 
 		unset($result['created']);
 		unset($result['modified']);
@@ -389,6 +386,11 @@ class RatableBehaviorTest extends TestCase {
 		$foreignKey = [1, 2];
 		$result = $this->Articles->isRatedBy($foreignKey, $userId);
 		$this->assertEquals([1], $result);
+
+		$userId = 1; // phpnut
+		$foreignKey = [5, 6];
+		$result = $this->Articles->isRatedBy($foreignKey, $userId);
+		$this->assertFalse($result);
 	}
 
 	/**
