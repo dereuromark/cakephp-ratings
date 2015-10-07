@@ -200,7 +200,8 @@ class RatableBehaviorTest extends TestCase {
 
 		$result = $this->Posts->decrementRating(1, 2.5);
 
-		debug($this->Posts->find()->toArray());
+		//debug($this->Posts->find()->toArray());
+		//debug($this->Posts->Ratings->find()->toArray());
 		$this->assertEquals('1.5', $result['rating']);
 	}
 

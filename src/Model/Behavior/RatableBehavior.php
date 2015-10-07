@@ -107,10 +107,14 @@ class RatableBehavior extends Behavior {
 	 * @param int $value
 	 * @return mixed boolean or calculated sum
 	 */
-	public function saveRating($foreignKey, $userId = null, $value = 0) {
+	public function saveRating($foreignKey, $userId, $value) {
 		$type = 'saveRating';
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
 		$oldRating = $this->isRatedBy($foreignKey, $userId);
+
+		if (is_array($foreignKey)) {
+			throw new \Exception('Array not supported for $foreignKey here');
+		}
 
 		if (!$oldRating || $this->_config['update']) {
 			$data = [];
@@ -123,17 +127,6 @@ class RatableBehavior extends Behavior {
 				$update = true;
 				$this->oldRating = $oldRating;
 				if (!empty($oldRating)) {
-					if (is_array($foreignKey)) {
-						$oldRating = $this->oldRating = $this->_table->Ratings->find('all', [
-							//'recursive' => -1,
-							'conditions' => [
-								'Ratings.model' => $this->_table->alias(),
-								'Ratings.foreign_key' => $foreignKey,
-								'Ratings.user_id' => $userId
-							]
-						])->first()->toArray();
-					}
-
 					$this->_table->Ratings->deleteAll([
 						'Ratings.model' => $this->_table->alias(),
 						'Ratings.foreign_key' => $foreignKey,
@@ -168,7 +161,7 @@ class RatableBehavior extends Behavior {
 	 * @param string $userId
 	 * @return mixed boolean or calculated sum
 	 */
-	public function removeRating($foreignKey, $userId = null) {
+	public function removeRating($foreignKey, $userId) {
 		$type = 'removeRating';
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
 		$oldRating = $this->isRatedBy($foreignKey, $userId);
@@ -264,9 +257,11 @@ class RatableBehavior extends Behavior {
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
-			$save[$this->_table->primaryKey()] = $id;
+			//$save[$this->_table->primaryKey()] = $id;
 
-			$r = $this->_table->newEntity($save, ['validate' => $this->_config['modelValidate']]);
+			$options = ['validate' => $this->_config['modelValidate']];
+			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
+
 			return $this->_table->save($r, [
 				'callbacks' => $this->_config['modelCallbacks']]);
 		}
@@ -322,7 +317,7 @@ class RatableBehavior extends Behavior {
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
-			$save[$this->_table->primaryKey()] = $id;
+			//$save[$this->_table->primaryKey()] = $id;
 			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
 
 			return $this->_table->save($r, [
@@ -346,6 +341,9 @@ class RatableBehavior extends Behavior {
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+		}
+		if (is_array($foreignKey)) {
+			throw new \Exception('Array not supported for $foreignKey here');
 		}
 
 		$mode = $this->modes[$mode];
@@ -389,7 +387,11 @@ class RatableBehavior extends Behavior {
 			$saveToField => $result[0]['rating'],
 		];
 
-		$rating = $this->_table->newEntity($data, ['validate' => $this->_config['modelValidate']]);
+		$rating = $this->_table->find()->where([$this->_table->primaryKey() => $foreignKey])->first();
+		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
+		//$rating = $this->_table->newEntity($data, ['validate' => $this->_config['modelValidate']]);
+		//$rating->isNew(false);
+
 		return $this->_table->save($rating, [
 			'callbacks' => $this->_config['modelCallbacks']
 		]);
@@ -456,10 +458,10 @@ class RatableBehavior extends Behavior {
 	/**
 	 * beforeRate callback to the model
 	 *
-	 * @param array
+	 * @param array $data
 	 * @return void
 	 */
-	public function beforeRateCallback($data = []) {
+	public function beforeRateCallback(array $data = []) {
 		if (method_exists($this->_table, 'beforeRate')) {
 			$this->_table->beforeRate($data);
 		}
@@ -469,11 +471,17 @@ class RatableBehavior extends Behavior {
 	 * More intelligent version of saveRating - checks record existence and ratings
 	 *
 	 * @param int|string $foreignKey Integer or string uuid
+	 * @param int|string $userId User id
 	 * @param mixed $rating Integer or string rating
 	 * @param array $options
-	 * @param return bool True on success
+	 * @return bool
+	 * @throws \Exception
 	 */
-	public function rate($foreignKey, $userId = null, $rating = null, array $options = []) {
+	public function rate($foreignKey, $userId, $rating, array $options = []) {
+		if (is_array($foreignKey)) {
+			throw new \Exception('Array not supported for $foreignKey here');
+		}
+
 		$options = array_merge([
 			'userField' => 'user_id',
 			'find' => [
@@ -534,6 +542,10 @@ class RatableBehavior extends Behavior {
 			return false;
 		}
 
+		if (is_array($foreignKey)) {
+			throw new \Exception('Array not supported for $foreignKey here');
+		}
+
 		$data = $this->_table->find('all', [
 			'conditions' => [
 				$this->_table->alias() . '.' . $this->_table->primaryKey() => $foreignKey],
@@ -549,7 +561,6 @@ class RatableBehavior extends Behavior {
 			$data[$this->_fieldName($newId)] += 1;
 		}
 
-		//$rating = $this->_table->newEntity((array)$data, ['validate' => $this->_config['modelValidate']]);
 		return $this->_table->save($data, [
 			'callbacks' => $this->_config['modelCallbacks']
 		]);

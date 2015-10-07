@@ -45,6 +45,8 @@ class RatingsTable extends Table {
 				'className' => $userClass, 'foreignKey' => 'user_id'
 			]
 		);
+
+		$this->addBehavior('Timestamp');
 	}
 
 	public function buildValidator() {
