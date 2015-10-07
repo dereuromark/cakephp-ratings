@@ -10,14 +10,14 @@
  */
 namespace Ratings\Test\TestCase\View\Helper;
 
-use Cake\View\Helper\FormHelper;
-use Cake\View\Helper\HtmlHelper;
 use Cake\Controller\Controller;
-use Cake\TestSuite\TestCase;
-use Ratings\View\Helper\RatingHelper;
-use Cake\View\View;
 use Cake\Network\Request;
 use Cake\Routing\Router;
+use Cake\TestSuite\TestCase;
+use Cake\View\Helper\FormHelper;
+use Cake\View\Helper\HtmlHelper;
+use Cake\View\View;
+use Ratings\View\Helper\RatingHelper;
 
 /**
  * CakePHP Ratings Plugin
@@ -29,17 +29,17 @@ use Cake\Routing\Router;
  */
 class RatingHelperTest extends TestCase {
 
-/**
- * Helper being tested
- *
- * @var RatingHelper
- */
+	/**
+	 * Helper being tested
+	 *
+	 * @var RatingHelper
+	 */
 	public $Rating;
 
-/**
- * (non-PHPdoc)
- * @see cake/tests/lib/TestCase#startTest($method)
- */
+	/**
+	 * (non-PHPdoc)
+	 * @see cake/tests/lib/TestCase#startTest($method)
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->request = new Request();
@@ -55,22 +55,22 @@ class RatingHelperTest extends TestCase {
 		Router::reload();
 	}
 
-/**
- * Test percentage method
- *
- * @return void
- */
+	/**
+	 * Test percentage method
+	 *
+	 * @return void
+	 */
 	public function testPercentage() {
 		$this->assertEquals('40', $this->Rating->percentage(2, 5));
 		$this->assertEquals('0', $this->Rating->percentage(0, 0));
 		$this->assertEquals('100', $this->Rating->percentage(6, 6));
 	}
 
-/**
- * Test bar method
- *
- * @return void
- */
+	/**
+	 * Test bar method
+	 *
+	 * @return void
+	 */
 	public function testBar() {
 		$result = $this->Rating->bar(1, 2);
 		$expected = '<div class="barRating"><div style="width: 50%" class="inner"><span>1</span></div></div>';
@@ -81,21 +81,21 @@ class RatingHelperTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test display method exception
- *
- * @return void
- * @expectedException \Exception
- */
+	/**
+	 * Test display method exception
+	 *
+	 * @return void
+	 * @expectedException \Exception
+	 */
 	public function testDisplayException() {
 		$this->Rating->display();
 	}
 
-/**
- * Test display method
- *
- * @return void
- */
+	/**
+	 * Test display method
+	 *
+	 * @return void
+	 */
 	public function testDisplay() {
 		$options = [
 			'item' => '42',
@@ -154,10 +154,10 @@ class RatingHelperTest extends TestCase {
 		//$this->assertEquals($expected, $result);
 	}
 
-/**
- * (non-PHPdoc)
- * @see cake/tests/lib/TestCase#endTest($method)
- */
+	/**
+	 * (non-PHPdoc)
+	 * @see cake/tests/lib/TestCase#endTest($method)
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Rating);

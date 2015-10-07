@@ -24,32 +24,31 @@
 
 class RatingsSchema extends CakeSchema {
 
-
-/**
- * Before callback
- *
- * @return boolean
- * @access public
- */
+	/**
+	 * Before callback
+	 *
+	 * @return boolean
+	 * @access public
+	 */
 	public function before($event = []) {
 		return true;
 	}
 
-/**
- * After callback
- *
- * @return void
- * @access public
- */
+	/**
+	 * After callback
+	 *
+	 * @return void
+	 * @access public
+	 */
 	public function after($event = []) {
 	}
 
-/**
- * Schema for ratings table
- *
- * @var array
- * @access public
- */
+	/**
+	 * Schema for ratings table
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public $ratings = [
 		'id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'key' => 'primary'],
 		'user_id' => ['type' => 'string', 'null' => false, 'default' => null, 'length' => 36],

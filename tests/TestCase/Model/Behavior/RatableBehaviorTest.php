@@ -11,8 +11,8 @@
 namespace Ratings\Test\TestCase\Model\Behavior;
 
 use App\Model\Model;
-use Cake\TestSuite\TestCase;
 use Cake\ORM\TableRegistry;
+use Cake\TestSuite\TestCase;
 
 /**
  * CakePHP Ratings Plugin
@@ -24,18 +24,18 @@ use Cake\ORM\TableRegistry;
  */
 class RatableBehaviorTest extends TestCase {
 
-/**
- * Holds the instance of the model
- *
- * @var mixed
- */
+	/**
+	 * Holds the instance of the model
+	 *
+	 * @var mixed
+	 */
 	public $Articles = null;
 
-/**
- * Fixtures
- *
- * @var array
- */
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = [
 		'plugin.ratings.ratings',
 		'plugin.ratings.articles',
@@ -43,11 +43,11 @@ class RatableBehaviorTest extends TestCase {
 		'plugin.ratings.users'
 	];
 
-/**
- * startTest
- *
- * @return void
- */
+	/**
+	 * startTest
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->Articles = TableRegistry::get('Articles');
@@ -56,11 +56,11 @@ class RatableBehaviorTest extends TestCase {
 		//$this->loadFixtures('Rating');
 	}
 
-/**
- * endTest
- *
- * @return void
- */
+	/**
+	 * endTest
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Articles);
@@ -68,11 +68,11 @@ class RatableBehaviorTest extends TestCase {
 		TableRegistry::clear();
 	}
 
-/**
- * Testing calculation of the rating
- *
- * @return void
- */
+	/**
+	 * Testing calculation of the rating
+	 *
+	 * @return void
+	 */
 	public function testCalculateRating() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$result = $this->Articles->calculateRating(1);
@@ -108,11 +108,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->Articles->calculateRating(1, true, 'pow');
 	}
 
-/**
- * Testing update of the rating
- *
- * @return void
- */
+	/**
+	 * Testing update of the rating
+	 *
+	 * @return void
+	 */
 	public function testIncrementRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1)->toArray();
@@ -212,11 +212,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->Posts->decrementRating(1, 1, true, 'pow');
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testSaveRating() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
@@ -228,11 +228,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertFalse($this->Articles->saveRating(1, $userId, 4));
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testSaveRatingWithAdditionalFields() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
@@ -246,11 +246,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertFalse($this->Posts->saveRating(1, $userId, 4));
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testSaveUpdatedRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true]);
@@ -275,11 +275,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 5);
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testRemoveRating() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
@@ -295,11 +295,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertFalse($this->Articles->saveRating(1, $userId, 4));
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testRemoveRatingWithAdditionalFields() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
@@ -319,11 +319,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertFalse($this->Posts->removeRating(1, $userId));
 	}
 
-/**
- * testSaveRating
- *
- * @return void
- */
+	/**
+	 * testSaveRating
+	 *
+	 * @return void
+	 */
 	public function testRemoveUpdatedRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true]);
@@ -361,10 +361,10 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 0);
 	}
 
-/**
- * Testings Ratable::isRatedBy()
- *
- */
+	/**
+	 * Testings Ratable::isRatedBy()
+	 *
+	 */
 	public function testIsRatedBy() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = 1; // phpnut
@@ -391,10 +391,10 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals([1], $result);
 	}
 
-/**
- * Testings Ratable::rate()
- *
- */
+	/**
+	 * Testings Ratable::rate()
+	 *
+	 */
 	public function testRate() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '3'; // phpnut
@@ -415,10 +415,10 @@ class RatableBehaviorTest extends TestCase {
 		//$this->Articles->rate($foreignKey, 0, 'up');
 	}
 
-/**
- * Testings Ratable::cacheRatingStatistics()
- *
- */
+	/**
+	 * Testings Ratable::cacheRatingStatistics()
+	 *
+	 */
 	public function testCacheRatingStatistics() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$this->Articles->saveRating(1, 4, 3);

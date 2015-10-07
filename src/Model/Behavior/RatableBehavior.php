@@ -23,24 +23,24 @@ use Cake\Utility\Hash;
  */
 class RatableBehavior extends Behavior {
 
-/**
- * Default settings
- *
- * modelClass		- must be set in the case of a plugin model to make the behavior work with plugin models like 'Plugin.Model'
- * rateClass		- name of the rate class model
- * foreignKey		- foreign key field
- * saveToField		- boolean, true if the calculated result should be saved in the rated model
- * field 			- name of the field that is updated with the calculated rating
- * fieldSummary		- optional cache field that will store summary of all ratings that allow to implement quick rating calculation
- * fieldCounter		- optional cache field that will store count of all ratings that allow to implement quick rating calculation
- * calculation		- 'average' or 'sum', default is average
- * update			- boolean flag, that define permission to rerate(change previous rating)
- * modelValidate	- validate the model before save, default is false
- * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
- * allowedValues	- @todo
- *
- * @var array
- */
+	/**
+	 * Default settings
+	 *
+	 * modelClass		- must be set in the case of a plugin model to make the behavior work with plugin models like 'Plugin.Model'
+	 * rateClass		- name of the rate class model
+	 * foreignKey		- foreign key field
+	 * saveToField		- boolean, true if the calculated result should be saved in the rated model
+	 * field 			- name of the field that is updated with the calculated rating
+	 * fieldSummary		- optional cache field that will store summary of all ratings that allow to implement quick rating calculation
+	 * fieldCounter		- optional cache field that will store count of all ratings that allow to implement quick rating calculation
+	 * calculation		- 'average' or 'sum', default is average
+	 * update			- boolean flag, that define permission to rerate(change previous rating)
+	 * modelValidate	- validate the model before save, default is false
+	 * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
+	 * allowedValues	- @todo
+	 *
+	 * @var array
+	 */
 	protected $_defaultConfig = [
 		'modelClass' => null,
 		'rateClass' => 'Ratings.Ratings',
@@ -57,28 +57,27 @@ class RatableBehavior extends Behavior {
 		'allowedValues' => []
 	];
 
-/**
- * Rating modes
- *
- * @var array
- */
+	/**
+	 * Rating modes
+	 *
+	 * @var array
+	 */
 	public $modes = [
 		'average' => 'avg',
 		'sum' => 'sum'];
 
-/**
- * Setup
- *
- * @param array $settings
- * @return void
- */
+	/**
+	 * Setup
+	 *
+	 * @param array $settings
+	 * @return void
+	 */
 	public function initialize(array $config) {
 		if (empty($this->_config['modelClass'])) {
 			$this->_config['modelClass'] = $this->_table->alias();
 		}
 
-		$this->_table->hasMany('Ratings'
-			 , [
+		$this->_table->hasMany('Ratings', [
 				'className' => $this->_config['rateClass'],
 				'foreignKey' => $this->_config['foreignKey'],
 				'unique' => true,
@@ -90,7 +89,7 @@ class RatableBehavior extends Behavior {
 		);
 
 		$this->_table->Ratings->belongsTo($this->_config['modelClass'],
-  			[
+			[
 				'className' => $this->_config['modelClass'],
 				'foreignKey' => 'foreign_key',
 				'counterCache' => $this->_config['countRates']
@@ -99,14 +98,14 @@ class RatableBehavior extends Behavior {
 		//die(debug($this->_table));
 	}
 
-/**
- * Saves a new rating
- *
- * @param string $foreignKey
- * @param string $userId
- * @param numeric $value
- * @return mixed boolean or calculated sum
- */
+	/**
+	 * Saves a new rating
+	 *
+	 * @param string $foreignKey
+	 * @param string $userId
+	 * @param numeric $value
+	 * @return mixed boolean or calculated sum
+	 */
 	public function saveRating($foreignKey = null, $userId = null, $value = 0) {
 		$type = 'saveRating';
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
@@ -161,15 +160,14 @@ class RatableBehavior extends Behavior {
 		return false;
 	}
 
-
-/**
- * Remove exists rating
- *
- * @param string $foreignKey
- * @param string $userId
- * @param numeric $value
- * @return mixed boolean or calculated sum
- */
+	/**
+	 * Remove exists rating
+	 *
+	 * @param string $foreignKey
+	 * @param string $userId
+	 * @param numeric $value
+	 * @return mixed boolean or calculated sum
+	 */
 	public function removeRating($foreignKey = null, $userId = null) {
 		$type = 'removeRating';
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
@@ -211,18 +209,18 @@ class RatableBehavior extends Behavior {
 		return $result;
 	}
 
-/**
- * Increments/decrements the rating
- *
- * See also Ratable::calculateRating() and decide which one suits your needs better
- *
- * @see Ratable::calculateRating()
- * @param string $foreignKey
- * @param integer $value of new rating
- * @param mixed $saveToField boolean or field name
- * @param string $mode type of calculation
- * @return mixed boolean or calculated sum
- */
+	/**
+	 * Increments/decrements the rating
+	 *
+	 * See also Ratable::calculateRating() and decide which one suits your needs better
+	 *
+	 * @see Ratable::calculateRating()
+	 * @param string $foreignKey
+	 * @param integer $value of new rating
+	 * @param mixed $saveToField boolean or field name
+	 * @param string $mode type of calculation
+	 * @return mixed boolean or calculated sum
+	 */
 	public function decrementRating($id, $oldRating, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
@@ -267,18 +265,18 @@ class RatableBehavior extends Behavior {
 		return $rating;
 	}
 
-/**
- * Increments/decrements the rating
- *
- * See also Ratable::calculateRating() and decide which one suits your needs better
- *
- * @see Ratable::calculateRating()
- * @param string $foreignKey
- * @param integer $value of new rating
- * @param mixed $saveToField boolean or fieldname
- * @param string $mode type of calculation
- * @return mixed boolean or calculated sum
- */
+	/**
+	 * Increments/decrements the rating
+	 *
+	 * See also Ratable::calculateRating() and decide which one suits your needs better
+	 *
+	 * @see Ratable::calculateRating()
+	 * @param string $foreignKey
+	 * @param integer $value of new rating
+	 * @param mixed $saveToField boolean or fieldname
+	 * @param string $mode type of calculation
+	 * @return mixed boolean or calculated sum
+	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
@@ -325,18 +323,18 @@ class RatableBehavior extends Behavior {
 		return $rating;
 	}
 
-/**
- * Calculates the rating
- *
- * This method does always a calculation of the the values based on SQL AVG()
- * and SUM(). Please note that this is relatively slow compared to incrementing
- * the values, see Ratable::incrementRating()
- *
- * @param string $foreignKey
- * @param mixed $saveToField boolean or field name
- * @param string $mode type of calculation
- * @return mixed boolean or calculated sum
- */
+	/**
+	 * Calculates the rating
+	 *
+	 * This method does always a calculation of the the values based on SQL AVG()
+	 * and SUM(). Please note that this is relatively slow compared to incrementing
+	 * the values, see Ratable::incrementRating()
+	 *
+	 * @param string $foreignKey
+	 * @param mixed $saveToField boolean or field name
+	 * @param string $mode type of calculation
+	 * @return mixed boolean or calculated sum
+	 */
 	public function calculateRating($foreignKey = null, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
@@ -389,13 +387,13 @@ class RatableBehavior extends Behavior {
 		]);
 	}
 
-/**
- * Method to check if an entry is rated by a certain user
- *
- * @param mixed Single foreign key as uuid or int or array of foreign keys
- * @param mixed Boolean true or false if a single foreign key was supplied else an array of already voted keys
- * @return mixed Array of related foreignKeys when querying for multiple entries, entry or false otherwise
- */
+	/**
+	 * Method to check if an entry is rated by a certain user
+	 *
+	 * @param mixed Single foreign key as uuid or int or array of foreign keys
+	 * @param mixed Boolean true or false if a single foreign key was supplied else an array of already voted keys
+	 * @return mixed Array of related foreignKeys when querying for multiple entries, entry or false otherwise
+	 */
 	public function isRatedBy($foreignKey = null, $userId = null) {
 		$findMethod = 'first';
 		if (is_array($foreignKey)) {
@@ -432,39 +430,39 @@ class RatableBehavior extends Behavior {
 		return $entry;
 	}
 
-/**
- * afterRate callback to the model
- *
- * @param array
- * @return void
- */
+	/**
+	 * afterRate callback to the model
+	 *
+	 * @param array
+	 * @return void
+	 */
 	public function afterRateCallback($data = []) {
 		if (method_exists($this->_table, 'afterRate')) {
 			$this->_table->afterRate($data);
 		}
 	}
 
-/**
- * beforeRate callback to the model
- *
- * @param array
- * @return void
- */
+	/**
+	 * beforeRate callback to the model
+	 *
+	 * @param array
+	 * @return void
+	 */
 	public function beforeRateCallback($data = []) {
 		if (method_exists($this->_table, 'beforeRate')) {
 			$this->_table->beforeRate($data);
 		}
 	}
 
-/**
- * More intelligent version of saveRating - checks record existence and ratings
- *
- * @param string model primary key / id
- * @param mixed user id integer or string uuid
- * @param mixed integer or string rating
- * @param array options
- * @param return bool True on success
- */
+	/**
+	 * More intelligent version of saveRating - checks record existence and ratings
+	 *
+	 * @param string model primary key / id
+	 * @param mixed user id integer or string uuid
+	 * @param mixed integer or string rating
+	 * @param array options
+	 * @param return bool True on success
+	 */
 	public function rate($foreignKey = null, $userId = null, $rating = null, $options = []) {
 		$options = array_merge([
 			'userField' => 'user_id',
@@ -502,15 +500,15 @@ class RatableBehavior extends Behavior {
 		throw new \RuntimeException(__d('ratings', 'You have already rated this record'));
 	}
 
-/**
- * Caches the sum of the different ratings for each of them
- *
- * For example a rating of 1 will increase the value in the field "rating_1" by 1,
- * a rating of 2 will increase "rating_2" by one...
- *
- * @param array Data passed to afterRate() or similar structure
- * @return bool True on success
- */
+	/**
+	 * Caches the sum of the different ratings for each of them
+	 *
+	 * For example a rating of 1 will increase the value in the field "rating_1" by 1,
+	 * a rating of 2 will increase "rating_2" by one...
+	 *
+	 * @param array Data passed to afterRate() or similar structure
+	 * @return bool True on success
+	 */
 	public function cacheRatingStatistics($data = []) {
 		extract($data);
 
@@ -547,13 +545,13 @@ class RatableBehavior extends Behavior {
 		]);
 	}
 
-/**
- * Return field name for cache value
- *
- * @param string $value
- * @param string $prefix
- * @return string
- */
+	/**
+	 * Return field name for cache value
+	 *
+	 * @param string $value
+	 * @param string $prefix
+	 * @return string
+	 */
 	protected function _fieldName($value, $prefix = 'rating_') {
 		$postfix = $value;
 		if ($value < 0) {

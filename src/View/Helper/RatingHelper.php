@@ -10,8 +10,8 @@
  */
 namespace Ratings\View\Helper;
 
-use Cake\View\Helper;
 use Cake\Utility\Text;
+use Cake\View\Helper;
 
 /**
  * CakePHP Ratings Plugin
@@ -20,25 +20,25 @@ use Cake\Utility\Text;
  */
 class RatingHelper extends Helper {
 
-/**
- * helpers variable
- *
- * @var array
- */
+	/**
+	 * helpers variable
+	 *
+	 * @var array
+	 */
 	public $helpers = ['Html', 'Form'];
 
-/**
- * Allowed types of html list elements
- *
- * @var array $allowedTypes
- */
+	/**
+	 * Allowed types of html list elements
+	 *
+	 * @var array $allowedTypes
+	 */
 	public $allowedTypes = ['ul', 'ol', 'radio'];
 
-/**
- * Default settings
- *
- * @var array $defaults
- */
+	/**
+	 * Default settings
+	 *
+	 * @var array $defaults
+	 */
 	public $defaults = [
 		'stars' => 5,
 		'item' => null,
@@ -52,22 +52,22 @@ class RatingHelper extends Helper {
 		'js' => false,
 	];
 
-/**
- * Sizes for rating image
- *
- * @var array
- */
+	/**
+	 * Sizes for rating image
+	 *
+	 * @var array
+	 */
 	public $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
-/**
- * Rounds the value according to the steps used (between min/max inclusivly)
- *
- * @param int $value
- * @param int $steps
- * @param int $min
- * @param int $max
- * @return int Value
- */
+	/**
+	 * Rounds the value according to the steps used (between min/max inclusivly)
+	 *
+	 * @param int $value
+	 * @param int $steps
+	 * @param int $min
+	 * @param int $max
+	 * @return int Value
+	 */
 	public function round($value, $steps = 4, $min = 1, $max = 5) {
 		if ($value <= $min) {
 			return $min;
@@ -76,15 +76,15 @@ class RatingHelper extends Helper {
 		return min($v, $max);
 	}
 
-/**
- * @param float $value (0...X)
- * @param array $options
- * - stars (defaults to 5)
- * - steps per image (defaults to 4 => 1/4 accuracy)
- * - ...
- * @param array $attributes for div container (id, style, ...)
- * @return string $divContainer with rating images
- */
+	/**
+	 * @param float $value (0...X)
+	 * @param array $options
+	 * - stars (defaults to 5)
+	 * - steps per image (defaults to 4 => 1/4 accuracy)
+	 * - ...
+	 * @param array $attributes for div container (id, style, ...)
+	 * @return string $divContainer with rating images
+	 */
 	public function ratingImage($value, array $options = [], array $attr = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
@@ -109,7 +109,7 @@ class RatingHelper extends Helper {
 
 		$res = '';
 		$disable = 0;
-		for ($i = 0; $i < $stars; $i++ ) {
+		for ($i = 0; $i < $stars; $i++) {
 			for ($j = 0; $j < $steps; $j++) {
 				if (!$disable && ($i + $j * (1 / $steps)) >= $roundedValue) {
 					$disable = 1;
@@ -142,15 +142,15 @@ class RatingHelper extends Helper {
 		return $this->Html->div('ratingStars clearfix', $res, $attr);
 	}
 
-/**
- * @param float $value (0...X)
- * @param array $options
- * - stars (defaults to 5)
- * - steps per image (defaults to 4 => 1/4 accuracy)
- * - ...
- * @param array $attributes for div container (id, style, ...)
- * @return string $divContainer with rating images
- */
+	/**
+	 * @param float $value (0...X)
+	 * @param array $options
+	 * - stars (defaults to 5)
+	 * - steps per image (defaults to 4 => 1/4 accuracy)
+	 * - ...
+	 * @param array $attributes for div container (id, style, ...)
+	 * @return string $divContainer with rating images
+	 */
 	public function image($value, array $options = [], array $attr = []) {
 		$defaults = [
 			//'type' => 'bootstrap',
@@ -191,7 +191,6 @@ class RatingHelper extends Helper {
 		$attr = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attr;
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attr);
 
-
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -212,7 +211,7 @@ class RatingHelper extends Helper {
 
 		$res = '';
 		$disable = 0;
-		for ($i = 0; $i < $stars; $i++ ) {
+		for ($i = 0; $i < $stars; $i++) {
 			for ($j = 0; $j < $steps; $j++) {
 				if (!$disable && ($i + $j * (1 / $steps)) >= $roundedValue) {
 					$disable = 1;
@@ -256,13 +255,13 @@ class RatingHelper extends Helper {
 		return $this->Form->input($field, $htmlAttributes);
 	}
 
-/**
- * Displays a bunch of rating links wrapped into a list element of your choice
- *
- * @param array $options
- * @param array $htmlAttributes Attributes for the rating links inside the list
- * @return string markup that displays the rating options
- */
+	/**
+	 * Displays a bunch of rating links wrapped into a list element of your choice
+	 *
+	 * @param array $options
+	 * @param array $htmlAttributes Attributes for the rating links inside the list
+	 * @return string markup that displays the rating options
+	 */
 	public function display(array $options = [], array $htmlAttributes = []) {
 		$options += $this->defaults;
 		if (empty($options['item'])) {
@@ -305,14 +304,14 @@ class RatingHelper extends Helper {
 		return $stars;
 	}
 
-/**
- * Bar rating
- *
- * @param integer value
- * @param integer total amount of rates
- * @param array options
- * @return string
- */
+	/**
+	 * Bar rating
+	 *
+	 * @param integer value
+	 * @param integer total amount of rates
+	 * @param array options
+	 * @return string
+	 */
 	public function bar($value, $total, array $options = []) {
 		$defaultOptions = [
 			'innerClass' => 'inner',
@@ -340,14 +339,14 @@ class RatingHelper extends Helper {
 		return $this->Html->div($options['outerClass'], $inner, $options['outerOptions']);
 	}
 
-/**
- * Calculates the percentage value
- *
- * @param integer value
- * @param integer total amount
- * @param integer precision of rounding
- * @return mixed float or integer based on the precision value
- */
+	/**
+	 * Calculates the percentage value
+	 *
+	 * @param integer value
+	 * @param integer total amount
+	 * @param integer precision of rounding
+	 * @return mixed float or integer based on the precision value
+	 */
 	public function percentage($value, $total, $precision = 2) {
 		if ($total > 0) {
 			return (round($value / $total, $precision) * 100);
@@ -355,13 +354,13 @@ class RatingHelper extends Helper {
 		return 0;
 	}
 
-/**
- * Displays a star form
- *
- * @param array $options
- * @param array $htmlAttributes Attributes for the rating links inside the list
- * @return string markup that displays the rating options
- */
+	/**
+	 * Displays a star form
+	 *
+	 * @param array $options
+	 * @param array $htmlAttributes Attributes for the rating links inside the list
+	 * @return string markup that displays the rating options
+	 */
 	public function starForm($options = [], $htmlAttributes = []) {
 		$options += $this->defaults;
 		$flush = false;

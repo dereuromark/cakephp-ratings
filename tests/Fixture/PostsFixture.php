@@ -12,7 +12,6 @@ namespace Ratings\Test\Fixture;
 
 use Cake\TestSuite\Fixture\TestFixture;
 
-
 /**
  * CakePHP Ratings Plugin
  *
@@ -23,12 +22,12 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class PostsFixture extends TestFixture {
 
-/**
- * fields property
- *
- * @var array
- * @access public
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public $fields = [
 		'id' => ['type' => 'integer'],
 		'title' => ['type' => 'string', 'null' => false],
@@ -39,12 +38,12 @@ class PostsFixture extends TestFixture {
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
 	];
 
-/**
- * records property
- *
- * @var array
- * @access public
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 * @access public
+	 */
 	public $records = [
 		[
 			'id' => 1,

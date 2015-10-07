@@ -11,13 +11,12 @@
 namespace Ratings\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\Auth;
-use Cake\Network\Session;
 use Cake\Controller\Controller;
-use Ratings\Controller\Component\RatingsComponent;
-use Cake\TestSuite\TestCase;
-use Cake\Network\Request;
-use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
+use Cake\Network\Request;
+use Cake\Network\Session;
+use Cake\ORM\TableRegistry;
+use Cake\TestSuite\TestCase;
 
 /**
  * Test ArticlesTestController
@@ -27,44 +26,44 @@ use Cake\Event\Event;
  */
 class ArticlesTestController extends Controller {
 
-/**
- * Models used
- *
- * @var array
- */
+	/**
+	 * Models used
+	 *
+	 * @var array
+	 */
 	public $modelClass = 'Articles';
 
-/**
- * Helpers used
- *
- * @var array
- */
+	/**
+	 * Helpers used
+	 *
+	 * @var array
+	 */
 	public $helpers = ['Html', 'Form'];
 
-/**
- * Components used
- *
- * @var array
- */
+	/**
+	 * Components used
+	 *
+	 * @var array
+	 */
 	public $components = ['Ratings.Ratings', 'Auth', 'Flash'];
 
-/**
- * test method
- *
- * @return void
- */
+	/**
+	 * test method
+	 *
+	 * @return void
+	 */
 	public function test() {
 		return;
 	}
 
-/**
- * Overloaded redirect
- *
- * @param string $url
- * @param string $status
- * @param string $exit
- * @return void
- */
+	/**
+	 * Overloaded redirect
+	 *
+	 * @param string $url
+	 * @param string $status
+	 * @param string $exit
+	 * @return void
+	 */
 	public function redirect($url, $status = null) {
 		$this->redirect = $url;
 	}
@@ -78,25 +77,25 @@ class ArticlesTestController extends Controller {
  */
 class RatingsComponentTest extends TestCase {
 
-/**
- * Controller using the tested component
- *
- * @var Controller
- */
+	/**
+	 * Controller using the tested component
+	 *
+	 * @var Controller
+	 */
 	public $Controller;
 
-/**
- * Mock AuthComponent object
- *
- * @var MockAuthComponent
- */
+	/**
+	 * Mock AuthComponent object
+	 *
+	 * @var MockAuthComponent
+	 */
 	public $AuthComponent;
 
-/**
- * Fixtures
- *
- * @var array
- */
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = [
 		'core.cake_sessions',
 		'plugin.ratings.ratings',
@@ -104,11 +103,11 @@ class RatingsComponentTest extends TestCase {
 		'plugin.ratings.users'
 	];
 
-/**
- * startTest method
- *
- * @return void
- */
+	/**
+	 * startTest method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 
@@ -133,11 +132,11 @@ class RatingsComponentTest extends TestCase {
 		*/
 	}
 
-/**
- * endTest method
- *
- * @return void
- */
+	/**
+	 * endTest method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		$this->session->destroy();
@@ -145,11 +144,11 @@ class RatingsComponentTest extends TestCase {
 		TableRegistry::clear();
 	}
 
-/**
- * testInitialize
- *
- * @return void
- */
+	/**
+	 * testInitialize
+	 *
+	 * @return void
+	 */
 	public function testInitialize() {
 		$this->_initControllerAndRatings([], false);
 		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
@@ -157,11 +156,11 @@ class RatingsComponentTest extends TestCase {
 		//$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
-/**
- * testInitializeWithParamsForBehavior
- *
- * @return void
- */
+	/**
+	 * testInitializeWithParamsForBehavior
+	 *
+	 * @return void
+	 */
 	public function testInitializeWithParamsForBehavior() {
 		$this->Controller->components = [
 			'Ratings.Ratings' => [
@@ -176,11 +175,11 @@ class RatingsComponentTest extends TestCase {
 		//$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
-/**
- * testInitializeWithParamsForComponent
- *
- * @return void
- */
+	/**
+	 * testInitializeWithParamsForComponent
+	 *
+	 * @return void
+	 */
 	public function testInitializeWithParamsForComponent() {
 		$this->Controller->components = [
 			'Ratings.Ratings' => [
@@ -194,11 +193,11 @@ class RatingsComponentTest extends TestCase {
 		//$this->assertEquals('Articles', $this->Controller->Ratings->config('modelName'));
 	}
 
-/**
- * testStartup
- *
- * @return void
- */
+	/**
+	 * testStartup
+	 *
+	 * @return void
+	 */
 	public function testStartup() {
 		/*
 		$this->AuthComponent
@@ -243,11 +242,11 @@ class RatingsComponentTest extends TestCase {
 		$this->assertEquals($expectedRedirect, $this->Controller->redirect);
 	}
 
-/**
- * testStartupAcceptPost
- *
- * @return void
- */
+	/**
+	 * testStartupAcceptPost
+	 *
+	 * @return void
+	 */
 	public function testStartupAcceptPost() {
 		$this->session->write('Auth.User.id', 1);
 		/*
@@ -279,11 +278,11 @@ class RatingsComponentTest extends TestCase {
 		$this->assertEquals($expectedRedirect, $this->Controller->redirect);
 	}
 
-/**
- * testBuildUrl
- *
- * @return void
- */
+	/**
+	 * testBuildUrl
+	 *
+	 * @return void
+	 */
 	public function testBuildUrl() {
 		$params = [
 			'plugin' => null,
@@ -307,12 +306,12 @@ class RatingsComponentTest extends TestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Convenience method for testing: Initializes the controller and the Ratings component
- *
- * @param array $params Controller params
- * @return void
- */
+	/**
+	 * Convenience method for testing: Initializes the controller and the Ratings component
+	 *
+	 * @param array $params Controller params
+	 * @return void
+	 */
 	protected function _initControllerAndRatings($params = []) {
 		$_default = ['?' => [], 'pass' => []];
 		$this->Controller->request->params = array_merge($_default, $params);

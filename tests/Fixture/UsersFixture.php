@@ -23,12 +23,12 @@ use Cake\TestSuite\Fixture\TestFixture;
 
 class UsersFixture extends TestFixture {
 
-/**
- * Fields
- *
- * @var array $fields
- * @access public
- */
+	/**
+	 * Fields
+	 *
+	 * @var array $fields
+	 * @access public
+	 */
 	public $fields = [
 		'id' => ['type' => 'string', 'null' => false, 'length' => 36],
 		'account_type' => ['type' => 'string', 'null' => false, 'length' => 8],
@@ -52,12 +52,12 @@ class UsersFixture extends TestFixture {
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_URL' => ['type' => 'unique', 'columns' => 'url']]
 	];
 
-/**
- * Records
- *
- * @var array $records
- * @access public
- */
+	/**
+	 * Records
+	 *
+	 * @var array $records
+	 * @access public
+	 */
 	public $records = [
 		[
 			'id' => '1',
@@ -145,9 +145,9 @@ class UsersFixture extends TestFixture {
 		]
 	];
 
-/**
- *
- */
+	/**
+	 *
+	 */
 	public function __construct() {
 		parent::__construct();
 		foreach ($this->records as &$record) {

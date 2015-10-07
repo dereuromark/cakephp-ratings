@@ -12,8 +12,8 @@ namespace Ratings\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\Controller;
-use Cake\Routing\Router;
 use Cake\Event\Event;
+use Cake\Routing\Router;
 
 /**
  * Ratings component
@@ -21,11 +21,11 @@ use Cake\Event\Event;
  */
 class RatingsComponent extends Component {
 
-/**
- * Components that are required
- *
- * @var array $components
- */
+	/**
+	 * Components that are required
+	 *
+	 * @var array $components
+	 */
 	public $components = ['RequestHandler', 'Flash'];
 
 	protected $_defaultConfig = [
@@ -37,21 +37,21 @@ class RatingsComponent extends Component {
 		''
 	];
 
-/**
- * Callback
- *
- * @param object Controller object
- */
+	/**
+	 * Callback
+	 *
+	 * @param object Controller object
+	 */
 	public function initialize(array $config) {
 		parent::initialize($config);
 	}
 
-/**
- * Callback
- *
- * @param object Controller object
- * @return void
- */
+	/**
+	 * Callback
+	 *
+	 * @param object Controller object
+	 * @return void
+	 */
 	public function beforeFilter(Event $event) {
 		$this->Controller = $event->subject();
 
@@ -94,13 +94,13 @@ class RatingsComponent extends Component {
 		}
 	}
 
-/**
- * Adds as user rating for a model record
- *
- * @param string $rate the model record id
- * @param string $rating
- * @param mixed $redirect boolean to redirect to same url or string or array to use it for Router::url()
- */
+	/**
+	 * Adds as user rating for a model record
+	 *
+	 * @param string $rate the model record id
+	 * @param string $rating
+	 * @param mixed $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
 		//$Controller->{$this->config('modelName')}->id = $rate;
@@ -131,11 +131,11 @@ class RatingsComponent extends Component {
 		return $result;
 	}
 
-/**
- * Clean url from rating parameters
- *
- * @return array
- */
+	/**
+	 * Clean url from rating parameters
+	 *
+	 * @return array
+	 */
 	public function buildUrl() {
 		$params = ['plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']];
 		$params = array_merge($params, $this->Controller->request->params['pass']);
@@ -147,14 +147,14 @@ class RatingsComponent extends Component {
 		return $params;
 	}
 
-/**
- * Overload Redirect.  Many actions are invoked via Xhr, most of these
- * require a list of current favorites to be returned.
- *
- * @param string $url
- * @param string|null $code
- * @return void|Response
- */
+	/**
+	 * Overload Redirect.  Many actions are invoked via Xhr, most of these
+	 * require a list of current favorites to be returned.
+	 *
+	 * @param string $url
+	 * @param string|null $code
+	 * @return void|Response
+	 */
 	public function redirect($url, $status = null) {
 		if (!empty($this->Controller->viewVars['authMessage']) && !empty($this->Controller->request->params['isJson'])) {
 			$this->RequestHandler->renderAs($this->Controller, 'json');

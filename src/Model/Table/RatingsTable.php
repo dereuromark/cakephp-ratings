@@ -23,13 +23,12 @@ use Cake\ORM\Table;
  */
 class RatingsTable extends Table {
 
-/**
- * Validation rules
- *
- * @var array $validate
- */
+	/**
+	 * Validation rules
+	 *
+	 * @var array $validate
+	 */
 	public $validate = [];
-
 
 	public function initialize(array $config) {
 		$table = Configure::read('Ratings.table');

@@ -11,8 +11,8 @@
 namespace Ratings\Test\TestCase\Model;
 
 use Cake\Core\Configure;
-use Cake\TestSuite\TestCase;
 use Cake\ORM\TableRegistry;
+use Cake\TestSuite\TestCase;
 
 /**
  * CakePHP Ratings Plugin
@@ -24,30 +24,30 @@ use Cake\ORM\TableRegistry;
  */
 class RatingsTableTest extends TestCase {
 
-/**
- * Rating Model
- *
- * @var Rating
- */
+	/**
+	 * Rating Model
+	 *
+	 * @var Rating
+	 */
 	public $Ratings = null;
 
-/**
- * Fixtures
- *
- * @var array
- */
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = [
 		'plugin.ratings.users',
 		'plugin.ratings.ratings',
 		'plugin.ratings.articles'
 	];
 
-/**
- * Start Test callback
- *
- * @param string $method
- * @return void
- */
+	/**
+	 * Start Test callback
+	 *
+	 * @param string $method
+	 * @return void
+	 */
 	public function setUp() {
 		Configure::delete('Ratings');
 		parent::setUp();
@@ -55,11 +55,11 @@ class RatingsTableTest extends TestCase {
 		$this->Ratings = TableRegistry::get('Ratings.Ratings');
 	}
 
-/**
- * testRatingInstance
- *
- * @return void
- */
+	/**
+	 * testRatingInstance
+	 *
+	 * @return void
+	 */
 	public function testRatingInstance() {
 		$this->assertInstanceOf('Ratings\Model\Table\RatingsTable', $this->Ratings);
 	}
