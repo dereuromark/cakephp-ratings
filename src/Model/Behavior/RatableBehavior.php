@@ -217,12 +217,13 @@ class RatableBehavior extends Behavior {
 	 * @see Ratable::calculateRating()
 	 *
 	 * @param int|string $id Foreign key
-	 * @param $oldRating
+	 * @param int $value Value of new rating
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
+	 * @param bool $update
 	 * @return mixed boolean or calculated sum
 	 */
-	public function decrementRating($id, $oldRating, $saveToField = true, $mode = 'average') {
+	public function decrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
@@ -235,8 +236,14 @@ class RatableBehavior extends Behavior {
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
 
-		$ratingSumNew = $data[$fieldSummary] - $oldRating;
-		$ratingCountNew = $data[$fieldCounter] - 1;
+		if ($update && !empty($this->oldRating)) {
+			throw new \Exception();
+			$ratingSumNew = $data[$fieldSummary] - $this->oldRating['value'] - $value;
+			$ratingCountNew = $data[$fieldCounter];
+		} else {
+			$ratingSumNew = $data[$fieldSummary] - $value;
+			$ratingCountNew = $data[$fieldCounter] - 1;
+		}
 
 		if ($mode === 'average') {
 			if ($ratingCountNew === 0) {
