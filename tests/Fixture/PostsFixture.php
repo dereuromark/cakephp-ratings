@@ -32,7 +32,7 @@ class PostsFixture extends TestFixture {
 		'id' => ['type' => 'integer'],
 		'title' => ['type' => 'string', 'null' => false],
 		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
-		'rating_sum' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'],
+		'rating_sum' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
 		'rating_count' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => '10'],
 		'integer_rating' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]

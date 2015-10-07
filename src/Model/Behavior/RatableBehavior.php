@@ -169,21 +169,15 @@ class RatableBehavior extends Behavior {
 			return false;
 		}
 
+		if (is_array($foreignKey)) {
+			throw new \Exception();
+		}
+
 		$data['foreign_key'] = $foreignKey;
 		$data['model'] = $this->_table->alias();
 		$data['user_id'] = $userId;
 		$update = true;
 		$this->oldRating = $oldRating;
-		if (is_array($foreignKey)) {
-			$oldRating = $this->oldRating = $this->_table->Ratings->find('all', [
-				//'recursive' => -1,
-				'conditions' => [
-					'Ratings.model' => $this->_table->alias(),
-					'Ratings.foreign_key' => $foreignKey,
-					'Ratings.user_id' => $userId
-				]
-			])->first();
-		}
 
 		$this->_table->Ratings->deleteAll([
 			'Ratings.model' => $this->_table->alias(),
@@ -221,7 +215,7 @@ class RatableBehavior extends Behavior {
 			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
-		$data = $this->_table->find('all', [
+		$rating = $this->_table->find('all', [
 			'conditions' => [
 				$this->_table->alias() . '.' . $this->_table->primaryKey() => $id],
 		])->first();
@@ -231,41 +225,41 @@ class RatableBehavior extends Behavior {
 
 		if (false && $update && !empty($this->oldRating)) {
 			//FIXME
-			$ratingSumNew = $data[$fieldSummary] - $this->oldRating['value'] - $value;
-			$ratingCountNew = $data[$fieldCounter];
+			$ratingSumNew = $rating[$fieldSummary] - $this->oldRating['value'] - $value;
+			$ratingCountNew = $rating[$fieldCounter];
 		} else {
-			$ratingSumNew = $data[$fieldSummary] - $value;
-			$ratingCountNew = $data[$fieldCounter] - 1;
+			$ratingSumNew = $rating[$fieldSummary] - $value;
+			$ratingCountNew = $rating[$fieldCounter] - 1;
 		}
 
 		if ($mode === 'average') {
 			if ($ratingCountNew === 0) {
-				$rating = 0;
+				$ratingSum = 0;
 			} else {
-				$rating = $ratingSumNew / $ratingCountNew;
+				$ratingSum = $ratingSumNew / $ratingCountNew;
 			}
 		} else {
-			$rating = $ratingSumNew;
+			$ratingSum = $ratingSumNew;
 		}
 
 		if ($saveToField || is_string($saveToField)) {
 			$save = [];
 			if (is_string($saveToField)) {
-				$save[$saveToField] = $rating;
+				$save[$saveToField] = $ratingSum;
 			} else {
-				$save[$this->_config['field']] = $rating;
+				$save[$this->_config['field']] = $ratingSum;
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
 			//$save[$this->_table->primaryKey()] = $id;
 
 			$options = ['validate' => $this->_config['modelValidate']];
-			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
+			$rating = $this->_table->patchEntity($rating, $save, ['validate' => $this->_config['modelValidate']]);
 
-			return $this->_table->save($r, [
+			return $this->_table->save($rating, [
 				'callbacks' => $this->_config['modelCallbacks']]);
 		}
-		return $rating;
+		return $ratingSum;
 	}
 
 	/**
@@ -274,10 +268,12 @@ class RatableBehavior extends Behavior {
 	 * See also Ratable::calculateRating() and decide which one suits your needs better
 	 *
 	 * @see Ratable::calculateRating()
+	 *
 	 * @param int|string $id foreignKey
 	 * @param integer $value of new rating
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
+	 * @param bool $update
 	 * @return mixed boolean or calculated sum
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {

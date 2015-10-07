@@ -168,7 +168,7 @@ class RatableBehaviorTest extends TestCase {
 	public function testDecrementRatingCalc() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, false);
-		$this->assertEquals($result, '0.0000');
+		$this->assertEquals('0.0', $result);
 	}
 
 	public function testDecrementRatingOtherField() {
@@ -197,12 +197,11 @@ class RatableBehaviorTest extends TestCase {
 
 		$result = $this->Posts->incrementRating(1, 2.5);
 		$this->assertEquals('1.75', $result['rating']);
+		$this->assertEquals('3.5', $result['rating_sum']);
 
 		$result = $this->Posts->decrementRating(1, 2.5);
-
-		//debug($this->Posts->find()->toArray());
-		//debug($this->Posts->Ratings->find()->toArray());
-		$this->assertEquals('1.5', $result['rating']);
+		$this->assertEquals('1.0', $result['rating']);
+		$this->assertEquals('1.0', $result['rating_sum']);
 	}
 
 	/**
