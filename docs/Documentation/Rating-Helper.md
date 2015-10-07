@@ -1,26 +1,26 @@
 Rating Helper
 =============
 
-Use the helper in your views to generate links mark a model record as favorite
+Use the helper in your views to generate links that mark a model record as favorite
 
 ```php
-echo $this->Rating->display(array(
+echo $this->Rating->display([
 	'item' => $post['id'],
 	'type' => 'radio',
 	'stars' => 5,
 	'value' => $item['rating'],
-	'createForm' => array(
-		'url' => array(
+	'createForm' => [
+		'url' => [
 			$this->passedArgs, 'rate' => $item['id'],
 			'redirect' => true
-		)
-	)
-));
+		]
+	]
+]);
 ```
 
 This generated form will be compatible with jQuery UI Stars. This jQuery plugin needs to be manually included in your webroot folder.
 
-Here is the sample of js that will stylize the form:
+Here is the JS sample code that will stylize the form:
 
 ```js
 $('#ratingform').stars({

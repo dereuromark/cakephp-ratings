@@ -13,12 +13,12 @@ class PostsController extends AppController {
 	);
 
 	public function view($postId = null) {
-		if (!$this->Post->exists($id)) {
+		if (!$this->Posts->exists($id)) {
 			throw new \NotFoundException(__('Invalid post'));
 		}
-		$options = array('conditions' => array('Post.' . $this->Post->primaryKey() => $id));
-		$this->set('post', $this->Post->find('all', $options)->first());
-		$this->set('isRated', $this->Post->isRatedBy($id, $this->Auth->user('id')));
+		$options = array('conditions' => ['Posts.' . $this->Post->primaryKey() => $id]);
+		$this->set('post', $this->Posts->find('all', $options)->first());
+		$this->set('isRated', $this->Posts->isRatedBy($id, $this->Auth->user('id')));
 	}
 }
 ```
@@ -28,7 +28,7 @@ All you have to do is to add the ratings component to your controllers component
 This line
 
 ```php
-$this->set('isRated', $this->Post->isRatedBy($id, $this->Auth->user('id')));
+$this->set('isRated', $this->Posts->isRatedBy($id, $this->Auth->user('id')));
 ```
 
 is not required but shows you how you can check if the current record was already rated for the current logged in user.
@@ -37,10 +37,10 @@ In your ```view.ctp``` add this.
 
 ```php
 if ($isRated === false) {
-	echo $this->Rating->display(array(
+	echo $this->Rating->display([
 		'item' => $post['id'],
-		'url' => array($post['id'])
-	));
+		'url' => [$post['id'])
+	]);
 } else {
 	echo __('You have already rated.');
 }
