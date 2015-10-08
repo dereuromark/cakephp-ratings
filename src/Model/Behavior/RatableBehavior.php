@@ -228,7 +228,7 @@ class RatableBehavior extends Behavior {
 			$ratingSumNew = $rating[$fieldSummary] - $this->oldRating['value'] - $value;
 			$ratingCountNew = $rating[$fieldCounter];
 		} else {
-			$ratingSumNew = $rating[$fieldSummary] - floor($value);
+			$ratingSumNew = $rating[$fieldSummary] - $value;
 			$ratingCountNew = $rating[$fieldCounter] - 1;
 		}
 
