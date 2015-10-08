@@ -26,6 +26,4 @@ For bugs and feature requests, please use the [issues](https://github.com/dereur
 
 ## License
 
-Copyright Cake Development Corporation (CakeDC). All rights reserved.
-
 Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.
