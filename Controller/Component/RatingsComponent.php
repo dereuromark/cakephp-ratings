@@ -195,7 +195,7 @@ class RatingsComponent extends Component {
 			$this->Session->setFlash($this->viewVars['authMessage']);
 		}
 		if (!empty($this->Controller->request->params['isAjax']) || !empty($this->Controller->request->params['isJson'])) {
-			$this->Controller->setAction('rated', $this->Controller->request->params['named']['rate']);
+			$this->Controller->setAction('rated', $this->Controller->request->query['rate']);
 			return $this->Controller->render('rated');
 		}
 		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
