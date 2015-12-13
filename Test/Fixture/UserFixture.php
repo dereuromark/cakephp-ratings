@@ -9,14 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-/**
- * CakePHP Ratings Plugin
- *
- * User fixture
- *
- * @package 	ratings
- * @subpackage 	ratings.tests.fixtures
- */
+App::uses('Security', 'Utility');
 
 if (!class_exists('User')) {
 	class User extends Model {
@@ -170,7 +163,6 @@ class UserFixture extends CakeTestFixture {
  */
 	public function __construct() {
 		parent::__construct();
-		App::uses('Security', 'Utility');
 		foreach ($this->records as &$record) {
 			$record['passwd'] = Security::hash($record['passwd'], null, true);
 		}
