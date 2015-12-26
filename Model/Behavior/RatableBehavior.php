@@ -413,7 +413,7 @@ class RatableBehavior extends ModelBehavior {
 		));
 
 		if ($findMethod == 'all') {
-			return Set::extract($entry, '{n}.Rating.foreign_key');
+			return Hash::extract($entry, '{n}.Rating.foreign_key');
 		}
 
 		if (empty($entry)) {
