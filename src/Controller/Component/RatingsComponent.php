@@ -22,12 +22,13 @@ use Cake\Routing\Router;
 class RatingsComponent extends Component {
 
 	/**
-	 * Components that are required
-	 *
-	 * @var array $components
+	 * @var array
 	 */
 	public $components = ['RequestHandler', 'Flash'];
 
+	/**
+	 * @var array
+	 */
 	protected $_defaultConfig = [
 		'enabled' => true,
 		'actions' => [], // Empty: all
@@ -40,7 +41,8 @@ class RatingsComponent extends Component {
 	/**
 	 * Callback
 	 *
-	 * @param object Controller object
+	 * @param array $config The configuration settings provided to this component.
+	 * @return void
 	 */
 	public function initialize(array $config) {
 		parent::initialize($config);
@@ -49,7 +51,7 @@ class RatingsComponent extends Component {
 	/**
 	 * Callback
 	 *
-	 * @param object Controller object
+	 * @param \Cake\Event\Event $event
 	 * @return void
 	 */
 	public function beforeFilter(Event $event) {

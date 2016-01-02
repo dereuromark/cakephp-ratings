@@ -57,13 +57,13 @@ class RatingsTable extends Table {
 
 		$this->validate = [
 			'user_id' => [
-				'required' => $rules['notEmpty']],
+				'required' => $rules['notBlank']],
 			'model' => [
-				'required' => $rules['notEmpty']],
+				'required' => $rules['notBlank']],
 			'foreign_key' => [
-				'required' => $rules['notEmpty']],
+				'required' => $rules['notBlank']],
 			'value' => [
-				'required' => $rules['notEmpty']]];
+				'required' => $rules['notBlank']]];
 	}
 
 }
