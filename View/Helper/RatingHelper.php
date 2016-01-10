@@ -332,7 +332,7 @@ class RatingHelper extends AppHelper {
 		if ($options['js']) {
 			$inputOptions['type'] = 'select';
 		}
-		$inputOptions = am($inputOptions, $htmlAttributes);
+		$inputOptions = array_merge($inputOptions, $htmlAttributes);
 
 		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
 		$result .= $this->Form->input($inputField, $inputOptions);
