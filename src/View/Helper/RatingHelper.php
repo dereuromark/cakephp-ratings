@@ -140,13 +140,6 @@ class RatingHelper extends Helper {
 
 			if (abs($roundedValue - $i) < 0.5) {
 			}
-			/*
-			if ($k === 'empty' && $options['steps'] > 1 && $roundedValue > $i && $roundedValue - $i <= 0.25) {
-				$k = 'full';
-			} elseif ($k === 'empty' && $options['steps'] > 1 && $roundedValue - $i > 0.25) {
-				$k = 'half';
-			}
-			*/
 
 			$res .= $array[$k];
 		}
@@ -191,8 +184,8 @@ class RatingHelper extends Helper {
 		}
 
 		$array = [
-			0 => '<i class="fa fa-fw fa-star"></i>',
-			1 => '<i class="fa fa-fw fa-star-o"></i>',
+			0 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-on" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
+			1 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-disabled" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
 		];
 
 		$res = '';
@@ -395,6 +388,7 @@ class RatingHelper extends Helper {
 	$(function() {
 		$('#$id').raty({
 			starType: 'i',
+			space: false,
 			scoreName: 'rating',
 			score: function() {
 				return $(this).attr('data-rating');
