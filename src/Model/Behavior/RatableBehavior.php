@@ -100,7 +100,7 @@ class RatableBehavior extends Behavior {
 	 * Saves a new rating
 	 *
 	 * @param string $foreignKey
-	 * @param string $userId
+	 * @param string|int $userId
 	 * @param int $value
 	 * @return bool|float Boolean or calculated sum
 	 */

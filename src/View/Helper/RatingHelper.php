@@ -68,12 +68,100 @@ class RatingHelper extends Helper {
 	 * @param int $max
 	 * @return int Value
 	 */
-	public function round($value, $steps = 4, $min = 1, $max = 5) {
+	public function round($value, $steps = 4, $min = 0, $max = 5) {
 		if ($value <= $min) {
 			return $min;
 		}
 		$v = round($value * $steps) / $steps;
 		return min($v, $max);
+	}
+
+	/**
+	 * @param float $value (0...X)
+	 * @param array $options
+	 * - type: defaults to fa (font-awesome), also possible: ui (jquery-ui)
+	 * - stars (defaults to 5)
+	 * - steps per image (defaults to 2 => 1/2 accuracy)
+	 * - ...
+	 * @param array $attributes for div container (id, style, ...)
+	 * @return string $divContainer with rating images
+	 */
+	public function ratingImage($value, array $options = [], array $attributes = []) {
+		$options += ['type' => 'fa'];
+		$matching = [
+			'fa' => 'FontAwesome',
+			'ui' => 'JqueryUi'
+		];
+		$method = '_ratingImage' . $matching[$options['type']];
+
+		return $this->$method($value, $options, $attributes);
+	}
+
+	/**
+	 * @param float $value (0...X)
+	 * @param array $options
+	 * - stars (defaults to 5)
+	 * - steps per image (defaults to 2 => 1/2 accuracy)
+	 * - ...
+	 * @param array $attributes for div container (id, style, ...)
+	 * @return string $divContainer with rating images
+	 */
+	public function _ratingImageFontAwesome($value, array $options = [], array $attributes = []) {
+		$array = [
+			'full' => '<i class="fa fa-fw fa-star"></i>',
+			'half' => '<i class="fa fa-fw fa-star-half-o"></i>',
+			'empty' => '<i class="fa fa-fw fa-star-o"></i>',
+		];
+
+		$options += [
+			'stars' => 5,
+			'steps' => 2,
+		];
+
+		if ($value <= 0) {
+			$roundedValue = 0;
+			if (empty($attributes['title'])) {
+				$attributes['title'] = __d('ratings', 'No rating available yet.');
+			}
+		} else {
+			$roundedValue = $this->round($value, $options['steps'], 0, $options['stars']);
+		}
+
+		$res = '';
+		for ($i = 0; $i < $options['stars']; $i++) {
+			if ((int)$roundedValue > $i) {
+				$k = 'full';
+			} else {
+				$k = 'empty';
+			}
+			if ($k === 'empty' && $roundedValue > $i && (2 * $roundedValue + 1) % 2 === 0) {
+				$k = 'half';
+			}
+
+			if (abs($roundedValue - $i) < 0.5) {
+			}
+			/*
+			if ($k === 'empty' && $options['steps'] > 1 && $roundedValue > $i && $roundedValue - $i <= 0.25) {
+				$k = 'full';
+			} elseif ($k === 'empty' && $options['steps'] > 1 && $roundedValue - $i > 0.25) {
+				$k = 'half';
+			}
+			*/
+
+			$res .= $array[$k];
+		}
+
+		$precision = 2;
+		if ((int)$roundedValue == $roundedValue) {
+			$precision = 0;
+		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
+			$precision = 1;
+		}
+		$defaults = [
+			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $options['stars']),
+		];
+		$attributes += $defaults;
+		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
 	/**
@@ -85,7 +173,7 @@ class RatingHelper extends Helper {
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string $divContainer with rating images
 	 */
-	public function ratingImage($value, array $options = [], array $attributes = []) {
+	public function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -99,12 +187,12 @@ class RatingHelper extends Helper {
 				$attributes['title'] = __d('ratings', 'No rating available yet.');
 			}
 		} else {
-			$roundedValue = $this->round($value, $steps, 1, $stars);
+			$roundedValue = $this->round($value, $steps, 0, $stars);
 		}
 
 		$array = [
-			0 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-on" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
-			1 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-disabled" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
+			0 => '<i class="fa fa-fw fa-star"></i>',
+			1 => '<i class="fa fa-fw fa-star-o"></i>',
 		];
 
 		$res = '';
@@ -261,7 +349,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param array $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
-	 * @return string markup that displays the rating options
+	 * @return string Markup that displays the rating options
 	 */
 	public function display(array $options = [], array $htmlAttributes = []) {
 		$options += $this->defaults;
@@ -292,25 +380,42 @@ class RatingHelper extends Helper {
 
 				$link = $this->Html->link($i, $url, $htmlAttributes);
 			}
-			$stars .= $this->Html->tag('li', $link, ['class' => 'star' . $i]);
+			$stars .= $this->Html->tag('div', $link, ['class' => 'ui-stars-star star' . $i]);
 		}
 
-		if (in_array($options['type'], $this->allowedTypes)) {
-			$type = $options['type'];
-		} else {
-			$type = 'ul';
-		}
+		$id =  'star_' . $options['item'];
 
-		$stars = $this->Html->tag($type, $stars, ['class' => $options['class'] . ' ' . 'rating-' . round($options['value'], 0)]);
+		$type = 'div';
+		$stars = $this->Html->tag($type, '', ['id' => $id, 'data-rating' => round($options['value'], 0)]);
+		$stars .= $this->Form->hidden('rate', ['value' => $options['item']]);
+
+		$script = <<<HTML
+<script>
+;(function($) {
+	$(function() {
+		$('#$id').raty({
+			starType: 'i',
+			scoreName: 'rating',
+			score: function() {
+				return $(this).attr('data-rating');
+			}
+		});
+	});
+})(jQuery);
+</script>
+HTML;
+
+		$this->_View->Blocks->concat('script', $script);
+
 		return $stars;
 	}
 
 	/**
 	 * Bar rating
 	 *
-	 * @param integer value
-	 * @param integer total amount of rates
-	 * @param array options
+	 * @param int $value
+	 * @param int $total amount of rates
+	 * @param array $options
 	 * @return string
 	 */
 	public function bar($value, $total, array $options = []) {

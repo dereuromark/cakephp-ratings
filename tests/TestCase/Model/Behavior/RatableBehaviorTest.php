@@ -202,6 +202,23 @@ class RatableBehaviorTest extends TestCase {
 		$result = $this->Posts->decrementRating(1, 2.5);
 		$this->assertEquals('1.0', $result['rating']);
 		$this->assertEquals('1.0', $result['rating_sum']);
+
+		$result = $this->Posts->incrementRating(1, 2.5);
+		$this->assertEquals('2.0', $result['rating']);
+		$this->assertEquals('4.0', $result['rating_sum']);
+
+		$data = [
+			'foreign_key' => 1,
+			'model' => 'Posts',
+			'user_id' => '4',
+			'value' => 2.5];
+		$rating = $this->Posts->Ratings->newEntity($data);
+		$this->Posts->Ratings->save($rating);
+
+		// Sum is actually 1+2.5+2.5=6, rating is actually 2 then
+		$result = $this->Posts->incrementRating(1, 2.5);
+		$this->assertEquals('2.3', round($result['rating'], 1));
+		$this->assertEquals('7.0', $result['rating_sum']);
 	}
 
 	/**

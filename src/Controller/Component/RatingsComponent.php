@@ -33,9 +33,9 @@ class RatingsComponent extends Component {
 		'enabled' => true,
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
-		'params' => ['rate' => true, 'rating' => true, 'redirect' => true],
-		'userId' => 'id', // or bool
-		''
+		'params' => ['rate' => true, 'rating' => null, 'redirect' => true],
+		'userId' => null,
+		'userIdField' => 'id',
 	];
 
 	/**
@@ -52,19 +52,19 @@ class RatingsComponent extends Component {
 	 * Callback
 	 *
 	 * @param \Cake\Event\Event $event
-	 * @return void
+	 * @return \Cake\Network\Response|array|null
 	 */
 	public function beforeFilter(Event $event) {
 		$this->Controller = $event->subject();
 
 		if (!$this->config('enabled')) {
-			return;
+			return null;
 		}
 
 		if ($actions = $this->config('actions')) {
 			$action = !empty($this->Controller->request->params['action']) ? $this->Controller->request->params['action'] : '';
 			if (!in_array($action, $actions)) {
-				return;
+				return null;
 			}
 		}
 
@@ -80,18 +80,12 @@ class RatingsComponent extends Component {
 		}
 		$this->Controller->helpers[] = 'Ratings.Rating';
 
-		$message = '';
-		$rating = null;
-		$params = $this->request->query;
-
-		if (empty($params['rating']) && !empty($this->request->data['rating'])) {
-			$params['rating'] = $this->request->data['rating'];
-		}
+		$params = $this->request->data + $this->request->query + $this->_config['params'];
 
 		if (!method_exists($this->Controller, 'rate')) {
 			if (isset($params['rate']) && isset($params['rating'])) {
-				$userId = !is_string($this->config('userId')) ? $this->config('userId') : $this->Controller->Auth->user($this->config('userId'));
-				return $this->rate($params['rate'], $params['rating'], $userId, !empty($params['redirect']));
+				$userId = $this->config('userId') ?: $this->Controller->Auth->user($this->config('userIdField'));
+				return $this->rate($params['rate'], $params['rating'], $userId, $params['redirect']);
 			}
 		}
 	}
@@ -101,11 +95,13 @@ class RatingsComponent extends Component {
 	 *
 	 * @param string $rate the model record id
 	 * @param string $rating
-	 * @param mixed $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 * @param string|int $user
+	 * @param bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 * @return \Cake\Network\Response|array|null
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
-		//$Controller->{$this->config('modelName')}->id = $rate;
+
 		if (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
@@ -124,7 +120,7 @@ class RatingsComponent extends Component {
 		}
 		$result = compact('status', 'message', 'rating');
 		$this->Controller->set($result);
-		if (!empty($redirect)) {
+		if ($redirect) {
 			if ($redirect === true) {
 				return $this->redirect($this->buildUrl());
 			}
@@ -153,18 +149,20 @@ class RatingsComponent extends Component {
 	 * Overload Redirect.  Many actions are invoked via Xhr, most of these
 	 * require a list of current favorites to be returned.
 	 *
-	 * @param string $url
-	 * @param string|null $code
-	 * @return void|Response
+	 * @param array|string $url
+	 * @param string|null $status
+	 * @return \Cake\Network\Response|null
 	 */
 	public function redirect($url, $status = null) {
 		if (!empty($this->Controller->viewVars['authMessage']) && !empty($this->Controller->request->params['isJson'])) {
 			$this->RequestHandler->renderAs($this->Controller, 'json');
-			$this->set('message', $this->Controller->viewVars['authMessage']);
-			$this->set('status', 'error');
-			echo $this->Controller->render('rate');
-			$this->_stop();
-		} elseif (!empty($this->viewVars['authMessage'])) {
+			$this->Controller->set('message', $this->Controller->viewVars['authMessage']);
+			$this->Controller->set('status', 'error');
+			$this->response->body($this->Controller->render('rate'));
+			return $this->response;
+		}
+
+		if (!empty($this->viewVars['authMessage'])) {
 			$this->Flash->error($this->viewVars['authMessage']);
 		}
 		if (!empty($this->Controller->request->params['isAjax']) || !empty($this->Controller->request->params['isJson'])) {
