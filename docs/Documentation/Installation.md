@@ -1,6 +1,6 @@
 # Installation
 
-To install the plugin, composer it as `"dereuromark/ratings":"dev-master"`.
+To install the plugin, composer it as `"dereuromark/cakephp-ratings":"dev-master"`.
 
 Then, include the following line in your `config/bootstrap.php` to load the plugin in your application.
 
