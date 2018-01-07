@@ -17,8 +17,8 @@ use Cake\TestSuite\Fixture\TestFixture;
  *
  * User fixture
  *
- * @package 	ratings
- * @subpackage 	ratings.tests.fixtures
+ * @package     ratings
+ * @subpackage     ratings.tests.fixtures
  */
 
 class UsersFixture extends TestFixture {
@@ -26,11 +26,11 @@ class UsersFixture extends TestFixture {
 	/**
 	 * Fields
 	 *
-	 * @var array $fields
+	 * @var array
 	 * @access public
 	 */
 	public $fields = [
-		'id' => ['type' => 'string', 'null' => false, 'length' => 36],
+		'id' => ['type' => 'uuid', 'null' => false, 'length' => 36],
 		'account_type' => ['type' => 'string', 'null' => false, 'length' => 8],
 		'url' => ['type' => 'string', 'null' => false],
 		'slug' => ['type' => 'string', 'null' => false],
@@ -55,7 +55,7 @@ class UsersFixture extends TestFixture {
 	/**
 	 * Records
 	 *
-	 * @var array $records
+	 * @var array
 	 * @access public
 	 */
 	public $records = [

@@ -11,15 +11,11 @@
 namespace Ratings\Model\Behavior;
 
 use Cake\ORM\Behavior;
-use Cake\Utility\Hash;
 
 /**
  * CakePHP Ratings Plugin
  *
  * Ratable behavior
- *
- * @package 	ratings
- * @subpackage 	ratings.models.behaviors
  */
 class RatableBehavior extends Behavior {
 
@@ -110,7 +106,7 @@ class RatableBehavior extends Behavior {
 		$oldRating = $this->isRatedBy($foreignKey, $userId);
 
 		if (is_array($foreignKey)) {
-			throw new \Exception('Array not supported for $foreignKey here');
+			throw new Exception('Array not supported for $foreignKey here');
 		}
 
 		if (!$oldRating || $this->_config['update']) {
@@ -167,7 +163,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		if (is_array($foreignKey)) {
-			throw new \Exception();
+			throw new Exception();
 		}
 
 		$data['foreign_key'] = $foreignKey;
@@ -209,7 +205,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
 		$rating = $this->_table->find('all', [
@@ -265,7 +261,7 @@ class RatableBehavior extends Behavior {
 	 * @see Ratable::calculateRating()
 	 *
 	 * @param int|string $id foreignKey
-	 * @param integer $value of new rating
+	 * @param int $value of new rating
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update
@@ -273,7 +269,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 
 		$data = $this->_table->find('all', [
@@ -332,10 +328,10 @@ class RatableBehavior extends Behavior {
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new \InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
 		}
 		if (is_array($foreignKey)) {
-			throw new \Exception('Array not supported for $foreignKey here');
+			throw new Exception('Array not supported for $foreignKey here');
 		}
 
 		$mode = $this->modes[$mode];
@@ -391,7 +387,7 @@ class RatableBehavior extends Behavior {
 	 * Method to check if an entry is rated by a certain user
 	 *
 	 * @param int|string|array $foreignKey foreign key as uuid or int or array of foreign keys
-	 * @param int|string $userId
+	 * @param int|string|null $userId
 	 * @return mixed Array of related foreignKeys when querying for multiple entries, entry or false otherwise
 	 */
 	public function isRatedBy($foreignKey, $userId = null) {
@@ -436,7 +432,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * afterRate callback to the model
 	 *
-	 * @param array
+	 * @param array $data
 	 * @return void
 	 */
 	public function afterRateCallback($data = []) {
@@ -469,7 +465,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function rate($foreignKey, $userId, $rating, array $options = []) {
 		if (is_array($foreignKey)) {
-			throw new \Exception('Array not supported for $foreignKey here');
+			throw new Exception('Array not supported for $foreignKey here');
 		}
 
 		$options = array_merge([
@@ -484,19 +480,19 @@ class RatableBehavior extends Behavior {
 		], $options);
 
 		if (!in_array($rating, array_keys($options['values']))) {
-			throw new \OutOfBoundsException(__d('ratings', 'Invalid Rating'));
+			throw new OutOfBoundsException(__d('ratings', 'Invalid Rating'));
 		}
 
 		$record = $this->_table->find('all', $options['find'])->first();
 
 		if (empty($record)) {
-			throw new \OutOfBoundsException(__d('ratings', 'Invalid Record'));
+			throw new OutOfBoundsException(__d('ratings', 'Invalid Record'));
 		}
 
 		if ($options['userField'] && $this->_table->hasField($options['userField'])) {
 			if ($record[$options['userField']] == $userId) {
 				//$this->_table->data = $record;
-				throw new \LogicException(__d('ratings', 'You can not vote on your own records'));
+				throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 			}
 		}
 
@@ -505,7 +501,7 @@ class RatableBehavior extends Behavior {
 			return true;
 		}
 
-		throw new \RuntimeException(__d('ratings', 'You have already rated this record'));
+		throw new RuntimeException(__d('ratings', 'You have already rated this record'));
 	}
 
 	/**
@@ -534,7 +530,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		if (is_array($foreignKey)) {
-			throw new \Exception('Array not supported for $foreignKey here');
+			throw new Exception('Array not supported for $foreignKey here');
 		}
 
 		$data = $this->_table->find('all', [

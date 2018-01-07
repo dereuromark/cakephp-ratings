@@ -16,7 +16,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  * CakePHP Ratings Plugin
  *
  * Rating fixture
- *
  */
 class RatingsFixture extends TestFixture {
 
@@ -66,4 +65,5 @@ class RatingsFixture extends TestFixture {
 			'value' => 3,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12']];
+
 }

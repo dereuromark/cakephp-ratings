@@ -2,25 +2,27 @@
 
 use Phinx\Migration\AbstractMigration;
 
-class Init extends AbstractMigration {
+class RatingsInit extends AbstractMigration {
 
-    /**
-     * Change Method.
-     *
-     * More information on this method is available here:
-     * http://docs.phinx.org/en/latest/migrations.html#the-change-method
-     *
-     * Uncomment this method if you would like to use it.
-     *
-    public function change()
-    {
-    }
-    */
+	/**
+	 * Change Method.
+	 *
+	 * More information on this method is available here:
+	 * http://docs.phinx.org/en/latest/migrations.html#the-change-method
+	 *
+	 * Uncomment this method if you would like to use it.
+	 *
+	public function change()
+	{
+	}
+	*/
 
-    /**
-     * Migrate Up.
-     */
-    public function up() {
+	/**
+	 * Migrate Up.
+	 *
+	 * @return void
+	 */
+	public function up() {
 		$content = <<<SQL
 CREATE TABLE IF NOT EXISTS `ratings` (
   `id` int(10) NOT NULL,
@@ -38,11 +40,14 @@ CREATE TABLE IF NOT EXISTS `ratings` (
 
 SQL;
 		$this->query($content);
-    }
+	}
 
-    /**
-     * Migrate Down.
-     */
-    public function down() {
-    }
+	/**
+	 * Migrate Down.
+	 *
+	 * @return void
+	 */
+	public function down() {
+	}
+
 }

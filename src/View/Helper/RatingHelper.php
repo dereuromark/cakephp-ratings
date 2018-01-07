@@ -12,6 +12,7 @@ namespace Ratings\View\Helper;
 
 use Cake\Utility\Text;
 use Cake\View\Helper;
+use Exception;
 
 /**
  * CakePHP Ratings Plugin
@@ -30,14 +31,14 @@ class RatingHelper extends Helper {
 	/**
 	 * Allowed types of html list elements
 	 *
-	 * @var array $allowedTypes
+	 * @var array
 	 */
 	public $allowedTypes = ['ul', 'ol', 'radio'];
 
 	/**
 	 * Default settings
 	 *
-	 * @var array $defaults
+	 * @var array
 	 */
 	public $defaults = [
 		'stars' => 5,
@@ -60,23 +61,8 @@ class RatingHelper extends Helper {
 	public $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
 	/**
-	 * Rounds the value according to the steps used (between min/max inclusivly)
+	 * Deprecated?
 	 *
-	 * @param int $value
-	 * @param int $steps
-	 * @param int $min
-	 * @param int $max
-	 * @return int Value
-	 */
-	public function round($value, $steps = 4, $min = 0, $max = 5) {
-		if ($value <= $min) {
-			return $min;
-		}
-		$v = round($value * $steps) / $steps;
-		return min($v, $max);
-	}
-
-	/**
 	 * @param float $value (0...X)
 	 * @param array $options
 	 * - type: defaults to fa (font-awesome), also possible: ui (jquery-ui)
@@ -106,7 +92,7 @@ class RatingHelper extends Helper {
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string $divContainer with rating images
 	 */
-	public function _ratingImageFontAwesome($value, array $options = [], array $attributes = []) {
+	protected function _ratingImageFontAwesome($value, array $options = [], array $attributes = []) {
 		$array = [
 			'full' => '<i class="fa fa-fw fa-star"></i>',
 			'half' => '<i class="fa fa-fw fa-star-half-o"></i>',
@@ -166,7 +152,7 @@ class RatingHelper extends Helper {
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string $divContainer with rating images
 	 */
-	public function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
+	protected function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
@@ -332,7 +318,6 @@ class RatingHelper extends Helper {
 	 * @return string HTML
 	 */
 	public function input($field, array $options = [], array $htmlAttributes = []) {
-
 		$htmlAttributes += $options;
 		return $this->Form->input($field, $htmlAttributes);
 	}
@@ -343,11 +328,12 @@ class RatingHelper extends Helper {
 	 * @param array $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
 	 * @return string Markup that displays the rating options
+	 * @throws \Exception
 	 */
 	public function display(array $options = [], array $htmlAttributes = []) {
 		$options += $this->defaults;
 		if (empty($options['item'])) {
-			throw new \Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
+			throw new Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
 		}
 
 		if ($options['type'] === 'bootstrap') {
@@ -358,6 +344,7 @@ class RatingHelper extends Helper {
 			return $this->starForm($options, $htmlAttributes);
 		}
 
+		//FIXME: not used yet
 		$stars = null;
 		for ($i = 1; $i <= $options['stars']; $i++) {
 			$link = null;
@@ -376,7 +363,7 @@ class RatingHelper extends Helper {
 			$stars .= $this->Html->tag('div', $link, ['class' => 'ui-stars-star star' . $i]);
 		}
 
-		$id =  'star_' . $options['item'];
+		$id = 'star_' . $options['item'];
 
 		$type = 'div';
 		$stars = $this->Html->tag($type, '', ['id' => $id, 'data-rating' => round($options['value'], 0)]);
@@ -442,16 +429,33 @@ HTML;
 	/**
 	 * Calculates the percentage value
 	 *
-	 * @param integer value
-	 * @param integer total amount
-	 * @param integer precision of rounding
+	 * @param int value
+	 * @param int total amount
+	 * @param int|int precision of rounding
 	 * @return mixed float or integer based on the precision value
 	 */
 	public function percentage($value, $total, $precision = 2) {
 		if ($total > 0) {
-			return (round($value / $total, $precision) * 100);
+			return round($value / $total, $precision) * 100;
 		}
 		return 0;
+	}
+
+	/**
+	 * Rounds the value according to the steps used (between min/max inclusivly)
+	 *
+	 * @param int $value
+	 * @param int $steps
+	 * @param int $min
+	 * @param int $max
+	 * @return int Value
+	 */
+	public function round($value, $steps = 4, $min = 0, $max = 5) {
+		if ($value <= $min) {
+			return $min;
+		}
+		$v = round($value * $steps) / $steps;
+		return min($v, $max);
 	}
 
 	/**
@@ -482,7 +486,8 @@ HTML;
 			'type' => in_array($options['type'], ['radio', 'select']) ? $options['type'] : 'radio',
 			'id' => 'starelement_' . $id,
 			'value' => isset($options['value']) ? round($options['value']) : 0,
-			'options' => array_combine(range(1, $options['stars']), range(1, $options['stars']))
+			'options' => array_combine(range(1, $options['stars']), range(1, $options['stars'])),
+			'empty' => true,
 		];
 		if ($options['js']) {
 			$inputOptions['type'] = 'select';
@@ -497,7 +502,7 @@ HTML;
 				$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
 				$flush = true;
 			} else {
-				$result .= $this->Form->submit(__d('ratings', 'Rate!')) . "\n";
+				$result .= $this->Form->button(__d('ratings', 'Rate!')) . "\n";
 			}
 			$result .= $this->Form->end() . "\n";
 
@@ -507,38 +512,34 @@ HTML;
 			} else {
 				$split = 1;
 			}
-			if ($options['js']) {
-			/*
-			$this->Js->buffer('
-			$("#star_' . $id . '").stars({
-				cancelValue: 0,
-				inputType: "select",
-				split:' . $split . ',
-				cancelShow: true,
-					'.(!$disabled ? 'captionEl: $("#cap_' . $id . '"),' : '').'
-					callback: function(ui, type, value) {
-						' . (isset($callback) ? $callback . '("star_' . $id . '");' : '') . '
-					}
-			}); eval();
-	');
-		*/
-		$result .= '<script>$(document).ready(function () {
-$("#star_' . $id . '").stars({
-	cancelValue: 0,
-	inputType: "' . $inputOptions['type'] . '",
-	split:1,
-	cancelShow: true,
-	captionEl: $("#cap_' . $id . '"),
-	callback: function(ui, type, value) {
-	' . (isset($options['callback']) ? ($options['callback'] . PHP_EOL) : '') . '}
-	});
-});</script>';
-			}
 
-			if ($flush) {
-				$this->Js->writeBuffer();
+			if ($options['js']) {
+				$script = <<<HTML
+<script>
+;(function($) {
+	$(function() {
+		$('#star_$id').rating({
+			filledStar: '<i class="fa fa-star"></i>',
+			emptyStar: '<i class="fa fa-star-o"></i>',
+			showClear: false,
+			showCaption: false,
+			size:'xs',
+			step: 1
+		});
+		$('#star_$id').on('rating:change', function(event, value, caption) {
+			$('#starelement_$id').val(value);
+		}).hide();
+	});
+})(jQuery);
+</script>
+HTML;
+				$this->_View->Blocks->concat('script', $script);
 			}
 		}
+
+		$result = '<div class="star-rating">' . $result . '</div>';
+
 		return $result;
 	}
+
 }

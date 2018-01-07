@@ -14,8 +14,6 @@ use Cake\Controller\Controller;
 use Cake\Network\Request;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use Cake\View\Helper\FormHelper;
-use Cake\View\Helper\HtmlHelper;
 use Cake\View\View;
 use Ratings\View\Helper\RatingHelper;
 
@@ -23,22 +21,21 @@ use Ratings\View\Helper\RatingHelper;
  * CakePHP Ratings Plugin
  *
  * Rating helper tests
- *
- * @package 	ratings
- * @subpackage 	ratings.tests.cases.helpers
  */
 class RatingHelperTest extends TestCase {
 
 	/**
 	 * Helper being tested
 	 *
-	 * @var RatingHelper
+	 * @var \Ratings\View\Helper\RatingHelper
 	 */
 	public $Rating;
 
 	/**
 	 * (non-PHPdoc)
+	 *
 	 * @see cake/tests/lib/TestCase#startTest($method)
+	 * @return void
 	 */
 	public function setUp() {
 		parent::setUp();
@@ -156,11 +153,14 @@ class RatingHelperTest extends TestCase {
 
 	/**
 	 * (non-PHPdoc)
+	 *
 	 * @see cake/tests/lib/TestCase#endTest($method)
+	 * @return void
 	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Rating);
 		//TableRegistry::flush();
 	}
+
 }

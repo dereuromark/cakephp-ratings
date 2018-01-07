@@ -18,16 +18,13 @@ use Cake\TestSuite\TestCase;
  * CakePHP Ratings Plugin
  *
  * Rating model tests
- *
- * @package 	ratings
- * @subpackage 	ratings.tests.cases.models
  */
 class RatingsTableTest extends TestCase {
 
 	/**
 	 * Rating Model
 	 *
-	 * @var Rating
+	 * @var Rating|null
 	 */
 	public $Ratings = null;
 
@@ -63,4 +60,5 @@ class RatingsTableTest extends TestCase {
 	public function testRatingInstance() {
 		$this->assertInstanceOf('Ratings\Model\Table\RatingsTable', $this->Ratings);
 	}
+
 }

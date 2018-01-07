@@ -16,9 +16,6 @@ use Cake\TestSuite\Fixture\TestFixture;
  * CakePHP Ratings Plugin
  *
  * Article fixture
- *
- * @package 	ratings
- * @subpackage 	ratings.tests.fixtures
  */
 class ArticlesFixture extends TestFixture {
 

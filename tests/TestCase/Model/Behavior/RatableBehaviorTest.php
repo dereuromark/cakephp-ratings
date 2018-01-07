@@ -10,7 +10,6 @@
  */
 namespace Ratings\Test\TestCase\Model\Behavior;
 
-use App\Model\Model;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -18,18 +17,20 @@ use Cake\TestSuite\TestCase;
  * CakePHP Ratings Plugin
  *
  * Ratable behavior tests
- *
- * @package 	ratings
- * @subpackage 	ratings.tests.cases.behaviors
  */
 class RatableBehaviorTest extends TestCase {
 
 	/**
 	 * Holds the instance of the model
 	 *
-	 * @var mixed
+	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
 	 */
-	public $Articles = null;
+	public $Articles;
+
+	/**
+	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
+	 */
+	protected $Posts;
 
 	/**
 	 * Fixtures
@@ -52,8 +53,6 @@ class RatableBehaviorTest extends TestCase {
 		parent::setUp();
 		$this->Articles = TableRegistry::get('Articles');
 		$this->Posts = TableRegistry::get('Posts');
-
-		//$this->loadFixtures('Rating');
 	}
 
 	/**
@@ -101,7 +100,7 @@ class RatableBehaviorTest extends TestCase {
 	/**
 	 * Testing calculation of the rating
 	 *
-	 * @expectedException BadMethodCallException
+	 * @expectedException \BadMethodCallException
 	 * @return void
 	 */
 	public function testCalculateRatingException() {
@@ -381,6 +380,7 @@ class RatableBehaviorTest extends TestCase {
 	/**
 	 * Testings Ratable::isRatedBy()
 	 *
+	 * @return void
 	 */
 	public function testIsRatedBy() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
@@ -413,6 +413,7 @@ class RatableBehaviorTest extends TestCase {
 	/**
 	 * Testings Ratable::rate()
 	 *
+	 * @return void
 	 */
 	public function testRate() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
@@ -437,6 +438,7 @@ class RatableBehaviorTest extends TestCase {
 	/**
 	 * Testings Ratable::cacheRatingStatistics()
 	 *
+	 * @return void
 	 */
 	public function testCacheRatingStatistics() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
@@ -504,4 +506,5 @@ class RatableBehaviorTest extends TestCase {
 		$result = $this->Articles->get(1)->toArray();
 		$this->assertEquals($result['rating_3'], 0);
 	}
+
 }

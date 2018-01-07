@@ -10,7 +10,6 @@
  */
 namespace Ratings\Test\TestCase\Controller\Component;
 
-use App\Controller\Component\Auth;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Network\Request;
@@ -20,16 +19,13 @@ use Cake\TestSuite\TestCase;
 
 /**
  * Test ArticlesTestController
- *
- * @package ratings
- * @subpackage ratings.tests.cases.components
  */
 class ArticlesTestController extends Controller {
 
 	/**
 	 * Models used
 	 *
-	 * @var array
+	 * @var string
 	 */
 	public $modelClass = 'Articles';
 
@@ -60,27 +56,25 @@ class ArticlesTestController extends Controller {
 	 * Overloaded redirect
 	 *
 	 * @param string $url
-	 * @param string $status
+	 * @param string|null $status
 	 * @param string $exit
 	 * @return void
 	 */
 	public function redirect($url, $status = null) {
 		$this->redirect = $url;
 	}
+
 }
 
 /**
  * Test RatingsComponentTest
- *
- * @package ratings
- * @subpackage ratings.tests.cases.components
  */
 class RatingsComponentTest extends TestCase {
 
 	/**
 	 * Controller using the tested component
 	 *
-	 * @var Controller
+	 * @var \Cake\Controller\Controller
 	 */
 	public $Controller;
 
@@ -97,7 +91,7 @@ class RatingsComponentTest extends TestCase {
 	 * @var array
 	 */
 	public $fixtures = [
-		'core.cake_sessions',
+		'core.sessions',
 		'plugin.ratings.ratings',
 		'plugin.ratings.articles',
 		'plugin.ratings.users'

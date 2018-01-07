@@ -13,13 +13,11 @@ namespace Ratings\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
-use Cake\Routing\Router;
 
 /**
  * Ratings component
- *
  */
-class RatingsComponent extends Component {
+class RatingComponent extends Component {
 
 	/**
 	 * @var array
@@ -61,7 +59,8 @@ class RatingsComponent extends Component {
 			return null;
 		}
 
-		if ($actions = $this->config('actions')) {
+		$actions = $this->config('actions');
+		if ($actions) {
 			$action = !empty($this->Controller->request->params['action']) ? $this->Controller->request->params['action'] : '';
 			if (!in_array($action, $actions)) {
 				return null;
@@ -80,9 +79,12 @@ class RatingsComponent extends Component {
 		}
 		$this->Controller->helpers[] = 'Ratings.Rating';
 
-		$params = $this->request->data + $this->request->query + $this->_config['params'];
+		if (!$this->request->is('post')) {
+			return null;
+		}
 
-		if (!method_exists($this->Controller, 'rate')) {
+		$params = $this->request->data + $this->request->query + $this->_config['params'];
+		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			if (isset($params['rate']) && isset($params['rating'])) {
 				$userId = $this->config('userId') ?: $this->Controller->Auth->user($this->config('userIdField'));
 				return $this->rate($params['rate'], $params['rating'], $userId, $params['redirect']);
@@ -102,11 +104,17 @@ class RatingsComponent extends Component {
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
 
-		if (!$user) {
+		if (!$rating) {
+			$message = __d('ratings', 'No rating selected');
+			$status = 'error';
+		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
 		} elseif ($Controller->{$this->config('modelName')}->findById($rate)) {
-			if ($newRating = $Controller->{$this->config('modelName')}->saveRating($rate, $user, $rating)) {
+			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
+			$Model = $Controller->{$this->config('modelName')};
+			$newRating = $Model->saveRating($rate, $user, $rating);
+			if ($newRating) {
 				$rating = round($newRating->newRating);
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
@@ -121,9 +129,13 @@ class RatingsComponent extends Component {
 		$result = compact('status', 'message', 'rating');
 		$this->Controller->set($result);
 		if ($redirect) {
+			if (is_numeric($redirect)) {
+				$redirect = (bool)$redirect;
+			}
 			if ($redirect === true) {
 				return $this->redirect($this->buildUrl());
 			}
+			dd($redirect);
 			return $this->redirect($redirect);
 		}
 		return $result;
@@ -170,7 +182,8 @@ class RatingsComponent extends Component {
 			return $this->Controller->render('rated');
 		}
 		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
-			$this->Flash->success($this->Controller->viewVars['message']);
+			$status = $this->Controller->viewVars['status'];
+			$this->Flash->$status($this->Controller->viewVars['message']);
 		}
 
 		return $this->Controller->redirect($url, $status);

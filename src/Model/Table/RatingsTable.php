@@ -12,24 +12,19 @@ namespace Ratings\Model\Table;
 
 use Cake\Core\Configure;
 use Cake\ORM\Table;
+use Cake\Validation\Validator;
 
 /**
  * CakePHP Ratings Plugin
  *
  * Rating model
- *
- * @package 	ratings
- * @subpackage 	ratings.models
  */
 class RatingsTable extends Table {
 
 	/**
-	 * Validation rules
-	 *
-	 * @var array $validate
+	 * @param array $config
+	 * @return void
 	 */
-	public $validate = [];
-
 	public function initialize(array $config) {
 		$table = Configure::read('Ratings.table');
 		if ($table) {
@@ -49,21 +44,34 @@ class RatingsTable extends Table {
 		$this->addBehavior('Timestamp');
 	}
 
-	public function buildValidator() {
-		$rules = [
-			'notBlank' => [
-				'required' => true,
-				'rule' => 'notBlank']];
+	/**
+	 * Default validation rules.
+	 *
+	 * @param \Cake\Validation\Validator $validator Validator instance.
+	 * @return \Cake\Validation\Validator
+	 */
+	public function validationDefault(Validator $validator) {
+		$validator
+			->scalar('user_id')
+			->requirePresence('user_id')
+			->notBlank('user_id');
 
-		$this->validate = [
-			'user_id' => [
-				'required' => $rules['notBlank']],
-			'model' => [
-				'required' => $rules['notBlank']],
-			'foreign_key' => [
-				'required' => $rules['notBlank']],
-			'value' => [
-				'required' => $rules['notBlank']]];
+		$validator
+			->scalar('model')
+			->requirePresence('model')
+			->notBlank('model');
+
+		$validator
+			->scalar('foreign_key')
+			->requirePresence('foreign_key')
+			->notBlank('foreign_key');
+
+		$validator
+			->scalar('value')
+			->requirePresence('value')
+			->notBlank('value');
+
+		return $validator;
 	}
 
 }
