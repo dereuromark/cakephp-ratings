@@ -15,7 +15,7 @@ Documentation
 -------------
 
 * [Installation](Documentation/Installation.md)
-* [Ratings Component](Documentation/Ratings-Component.md)
+* [Rating Component](Documentation/Rating-Component.md)
 * [Ratable Behavior](Documentation/Ratable-Behavior.md)
 * [Rating Helper](Documentation/Rating-Helper.md)
 

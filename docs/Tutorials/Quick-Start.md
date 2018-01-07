@@ -8,9 +8,12 @@ For this example we assume that we want to rate postings. We will cover here onl
 ```php
 class PostsController extends AppController {
 
-	public $components = array(
-		'Ratings.Ratings'
-	);
+	/**
+	 * @var array
+	 */
+	public $components = [
+		'Ratings.Rating'
+	];
 
 	public function view($postId = null) {
 		if (!$this->Posts->exists($id)) {
@@ -23,7 +26,7 @@ class PostsController extends AppController {
 }
 ```
 
-All you have to do is to add the ratings component to your controllers component array, this will already make ratings work and load the behavior for the controllers current `$modelClass` and also load the helper.
+All you have to do is to add the Rating component to your controllers component array, this will already make ratings work and load the behavior for the controllers current `$modelClass` and also load the helper.
 
 This line
 

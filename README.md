@@ -16,6 +16,15 @@ The core part of this plugin is the ratable behavior that is attached to your mo
 
 This branch only works for **CakePHP3.x** - please use the respective branch for CakePHP 2.x!
 
+### Recommended
+
+To have a nice star rating to chose from, it ships with the possibility to include JS.
+The default JS tool in use is:
+
+* https://github.com/kartik-v/bootstrap-star-rating
+
+It should however be customizable to any other JS library and templating.
+
 ## Documentation
 
 For documentation, as well as tutorials, see the [docs](docs/) directory of this repository.

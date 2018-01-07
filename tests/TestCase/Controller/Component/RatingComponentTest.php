@@ -41,7 +41,7 @@ class ArticlesTestController extends Controller {
 	 *
 	 * @var array
 	 */
-	public $components = ['Ratings.Ratings', 'Auth', 'Flash'];
+	public $components = ['Ratings.Rating', 'Auth', 'Flash'];
 
 	/**
 	 * test method
@@ -66,10 +66,7 @@ class ArticlesTestController extends Controller {
 
 }
 
-/**
- * Test RatingsComponentTest
- */
-class RatingsComponentTest extends TestCase {
+class RatingComponentTest extends TestCase {
 
 	/**
 	 * Controller using the tested component
