@@ -262,7 +262,6 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
-
 		$this->assertEquals($result['rating'], '3');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 3);
@@ -273,7 +272,6 @@ class RatableBehaviorTest extends TestCase {
 			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
-
 
 		$this->assertEquals($result['rating'], '5');
 		$this->assertEquals($result['rating_count'], 1);
@@ -335,13 +333,11 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
-
 		$this->assertEquals($result['rating'], '3');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 3);
 
 		$result = $this->Posts->removeRating(1, $userId)->toArray();
-
 
 		$this->assertEquals($result['rating'], '0');
 		$this->assertEquals($result['rating_count'], 0);
@@ -353,7 +349,6 @@ class RatableBehaviorTest extends TestCase {
 			'update' => true]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
-
 
 		$this->assertEquals($result['rating'], '5');
 		$this->assertEquals($result['rating_count'], 1);
