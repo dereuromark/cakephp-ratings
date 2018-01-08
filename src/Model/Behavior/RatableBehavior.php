@@ -11,6 +11,11 @@
 namespace Ratings\Model\Behavior;
 
 use Cake\ORM\Behavior;
+use Exception;
+use InvalidArgumentException;
+use LogicException;
+use OutOfBoundsException;
+use RuntimeException;
 
 /**
  * CakePHP Ratings Plugin
@@ -89,7 +94,6 @@ class RatableBehavior extends Behavior {
 				'counterCache' => $this->_config['countRates']
 			]
 		);
-		//die(debug($this->_table));
 	}
 
 	/**
@@ -99,15 +103,16 @@ class RatableBehavior extends Behavior {
 	 * @param string|int $userId
 	 * @param int $value
 	 * @return bool|float Boolean or calculated sum
+	 * @throws \Exception
 	 */
 	public function saveRating($foreignKey, $userId, $value) {
-		$type = 'saveRating';
-		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
-		$oldRating = $this->isRatedBy($foreignKey, $userId);
-
 		if (is_array($foreignKey)) {
 			throw new Exception('Array not supported for $foreignKey here');
 		}
+
+		$type = 'saveRating';
+		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
+		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 
 		if (!$oldRating || $this->_config['update']) {
 			$data = [];
@@ -153,11 +158,12 @@ class RatableBehavior extends Behavior {
 	 * @param string $foreignKey
 	 * @param string $userId
 	 * @return bool|float Boolean or calculated sum
+	 * @throws \Exception
 	 */
 	public function removeRating($foreignKey, $userId) {
 		$type = 'removeRating';
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
-		$oldRating = $this->isRatedBy($foreignKey, $userId);
+		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
 			return false;
 		}
@@ -205,7 +211,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 
 		$rating = $this->_table->find('all', [
@@ -269,7 +275,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 
 		$data = $this->_table->find('all', [
@@ -328,7 +334,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
-			throw new InvalidArgumentException(__d('ratings', 'Invalid rating mode {0}.', $mode));
+			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 		if (is_array($foreignKey)) {
 			throw new Exception('Array not supported for $foreignKey here');
@@ -338,6 +344,11 @@ class RatableBehavior extends Behavior {
 		$options = [
 			'contain' => [$this->_table->alias()],
 			'fields' => function ($query) use ($mode) {
+					/**
+						 *
+
+						 * @var \Cake\Database\Query
+						 */
 				return [
 					'rating' => $query->newExpr()->add($mode . '(value)'),
 				];
@@ -386,47 +397,30 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Method to check if an entry is rated by a certain user
 	 *
-	 * @param int|string|array $foreignKey foreign key as uuid or int or array of foreign keys
-	 * @param int|string|null $userId
-	 * @return mixed Array of related foreignKeys when querying for multiple entries, entry or false otherwise
+	 * @param int|string $foreignKey Foreign key as uuid or int
+	 * @param int|string $userId
+	 * @return \Cake\ORM\Query
 	 */
-	public function isRatedBy($foreignKey, $userId = null) {
-		$findMethod = 'first';
-		if (is_array($foreignKey)) {
-			$findMethod = 'all';
-		} else {
-			$foreignKey = (array)$foreignKey;
-		}
-
+	public function isRatedBy($foreignKey, $userId) {
 		$entry = $this->_table->Ratings->find('all', [
 			'conditions' => [
-				'Ratings.foreign_key IN' => $foreignKey,
+				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
 				'Ratings.model' => $this->_table->alias()
 			]
 		]);
-		if ($findMethod === 'first') {
-			$entry = $entry->first();
-		}
-
-		if ($entry) {
-			$entry = $entry->toArray();
-		}
-
-		if (empty($entry)) {
-			return false;
-		}
-
-		if ($findMethod === 'all') {
-			//return Hash::extract($entry, '{n}.foreign_key');
-			$ids = [];
-			foreach ($entry as $row) {
-				$ids[] = $row['foreign_key'];
-			}
-			return $ids;
-		}
 
 		return $entry;
+	}
+
+	/**
+	 * @param int|string $foreignKey Foreign key as uuid or int
+	 * @param int|string $userId
+	 *
+	 * @return bool
+	 */
+	public function hasRated($foreignKey, $userId) {
+		return $this->isRatedBy($foreignKey, $userId)->count() > 0;
 	}
 
 	/**

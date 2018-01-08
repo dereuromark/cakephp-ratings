@@ -22,11 +22,9 @@ use Cake\TestSuite\TestCase;
 class RatingsTableTest extends TestCase {
 
 	/**
-	 * Rating Model
-	 *
-	 * @var Rating|null
+	 * @var \Ratings\Model\Table\RatingsTable
 	 */
-	public $Ratings = null;
+	public $Ratings;
 
 	/**
 	 * Fixtures
@@ -59,6 +57,23 @@ class RatingsTableTest extends TestCase {
 	 */
 	public function testRatingInstance() {
 		$this->assertInstanceOf('Ratings\Model\Table\RatingsTable', $this->Ratings);
+	}
+
+	/**
+	 * testRatingInstance
+	 *
+	 * @return void
+	 */
+	public function testSave() {
+		$data = [
+			'model' => 'Foo',
+			'foreign_key' => 1,
+			'user_id' => 1,
+			'value' => 2.0,
+		];
+		$rating = $this->Ratings->newEntity($data);
+		$result = $this->Ratings->save($rating);
+		$this->assertTrue((bool)$result, print_r($rating->errors(), true));
 	}
 
 }

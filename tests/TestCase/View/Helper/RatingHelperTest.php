@@ -93,7 +93,7 @@ class RatingHelperTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function testDisplay() {
+	public function _testDisplay() {
 		$options = [
 			'item' => '42',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],

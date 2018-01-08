@@ -258,6 +258,7 @@ class RatingHelper extends Helper {
 		$attributes = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 
+		/*
 		//FIXME or remove
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
@@ -310,9 +311,11 @@ class RatingHelper extends Helper {
 		];
 		$attributes += $defaults;
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
+		*/
 	}
 
 	/**
+	 * @param string $field
 	 * @param array $options
 	 * @param array $htmlAttributes
 	 * @return string HTML
@@ -429,10 +432,10 @@ HTML;
 	/**
 	 * Calculates the percentage value
 	 *
-	 * @param int value
-	 * @param int total amount
-	 * @param int|int precision of rounding
-	 * @return mixed float or integer based on the precision value
+	 * @param int $value
+	 * @param int $total amount
+	 * @param int $precision Precision of rounding
+	 * @return float|int Based on the precision value
 	 */
 	public function percentage($value, $total, $precision = 2) {
 		if ($total > 0) {

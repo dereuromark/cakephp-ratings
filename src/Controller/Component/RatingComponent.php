@@ -28,10 +28,9 @@ class RatingComponent extends Component {
 	 * @var array
 	 */
 	protected $_defaultConfig = [
-		'enabled' => true,
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
-		'params' => ['rate' => true, 'rating' => null, 'redirect' => true],
+		'params' => ['rate' => null, 'rating' => null, 'redirect' => true],
 		'userId' => null,
 		'userIdField' => 'id',
 	];
@@ -52,12 +51,8 @@ class RatingComponent extends Component {
 	 * @param \Cake\Event\Event $event
 	 * @return \Cake\Network\Response|array|null
 	 */
-	public function beforeFilter(Event $event) {
+	public function startup(Event $event) {
 		$this->Controller = $event->subject();
-
-		if (!$this->config('enabled')) {
-			return null;
-		}
 
 		$actions = $this->config('actions');
 		if ($actions) {
@@ -98,8 +93,8 @@ class RatingComponent extends Component {
 	 * @param string $rate the model record id
 	 * @param string $rating
 	 * @param string|int $user
-	 * @param bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
-	 * @return \Cake\Network\Response|array|null
+	 * @param bool|string|array $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 * @return \Cake\Network\Response|null
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
@@ -135,10 +130,9 @@ class RatingComponent extends Component {
 			if ($redirect === true) {
 				return $this->redirect($this->buildUrl());
 			}
-			dd($redirect);
 			return $this->redirect($redirect);
 		}
-		return $result;
+		return null;
 	}
 
 	/**
@@ -149,8 +143,10 @@ class RatingComponent extends Component {
 	public function buildUrl() {
 		$params = ['plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']];
 		$params = array_merge($params, $this->Controller->request->params['pass']);
+
+		$ratingParams = array_keys($this->_config['params']);
 		foreach ($this->Controller->request->query as $name => $value) {
-			if (!isset($this->_config['params'][$name])) {
+			if (!in_array($name, $ratingParams)) {
 				$params['?'][$name] = $value;
 			}
 		}

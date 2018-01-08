@@ -190,10 +190,12 @@ class RatableBehaviorTest extends TestCase {
 			'foreign_key' => 1,
 			'model' => 'Posts',
 			'user_id' => '3',
-			'value' => 2.5];
+			'value' => 3.5
+		];
 		$rating = $this->Posts->Ratings->newEntity($data);
-		$this->Posts->Ratings->save($rating);
+		$this->Posts->Ratings->saveOrFail($rating);
 
+		// The current record has one record votes with value 1 (sum 1)
 		$result = $this->Posts->incrementRating(1, 2.5);
 		$this->assertEquals('1.75', $result['rating']);
 		$this->assertEquals('3.5', $result['rating_sum']);
@@ -202,22 +204,9 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals('1.0', $result['rating']);
 		$this->assertEquals('1.0', $result['rating_sum']);
 
-		$result = $this->Posts->incrementRating(1, 2.5);
+		$result = $this->Posts->incrementRating(1, 3);
 		$this->assertEquals('2.0', $result['rating']);
 		$this->assertEquals('4.0', $result['rating_sum']);
-
-		$data = [
-			'foreign_key' => 1,
-			'model' => 'Posts',
-			'user_id' => '4',
-			'value' => 2.5];
-		$rating = $this->Posts->Ratings->newEntity($data);
-		$this->Posts->Ratings->save($rating);
-
-		// Sum is actually 1+2.5+2.5=6, rating is actually 2 then
-		$result = $this->Posts->incrementRating(1, 2.5);
-		$this->assertEquals('2.3', round($result['rating'], 1));
-		$this->assertEquals('7.0', $result['rating_sum']);
 	}
 
 	/**
@@ -386,28 +375,14 @@ class RatableBehaviorTest extends TestCase {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = 1; // phpnut
 		$foreignKey = 1;
-		$result = $this->Articles->isRatedBy($foreignKey, $userId);
+		$result = $this->Articles->isRatedBy($foreignKey, $userId)->count();
 
-		unset($result['created']);
-		unset($result['modified']);
-		$expected = [
-			'id' => 1,
-			'user_id' => 1,
-			'foreign_key' => '1',
-			'model' => 'Articles',
-			'value' => 1.0,
-		];
-		$this->assertEquals($expected, $result);
+		$this->assertSame(1, $result);
 
 		$userId = 1; // phpnut
-		$foreignKey = [1, 2];
-		$result = $this->Articles->isRatedBy($foreignKey, $userId);
-		$this->assertEquals([1], $result);
-
-		$userId = 1; // phpnut
-		$foreignKey = [5, 6];
-		$result = $this->Articles->isRatedBy($foreignKey, $userId);
-		$this->assertFalse($result);
+		$foreignKey = 3;
+		$result = $this->Articles->isRatedBy($foreignKey, $userId)->count();
+		$this->assertSame(0, $result);
 	}
 
 	/**
