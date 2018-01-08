@@ -17,11 +17,6 @@ use Cake\TestSuite\TestCase;
 use Cake\View\View;
 use Ratings\View\Helper\RatingHelper;
 
-/**
- * CakePHP Ratings Plugin
- *
- * Rating helper tests
- */
 class RatingHelperTest extends TestCase {
 
 	/**
@@ -32,9 +27,18 @@ class RatingHelperTest extends TestCase {
 	public $Rating;
 
 	/**
+	 * @var \Cake\Http\ServerRequest
+	 */
+	protected $request;
+
+	/**
+	 * @var \Cake\View\View
+	 */
+	protected $View;
+
+	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see cake/tests/lib/TestCase#startTest($method)
 	 * @return void
 	 */
 	public function setUp() {
@@ -43,12 +47,7 @@ class RatingHelperTest extends TestCase {
 		$this->Controller = new Controller();
 		$this->View = new View($this->request);
 		$this->Rating = new RatingHelper($this->View);
-		//$this->Rating->Form = new FormHelper($this->View);
-		//$this->Rating->Html = new HtmlHelper($this->View);
-		//$this->Rating->Form->Html = $this->Rating->Html;
-		//$this->Rating->Form->params['action'] = 'add';
 
-		//ClassRegistry::addObject('view', $this->View);
 		Router::reload();
 	}
 
@@ -61,6 +60,15 @@ class RatingHelperTest extends TestCase {
 		$this->assertEquals('40', $this->Rating->percentage(2, 5));
 		$this->assertEquals('0', $this->Rating->percentage(0, 0));
 		$this->assertEquals('100', $this->Rating->percentage(6, 6));
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testRound() {
+		$this->assertSame(3.25, $this->Rating->round(3.31, 4));
+		$this->assertSame(5, $this->Rating->round(5.31, 4, 1, 5));
+		$this->assertSame(1, $this->Rating->round(0.76, 4, 1, 5));
 	}
 
 	/**
@@ -79,6 +87,37 @@ class RatingHelperTest extends TestCase {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function testRatingImage() {
+		ini_set('intl.default_locale', 'de_DE');
+
+		$result = $this->Rating->ratingImage(3.25);
+
+		$expected = '<div title="3,5 of 5 stars" class="ratingStars clearfix"><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star"></i><i class="fa fa-fw fa-star-half-o"></i><i class="fa fa-fw fa-star-o"></i></div>';
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testDisplay() {
+		$options = [
+			'item' => 3,
+			'type' => 'radio',
+			'stars' => 5,
+			'js' => true,
+			'createForm' => ['url' => ['?' => ['rate' => 3, 'redirect' => true]]]
+		];
+		$attributes = ['legend' => false];
+
+		$result = $this->Rating->display($options, $attributes);
+		$this->assertTextContains('<form method="post" accept-charset="utf-8" action="/?rate=3&amp;redirect=1">', $result);
+		$this->assertTextContains('<input type="hidden" name="_method" value="POST"/>', $result);
+		$this->assertTextContains('<select name="rating" id="', $result);
+	}
+
+	/**
 	 * Test display method exception
 	 *
 	 * @return void
@@ -90,6 +129,8 @@ class RatingHelperTest extends TestCase {
 
 	/**
 	 * Test display method
+	 *
+	 * @deprecated
 	 *
 	 * @return void
 	 */
@@ -152,15 +193,29 @@ class RatingHelperTest extends TestCase {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function testImage() {
+		$result = $this->Rating->image(3.11);
+		$expected = '<div data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" title="3 of 5 stars" class="rating-container rating-fa"><div class="rating-stars" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" style="width: 60%"></div></div>';
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function testInput() {
+		$this->Rating->input('foo');
+	}
+
+	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see cake/tests/lib/TestCase#endTest($method)
 	 * @return void
 	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Rating);
-		//TableRegistry::flush();
 	}
 
 }

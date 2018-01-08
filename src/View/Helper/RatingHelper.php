@@ -26,7 +26,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @var array
 	 */
-	public $helpers = ['Html', 'Form'];
+	public $helpers = ['Html', 'Form', 'Number'];
 
 	/**
 	 * Allowed types of html list elements
@@ -51,6 +51,7 @@ class RatingHelper extends Helper {
 		'redirect' => true,
 		'class' => 'rating',
 		'js' => false,
+		'precision' => 1,
 	];
 
 	/**
@@ -130,14 +131,8 @@ class RatingHelper extends Helper {
 			$res .= $array[$k];
 		}
 
-		$precision = 2;
-		if ((int)$roundedValue == $roundedValue) {
-			$precision = 0;
-		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
-			$precision = 1;
-		}
 		$defaults = [
-			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $options['stars']),
+			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $options['stars']),
 		];
 		$attributes += $defaults;
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
@@ -196,14 +191,8 @@ class RatingHelper extends Helper {
 			}
 		}
 
-		$precision = 2;
-		if ((int)$roundedValue == $roundedValue) {
-			$precision = 0;
-		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
-			$precision = 1;
-		}
 		$defaults = [
-			'title' => __d('ratings', '{0} of {1} stars', number_format($roundedValue, $precision, ',', '.'), $stars),
+			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($$roundedValue, $this->_config), $stars),
 		];
 		$attributes += $defaults;
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
@@ -236,13 +225,7 @@ class RatingHelper extends Helper {
 		}
 		$percent = $this->percentage($roundedValue, $options['stars']);
 
-		$precision = 2;
-		if ((int)$roundedValue == $roundedValue) {
-			$precision = 0;
-		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
-			$precision = 1;
-		}
-		$title = __d('ratings', '{0} of {1} stars', number_format(min($roundedValue, $options['stars']), $precision, ',', '.'), $options['stars']);
+		$title = __d('ratings', '{0} of {1} stars', $this->Number->format(min($roundedValue, $options['stars']), $this->_config), $options['stars']);
 
 		$attrContent = [
 			'class' => 'rating-stars', 'data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape'],

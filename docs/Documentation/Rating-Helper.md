@@ -11,7 +11,8 @@ echo $this->Rating->display([
 	'value' => $item['rating'],
 	'createForm' => [
 		'url' => [
-			$this->passedArgs, 'rate' => $item['id'],
+			$this->passedArgs, 
+			'rate' => $item['id'],
 			'redirect' => true
 		]
 	]
@@ -53,6 +54,7 @@ There is a sample JSON layout included in the ratings plugin, but views need to 
 Helper methods
 --------------
 
-* **display():** Displays a bunch of rating links wrapped into a list element of your choice.
+* **display():** Displays a bunch of rating links wrapped into a list element of your choice. Using `createForm` option you can use this to allow rating.
+* **ratingImage():** Displays pure HTML stars (non JS) for easy readonly use.
 * **bar($value, $total, $options):** Bar rating.
-* **starForm($options, $urlHtmlAttributes):** Displays a star form.
+* **starForm($options, $urlHtmlAttributes):** Displays a star form. Used by display().

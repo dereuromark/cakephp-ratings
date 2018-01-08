@@ -20,9 +20,14 @@ cake Migrations migrate -p Ratings
 
 Alternately you can copy-and-paste the SQL commands from the migration files.
 
-## Database Table Name
+### Database Table Name
 
 To customize the table name, you can use the Configure key `Ratings.table`:
 ```php
 Configure::write('Ratings.table', 'prefixed_special_ratings');
 ```
+
+### Using UUIDs
+You can use UUIDs for id, user_id columns. In that case just copy-and-paste the Migration to app level and adjust the type accordingly.
+In that case do not use the above migration command.
+

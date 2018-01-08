@@ -38,7 +38,7 @@ class RatableBehavior extends Behavior {
 	 * update			- boolean flag, that define permission to rerate(change previous rating)
 	 * modelValidate	- validate the model before save, default is false
 	 * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
-	 * allowedValues	- @todo
+	 * countRates       - counter cache
 	 *
 	 * @var array
 	 */
@@ -55,7 +55,6 @@ class RatableBehavior extends Behavior {
 		'update' => false,
 		'modelValidate' => false,
 		'modelCallbacks' => false,
-		'allowedValues' => []
 	];
 
 	/**
@@ -175,7 +174,6 @@ class RatableBehavior extends Behavior {
 		$data['foreign_key'] = $foreignKey;
 		$data['model'] = $this->_table->alias();
 		$data['user_id'] = $userId;
-		$update = true;
 		$this->oldRating = $oldRating;
 
 		$this->_table->Ratings->deleteAll([
@@ -187,7 +185,7 @@ class RatableBehavior extends Behavior {
 		$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
 		$fieldSummaryType = $this->_table->hasField($this->_config['fieldSummary']);
 		if ($fieldCounterType && $fieldSummaryType) {
-			$result = $this->decrementRating($foreignKey, $oldRating['value'], $this->_config['saveToField'], $this->_config['calculation'], $update);
+			$result = $this->decrementRating($foreignKey, $oldRating['value'], $this->_config['saveToField'], $this->_config['calculation']);
 		} else {
 			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 		}
@@ -206,10 +204,9 @@ class RatableBehavior extends Behavior {
 	 * @param int $value Value of new rating
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @param bool $update
 	 * @return bool|float Boolean or calculated sum
 	 */
-	public function decrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
+	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
@@ -222,14 +219,8 @@ class RatableBehavior extends Behavior {
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
 
-		if (false && $update && !empty($this->oldRating)) {
-			//FIXME
-			$ratingSumNew = $rating[$fieldSummary] - $this->oldRating['value'] - $value;
-			$ratingCountNew = $rating[$fieldCounter];
-		} else {
-			$ratingSumNew = $rating[$fieldSummary] - $value;
-			$ratingCountNew = $rating[$fieldCounter] - 1;
-		}
+		$ratingSumNew = $rating[$fieldSummary] - $value;
+		$ratingCountNew = $rating[$fieldCounter] - 1;
 
 		if ($mode === 'average') {
 			if ($ratingCountNew === 0) {

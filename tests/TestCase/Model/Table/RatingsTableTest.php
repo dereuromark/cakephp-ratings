@@ -14,11 +14,6 @@ use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
-/**
- * CakePHP Ratings Plugin
- *
- * Rating model tests
- */
 class RatingsTableTest extends TestCase {
 
 	/**

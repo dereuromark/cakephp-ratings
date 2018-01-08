@@ -210,7 +210,7 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException BadMethodCallException
+	 * @expectedException \BadMethodCallException
 	 * @return void
 	 */
 	public function testDecrementRatingException() {
@@ -226,7 +226,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Articles->saveRating(1, $userId, 4)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '2.5000');
 
 		$userId = '1'; // phpnut
@@ -242,7 +242,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Posts->saveRating(1, $userId, 4)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '2.5000');
 		$this->assertEquals($result['rating_count'], 2);
 		$this->assertEquals($result['rating_sum'], 5);
@@ -262,7 +262,7 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '3');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 3);
@@ -274,7 +274,7 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
 
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '5');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 5);
@@ -289,11 +289,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Articles->saveRating(1, $userId, 4)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '2.5000');
 
 		$result = $this->Articles->removeRating(1, $userId)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '1.0000');
 
 		$userId = '1'; // phpnut
@@ -309,13 +309,13 @@ class RatableBehaviorTest extends TestCase {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$userId = '2'; // floriank
 		$result = $this->Posts->saveRating(1, $userId, 4)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '2.5000');
 		$this->assertEquals($result['rating_count'], 2);
 		$this->assertEquals($result['rating_sum'], 5);
 
 		$result = $this->Posts->removeRating(1, $userId)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '1.0000');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 1);
@@ -335,14 +335,14 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
 
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '3');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 3);
 
 		$result = $this->Posts->removeRating(1, $userId)->toArray();
 
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '0');
 		$this->assertEquals($result['rating_count'], 0);
 		$this->assertEquals($result['rating_sum'], 0);
@@ -354,13 +354,13 @@ class RatableBehaviorTest extends TestCase {
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
 
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '5');
 		$this->assertEquals($result['rating_count'], 1);
 		$this->assertEquals($result['rating_sum'], 5);
 
 		$result = $this->Posts->removeRating(3, $userId)->toArray();
-		$this->assertInternalType('array', $result);
+
 		$this->assertEquals($result['rating'], '0');
 		$this->assertEquals($result['rating_count'], 0);
 		$this->assertEquals($result['rating_sum'], 0);
