@@ -23,7 +23,7 @@ The default JS tool in use is:
 
 * https://github.com/kartik-v/bootstrap-star-rating
 
-It should however be customizable to any other JS library and templating.
+It should, however, be customizable to any other JS library and templating framework.
 
 ## Documentation
 
@@ -32,7 +32,3 @@ For documentation, as well as tutorials, see the [docs](docs/) directory of this
 ## Support
 
 For bugs and feature requests, please use the [issues](https://github.com/dereuromark/cakephp-ratings/issues) section of this repository.
-
-## License
-
-Licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) License. Redistributions of the source code included in this repository must retain the copyright notice found in each file.
