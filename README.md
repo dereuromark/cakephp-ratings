@@ -25,6 +25,9 @@ The default JS tool in use is:
 
 It should, however, be customizable to any other JS library and templating framework.
 
+## Demo
+https://sandbox.dereuromark.de/sandbox/ratings
+
 ## Documentation
 
 For documentation, as well as tutorials, see the [docs](docs/) directory of this repository.
