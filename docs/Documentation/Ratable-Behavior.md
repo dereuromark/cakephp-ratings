@@ -1,8 +1,7 @@
-Ratable Behavior
-================
+# Ratable Behavior
 
-Behavior configuration
-----------------------
+## Behavior configuration
+
 
 * **modelClass:** Must be set in the case of a plugin model to make the behavior work with plugin models like `Plugin.Model`. Required to define for plugin's models, and for model of app which name does not equal to class name.
 * **saveToField:** Boolean, true if the calculated result should be saved in the rated model
@@ -19,8 +18,7 @@ The following options provide common defaults that, in most cases, need not be r
 * **fieldSummary:** Optional cache field that will store summary of all ratings that allow to implement quick rating calculation,
 * **fieldCounter:** Optional cache field that will store count of all ratings that allow to implement quick rating calculation.
 
-Behavior callbacks
-------------------
+## Behavior callbacks
 
 The `beforeRate()` and `afterRate()` callbacks are currently supported, and are defined in the rated model. These are called before and after the rate operation respectively.
 

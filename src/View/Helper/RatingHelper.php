@@ -15,9 +15,9 @@ use Cake\View\Helper;
 use Exception;
 
 /**
- * CakePHP Ratings Plugin
- *
- * Rating helper
+ * @property \Cake\View\Helper\HtmlHelper $Html
+ * @property \Cake\View\Helper\FormHelper $Form
+ * @property \Cake\View\Helper\NumberHelper $Number
  */
 class RatingHelper extends Helper {
 
@@ -44,14 +44,14 @@ class RatingHelper extends Helper {
 		'stars' => 5,
 		'item' => null,
 		'value' => 0,
-		'type' => 'ul',
+		'type' => 'select', // Using a dropdown as fallback solution, you can also chose radio
 		'createForm' => false,
 		'url' => [],
 		'link' => true,
-		'redirect' => true,
+		'redirect' => true, // PRG pattern
 		'class' => 'rating',
-		'js' => false,
-		'precision' => 1,
+		'js' => false, // Auto-include JS snippet (You still need to provide the JS and CSS library)
+		'precision' => 1, // Rounding (decimal places)
 	];
 
 	/**
@@ -62,8 +62,18 @@ class RatingHelper extends Helper {
 	public $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
 	/**
-	 * Deprecated?
+	 * Displays a bunch of rating links wrapped into a list element of your choice
 	 *
+	 * @param float $value
+	 * @param array $options
+	 * @param array $htmlAttributes Attributes for the rating links inside the list
+	 * @return string Markup that displays the rating options as ul/li list
+	 */
+	public function display($value, array $options = [], array $htmlAttributes = []) {
+		return $this->ratingImage($value, $options, $htmlAttributes);
+	}
+
+	/**
 	 * @param float $value (0...X)
 	 * @param array $options
 	 * - type: defaults to fa (font-awesome), also possible: ui (jquery-ui)
@@ -192,13 +202,15 @@ class RatingHelper extends Helper {
 		}
 
 		$defaults = [
-			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($$roundedValue, $this->_config), $stars),
+			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $stars),
 		];
 		$attributes += $defaults;
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
 	/**
+	 * @deprecated //FIXME or make ratingImage() to image()
+	 *
 	 * @param float $value (0...X)
 	 * @param array $options
 	 * - stars (defaults to 5)
@@ -298,150 +310,14 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @param string $field
 	 * @param array $options
 	 * @param array $htmlAttributes
 	 * @return string HTML
 	 */
-	public function input($field, array $options = [], array $htmlAttributes = []) {
-		$htmlAttributes += $options;
-		return $this->Form->input($field, $htmlAttributes);
-	}
-
-	/**
-	 * Displays a bunch of rating links wrapped into a list element of your choice
-	 *
-	 * @param array $options
-	 * @param array $htmlAttributes Attributes for the rating links inside the list
-	 * @return string Markup that displays the rating options
-	 * @throws \Exception
-	 */
-	public function display(array $options = [], array $htmlAttributes = []) {
+	public function control(array $options, array $htmlAttributes = []) {
 		$options += $this->defaults;
-		if (empty($options['item'])) {
-			throw new Exception(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
-		}
 
-		if ($options['type'] === 'bootstrap') {
-			return $this->input($options, $htmlAttributes);
-		}
-
-		if ($options['type'] === 'radio' || $options['type'] === 'select') {
-			return $this->starForm($options, $htmlAttributes);
-		}
-
-		//FIXME: not used yet
-		$stars = null;
-		for ($i = 1; $i <= $options['stars']; $i++) {
-			$link = null;
-			if ($options['link']) {
-				$url = $options['url'];
-				if (!isset($url['?'])) {
-					$url['?'] = [];
-				}
-				$url['?'] = ['rate' => $options['item'], 'rating' => $i] + $url['?'];
-				if ($options['redirect']) {
-					$url['?']['redirect'] = 1;
-				}
-
-				$link = $this->Html->link($i, $url, $htmlAttributes);
-			}
-			$stars .= $this->Html->tag('div', $link, ['class' => 'ui-stars-star star' . $i]);
-		}
-
-		$id = 'star_' . $options['item'];
-
-		$type = 'div';
-		$stars = $this->Html->tag($type, '', ['id' => $id, 'data-rating' => round($options['value'], 0)]);
-		$stars .= $this->Form->hidden('rate', ['value' => $options['item']]);
-
-		$script = <<<HTML
-<script>
-;(function($) {
-	$(function() {
-		$('#$id').raty({
-			starType: 'i',
-			space: false,
-			scoreName: 'rating',
-			score: function() {
-				return $(this).attr('data-rating');
-			}
-		});
-	});
-})(jQuery);
-</script>
-HTML;
-
-		$this->_View->Blocks->concat('script', $script);
-
-		return $stars;
-	}
-
-	/**
-	 * Bar rating
-	 *
-	 * @param int $value
-	 * @param int $total amount of rates
-	 * @param array $options
-	 * @return string
-	 */
-	public function bar($value, $total, array $options = []) {
-		$defaultOptions = [
-			'innerClass' => 'inner',
-			'innerHtml' => '<span>%value%</span>',
-			'innerOptions' => [],
-			'outerClass' => 'barRating',
-			'outerOptions' => [],
-			'element' => null];
-		$options += $defaultOptions;
-
-		$percentage = $this->percentage($value, $total);
-
-		if (!empty($options['element'])) {
-			return $this->_View->element($options['element'], [
-				'value' => $value,
-				'percentage' => $percentage,
-				'total' => $total]);
-		}
-
-		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
-		$innerContent = str_replace('%value%', $value, $options['innerHtml']);
-		$innerContent = str_replace('%percentage%', $percentage, $innerContent);
-		$inner = $this->Html->div($options['innerClass'], $innerContent, $options['innerOptions']);
-
-		return $this->Html->div($options['outerClass'], $inner, $options['outerOptions']);
-	}
-
-	/**
-	 * Calculates the percentage value
-	 *
-	 * @param int $value
-	 * @param int $total amount
-	 * @param int $precision Precision of rounding
-	 * @return float|int Based on the precision value
-	 */
-	public function percentage($value, $total, $precision = 2) {
-		if ($total > 0) {
-			return round($value / $total, $precision) * 100;
-		}
-		return 0;
-	}
-
-	/**
-	 * Rounds the value according to the steps used (between min/max inclusivly)
-	 *
-	 * @param int $value
-	 * @param int $steps
-	 * @param int $min
-	 * @param int $max
-	 * @return int Value
-	 */
-	public function round($value, $steps = 4, $min = 0, $max = 5) {
-		if ($value <= $min) {
-			return $min;
-		}
-		$v = round($value * $steps) / $steps;
-		return min($v, $max);
+		return $this->starForm($options, $htmlAttributes);
 	}
 
 	/**
@@ -450,18 +326,32 @@ HTML;
 	 * @param array $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
 	 * @return string markup that displays the rating options
+	 * @throws \Exception
 	 */
-	public function starForm($options = [], $htmlAttributes = []) {
+	public function starForm($options, $htmlAttributes = []) {
 		$options += $this->defaults;
 		$flush = false;
 		if (empty($options['item'])) {
-			trigger_error(__d('ratings', 'You must set the id of the item you want to rate.'), E_USER_NOTICE);
+			throw new Exception('You must set the id of the item you want to rate.');
 		}
 		$id = $options['item'];
+
+		if (!$options['url']) {
+			$options['url']['?']['redirect'] = true;
+		}
+
+		// Shim url into a createForm type
+		if (!$options['createForm'] && $options['url']) {
+			$options['createForm'] = [
+				'url' => $options['url'],
+			];
+			unset($options['url']);
+		}
 
 		$result = '';
 		if ($options['createForm']) {
 			$result .= $this->Form->create(null, $options['createForm']) . "\n";
+			$result .= $this->Form->hidden('rate', ['value' => $id]);
 		}
 		$inputField = 'rating';
 		if (!empty($options['inputField'])) {
@@ -526,6 +416,73 @@ HTML;
 		$result = '<div class="star-rating">' . $result . '</div>';
 
 		return $result;
+	}
+
+	/**
+	 * Bar rating display.
+	 *
+	 * @param int $value
+	 * @param int $total amount of rates
+	 * @param array $options
+	 * @return string
+	 */
+	public function bar($value, $total, array $options = []) {
+		$defaultOptions = [
+			'innerClass' => 'inner',
+			'innerHtml' => '<span>%value%</span>',
+			'innerOptions' => [],
+			'outerClass' => 'bar-rating',
+			'outerOptions' => [],
+			'element' => null];
+		$options += $defaultOptions;
+
+		$percentage = $this->percentage($value, $total);
+
+		if (!empty($options['element'])) {
+			return $this->_View->element($options['element'], [
+				'value' => $value,
+				'percentage' => $percentage,
+				'total' => $total]);
+		}
+
+		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
+		$innerContent = str_replace('%value%', $this->Number->format($value, $this->_config), $options['innerHtml']);
+		$innerContent = str_replace('%percentage%', $percentage, $innerContent);
+		$inner = $this->Html->div($options['innerClass'], $innerContent, $options['innerOptions']);
+
+		return $this->Html->div($options['outerClass'], $inner, $options['outerOptions']);
+	}
+
+	/**
+	 * Calculates the percentage value
+	 *
+	 * @param int $value
+	 * @param int $total amount
+	 * @param int $precision Precision of rounding
+	 * @return float|int Based on the precision value
+	 */
+	public function percentage($value, $total, $precision = 2) {
+		if ($total > 0) {
+			return round($value / $total, $precision) * 100;
+		}
+		return 0;
+	}
+
+	/**
+	 * Rounds the value according to the steps used (between min/max inclusivly)
+	 *
+	 * @param int $value
+	 * @param int $steps
+	 * @param int $min
+	 * @param int $max
+	 * @return int Value
+	 */
+	public function round($value, $steps = 4, $min = 0, $max = 5) {
+		if ($value <= $min) {
+			return $min;
+		}
+		$v = round($value * $steps) / $steps;
+		return min($v, $max);
 	}
 
 }

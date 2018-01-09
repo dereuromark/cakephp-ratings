@@ -17,11 +17,6 @@ use LogicException;
 use OutOfBoundsException;
 use RuntimeException;
 
-/**
- * CakePHP Ratings Plugin
- *
- * Ratable behavior
- */
 class RatableBehavior extends Behavior {
 
 	/**

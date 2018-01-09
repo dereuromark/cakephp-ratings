@@ -4,3 +4,4 @@
 /plugins/
 /tmp
 /.idea/
+/config/Migrations/schema-dump-default.lock

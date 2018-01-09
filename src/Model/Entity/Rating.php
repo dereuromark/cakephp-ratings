@@ -8,11 +8,12 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property int $user_id
- * @property int $model
+ * @property string $model
  * @property int $foreign_key
  * @property float $value
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\Time $created
+ * @property \Cake\I18n\Time $modified
+ * @property \App\Model\Entity\User $user
  */
 class Rating extends Entity {
 

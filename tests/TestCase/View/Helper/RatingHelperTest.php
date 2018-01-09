@@ -57,9 +57,9 @@ class RatingHelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testPercentage() {
-		$this->assertEquals('40', $this->Rating->percentage(2, 5));
-		$this->assertEquals('0', $this->Rating->percentage(0, 0));
-		$this->assertEquals('100', $this->Rating->percentage(6, 6));
+		$this->assertSame(40.0, $this->Rating->percentage(2, 5));
+		$this->assertSame(0, $this->Rating->percentage(0, 0));
+		$this->assertSame(100.0, $this->Rating->percentage(6, 6));
 	}
 
 	/**
@@ -78,11 +78,15 @@ class RatingHelperTest extends TestCase {
 	 */
 	public function testBar() {
 		$result = $this->Rating->bar(1, 2);
-		$expected = '<div class="barRating"><div style="width: 50%" class="inner"><span>1</span></div></div>';
+		$expected = '<div class="bar-rating"><div style="width: 50%" class="inner"><span>1</span></div></div>';
+		$this->assertEquals($expected, $result);
+
+		$result = $this->Rating->bar(1.2, 2);
+		$expected = '<div class="bar-rating"><div style="width: 60%" class="inner"><span>1,2</span></div></div>';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Rating->bar(1, 4, ['innerHtml' => '<span>%percentage%</span>']);
-		$expected = '<div class="barRating"><div style="width: 25%" class="inner"><span>25</span></div></div>';
+		$expected = '<div class="bar-rating"><div style="width: 25%" class="inner"><span>25</span></div></div>';
 		$this->assertEquals($expected, $result);
 	}
 
@@ -101,7 +105,7 @@ class RatingHelperTest extends TestCase {
 	/**
 	 * @return void
 	 */
-	public function testDisplay() {
+	public function testControl() {
 		$options = [
 			'item' => 3,
 			'type' => 'radio',
@@ -111,20 +115,20 @@ class RatingHelperTest extends TestCase {
 		];
 		$attributes = ['legend' => false];
 
-		$result = $this->Rating->display($options, $attributes);
+		$result = $this->Rating->control($options, $attributes);
 		$this->assertTextContains('<form method="post" accept-charset="utf-8" action="/?rate=3&amp;redirect=1">', $result);
 		$this->assertTextContains('<input type="hidden" name="_method" value="POST"/>', $result);
 		$this->assertTextContains('<select name="rating" id="', $result);
 	}
 
 	/**
-	 * Test display method exception
+	 * Tests control() method exception
 	 *
 	 * @return void
 	 * @expectedException \Exception
 	 */
-	public function testDisplayException() {
-		$this->Rating->display();
+	public function testControlException() {
+		$this->Rating->control([]);
 	}
 
 	/**
@@ -199,13 +203,6 @@ class RatingHelperTest extends TestCase {
 		$result = $this->Rating->image(3.11);
 		$expected = '<div data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" title="3 of 5 stars" class="rating-container rating-fa"><div class="rating-stars" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" style="width: 60%"></div></div>';
 		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @return void
-	 */
-	public function testInput() {
-		$this->Rating->input('foo');
 	}
 
 	/**

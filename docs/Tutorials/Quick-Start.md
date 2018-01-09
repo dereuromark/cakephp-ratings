@@ -59,13 +59,14 @@ is not required but shows you how you can check if the current record was alread
 In your ```view.ctp``` add this.
 
 ```php
-if (!$hasRated) {
-	echo $this->Rating->display([
+if (!$isRated) {
+	echo $this->Rating->control([
 		'item' => $post['id'],
-		'url' => [$post['id'])
+		'js' => true,
 	]);
 } else {
 	echo __('You have already rated.');
+	echo $this->Rating->display($isRated['value']);
 }
 ```
 
@@ -76,24 +77,8 @@ In our case we want to go back to the view we're currently on so we need to pass
 JS can be included to generate a nice star rating widget to click on instead of just an input, radio or dropdown. Use `'js' => true` for this.
 Also don't forget to include the assets.
 
-If you use bower:
-```
-bower install bootstrap-star-rating --save
-```
-And if you also use AssetCompress plugin:
-```
-// Add path to assets or wherever you configured bower to place the files
-paths[] = WEBROOT/assets/
-
-// in JS section
-files[] = bootstrap-star-rating/js/star-rating.js
-
-// in CSS section
-files[] = bootstrap-star-rating/css/star-rating.css
-```
-
 ### Read Only
 If you only want to display the results, a HTML only (non JS) font-svg solution is recommended:
 ```php
-echo $this->Rating->ratingImage($post->rating) . ' <nobr>(' . $post->rating_count . ' votes)</nobr>';
+echo $this->Rating->display($post->rating) . ' <nobr>(' . $post->rating_count . ' votes)</nobr>';
 ```

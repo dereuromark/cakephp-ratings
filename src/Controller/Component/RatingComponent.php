@@ -15,7 +15,8 @@ use Cake\Controller\Controller;
 use Cake\Event\Event;
 
 /**
- * Ratings component
+ * @property \Cake\Controller\Component\RequestHandlerComponent $RequestHandler
+ * @property \Cake\Controller\Component\FlashComponent $Flash
  */
 class RatingComponent extends Component {
 

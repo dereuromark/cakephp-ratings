@@ -1,5 +1,4 @@
-Rating Component
-----------------
+# Rating Component
 
 As the component starts up, it attaches the Ratable behavior to the default controller model.
 
@@ -7,8 +6,7 @@ It will handle the ```rate```, ```rating```, and ```redirect``` query parameters
 
 When rate and rating parameters are passed and the current controller action is inside ```$actions``` list (that by default allows all), the ```rate``` action of component is executed. It is possible to redefine it in the controller if more customization is needed.
 
-Component settings
-------------------
+## Component settings
 
 * **modelClass:** Must be set in the case of a plugin model to make the behavior work with plugin models like ```Plugin.Model```.
 * **rateClass:** Name of the rate class model.
