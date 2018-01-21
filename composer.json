@@ -32,7 +32,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"Ratings\\": "src/"
+			"Ratings\\": "src/",
+			"Ratings\\Test\\Fixture\\": "tests/Fixture/"
 		}
 	},
 	"autoload-dev": {
