@@ -338,6 +338,9 @@ class RatingHelper extends Helper {
 
 		if (!$options['url']) {
 			$options['url']['?']['redirect'] = true;
+			foreach ($this->request->params['pass'] as $passedParam) {
+				$options['url'][] = $passedParam;
+			}
 		}
 
 		// Shim url into a createForm type
