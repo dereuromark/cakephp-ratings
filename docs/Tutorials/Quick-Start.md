@@ -11,8 +11,8 @@ You have already created the ratings table.
 
 Ideally, you have the following fields in your posts table:
 - "rating" (float, default 0.0)
-- "ratung_sum" (int 10, optional but recommended)
-- "ratung_count" (int 10, optional but recommended)
+- "rating_sum" (int 10, optional but recommended)
+- "rating_count" (int 10, optional but recommended)
 
 If you allow smaller ratings then integer 1...x, you might want to set rating_sum to float, as well.
 
