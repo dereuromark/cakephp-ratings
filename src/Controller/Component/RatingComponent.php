@@ -53,9 +53,9 @@ class RatingComponent extends Component {
 	 * @return \Cake\Network\Response|array|null
 	 */
 	public function startup(Event $event) {
-		$this->Controller = $event->subject();
+		$this->Controller = $event->getSubject();
 
-		$actions = $this->config('actions');
+		$actions = $this->getConfig('actions');
 		if ($actions) {
 			$action = !empty($this->Controller->request->params['action']) ? $this->Controller->request->params['action'] : '';
 			if (!in_array($action, $actions)) {
@@ -64,7 +64,7 @@ class RatingComponent extends Component {
 		}
 
 		$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['_ext']) && $this->Controller->request->params['url']['_ext'] === 'json');
-		$modelName = $this->config('modelName');
+		$modelName = $this->getConfig('modelName');
 		if (empty($modelName)) {
 			$modelName = $this->Controller->modelClass;
 		}
@@ -79,10 +79,10 @@ class RatingComponent extends Component {
 			return null;
 		}
 
-		$params = $this->request->data + $this->request->query + $this->_config['params'];
+		$params = $this->request->getData() + $this->request->getQuery() + $this->_config['params'];
 		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			if (isset($params['rate']) && isset($params['rating'])) {
-				$userId = $this->config('userId') ?: $this->Controller->Auth->user($this->config('userIdField'));
+				$userId = $this->getConfig('userId') ?: $this->Controller->Auth->user($this->getConfig('userIdField'));
 				return $this->rate($params['rate'], $params['rating'], $userId, $params['redirect']);
 			}
 		}
@@ -106,9 +106,9 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->{$this->config('modelName')}->findById($rate)) {
+		} elseif ($Controller->{$this->getConfig('modelName')}->findById($rate)) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
-			$Model = $Controller->{$this->config('modelName')};
+			$Model = $Controller->{$this->getConfig('modelName')};
 			$newRating = $Model->saveRating($rate, $user, $rating);
 			if ($newRating) {
 				$rating = round($newRating->newRating);
@@ -179,8 +179,8 @@ class RatingComponent extends Component {
 			return $this->Controller->render('rated');
 		}
 		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {
-			$status = $this->Controller->viewVars['status'];
-			$this->Flash->$status($this->Controller->viewVars['message']);
+			$method = $this->Controller->viewVars['status'];
+			$this->Flash->$method($this->Controller->viewVars['message']);
 		}
 
 		return $this->Controller->redirect($url, $status);

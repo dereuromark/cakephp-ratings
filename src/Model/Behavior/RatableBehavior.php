@@ -120,7 +120,7 @@ class RatableBehavior extends Behavior {
 				$this->oldRating = $oldRating;
 				if (!empty($oldRating)) {
 					$this->_table->Ratings->deleteAll([
-						'Ratings.model' => $this->_table->alias(),
+						'Ratings.model' => $this->_table->getAlias(),
 						'Ratings.foreign_key' => $foreignKey,
 						'Ratings.user_id' => $userId
 					]);
@@ -167,12 +167,12 @@ class RatableBehavior extends Behavior {
 		}
 
 		$data['foreign_key'] = $foreignKey;
-		$data['model'] = $this->_table->alias();
+		$data['model'] = $this->_table->getAlias();
 		$data['user_id'] = $userId;
 		$this->oldRating = $oldRating;
 
 		$this->_table->Ratings->deleteAll([
-			'Ratings.model' => $this->_table->alias(),
+			'Ratings.model' => $this->_table->getAlias(),
 			'Ratings.foreign_key' => $foreignKey,
 			'Ratings.user_id' => $userId
 		]);
@@ -208,7 +208,7 @@ class RatableBehavior extends Behavior {
 
 		$rating = $this->_table->find('all', [
 			'conditions' => [
-				$this->_table->alias() . '.' . $this->_table->primaryKey() => $id],
+				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $id],
 		])->first();
 
 		$fieldSummary = $this->_config['fieldSummary'];
@@ -266,7 +266,7 @@ class RatableBehavior extends Behavior {
 
 		$data = $this->_table->find('all', [
 			'conditions' => [
-				$this->_table->alias() . '.' . $this->_table->primaryKey() => $id],
+				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $id],
 		])->first();
 
 		$fieldSummary = $this->_config['fieldSummary'];
@@ -328,7 +328,7 @@ class RatableBehavior extends Behavior {
 
 		$mode = $this->modes[$mode];
 		$options = [
-			'contain' => [$this->_table->alias()],
+			'contain' => [$this->_table->getAlias()],
 			'fields' => function ($query) use ($mode) {
 					/**
 						 *
@@ -341,7 +341,7 @@ class RatableBehavior extends Behavior {
 			},
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
-				'Ratings.model' => $this->_table->alias()
+				'Ratings.model' => $this->_table->getAlias()
 			]
 		];
 
@@ -368,11 +368,11 @@ class RatableBehavior extends Behavior {
 		}
 
 		$data = [
-			$this->_table->primaryKey() => $foreignKey,
+			$this->_table->getPrimaryKey() => $foreignKey,
 			$saveToField => $result[0]['rating'],
 		];
 
-		$rating = $this->_table->find()->where([$this->_table->primaryKey() => $foreignKey])->first();
+		$rating = $this->_table->find()->where([$this->_table->getPrimaryKey() => $foreignKey])->first();
 		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
 
 		return $this->_table->save($rating, [
@@ -392,7 +392,7 @@ class RatableBehavior extends Behavior {
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
-				'Ratings.model' => $this->_table->alias()
+				'Ratings.model' => $this->_table->getAlias()
 			]
 		]);
 
@@ -453,7 +453,7 @@ class RatableBehavior extends Behavior {
 			'find' => [
 				'contain' => [],
 				'conditions' => [
-					$this->_table->alias() . '.' . $this->_table->primaryKey() => $foreignKey]],
+					$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $foreignKey]],
 			'values' => [
 				'up' => 1, 'down' => -1
 			]
@@ -515,7 +515,7 @@ class RatableBehavior extends Behavior {
 
 		$data = $this->_table->find('all', [
 			'conditions' => [
-				$this->_table->alias() . '.' . $this->_table->primaryKey() => $foreignKey],
+				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $foreignKey],
 		])->first();
 
 		if (($update || $type === 'removeRating') && !empty($oldRating)) {

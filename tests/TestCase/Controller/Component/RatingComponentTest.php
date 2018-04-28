@@ -65,11 +65,6 @@ class RatingComponentTest extends TestCase {
 
 		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
 		$this->AuthComponent = $this->getMockBuilder(AuthComponent::class)->setMethods(['user'])->disableOriginalConstructor()->getMock();
-		/*
-		$this->AuthComponent = new MockAuthComponent($this->Collection);
-		$this->AuthComponent->enabled = true;
-		$this->Controller->Auth = $this->AuthComponent;
-		*/
 
 		Router::reload();
 	}
@@ -81,7 +76,7 @@ class RatingComponentTest extends TestCase {
 	 */
 	public function tearDown() {
 		parent::tearDown();
-		$this->Controller->request->session()->destroy();
+		$this->Controller->request->getSession()->destroy();
 		unset($this->Controller);
 		TableRegistry::clear();
 	}
@@ -113,7 +108,6 @@ class RatingComponentTest extends TestCase {
 			'Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		$this->assertTrue($this->Controller->Articles->behaviors()->Ratable->config('update'), 'Ratable behavior should be updatable.');
-		//$this->assertEquals('Articles', $this->Controller->Ratings->modelName);
 	}
 
 	/**
@@ -130,8 +124,7 @@ class RatingComponentTest extends TestCase {
 		$this->_initControllerAndRatings(['action' => 'show']);
 		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
-		$this->assertEquals(['show'], $this->Controller->Rating->config('actions'));
-		//$this->assertEquals('Articles', $this->Controller->Ratings->config('modelName'));
+		$this->assertEquals(['show'], $this->Controller->Rating->getConfig('actions'));
 	}
 
 	/**
@@ -141,14 +134,7 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testStartup() {
-		$this->Controller->request->session()->write('Flash', null);
-		/*
-		$this->AuthComponent
-			->expects($this->any())
-			->method('user')
-			->with('id')
-			->will($this->returnValue(array('1')));
-		*/
+		$this->Controller->request->getSession()->write('Flash', null);
 
 		$params = [
 			'plugin' => null,
@@ -170,14 +156,14 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->request->session()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
 		$this->Controller->request->session()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
 */
-		$this->Controller->request->session()->write('Flash', null);
+		$this->Controller->request->getSession()->write('Flash', null);
 		ServerRequest::addDetector('post', function() { return true;
 });
 		$result = $this->_initControllerAndRatings($params);
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-		$sessionFlash = $this->Controller->request->session()->read('Flash.flash');
+		$sessionFlash = $this->Controller->request->getSession()->read('Flash.flash');
 		$expectedFlash = [
 			[
 				'message' => __d('ratings', 'Not logged in'),
@@ -188,8 +174,7 @@ class RatingComponentTest extends TestCase {
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->request->session()->write('Flash', null);
-		//$this->Controller->request->session()->write('Auth.User.id', 1);
+		$this->Controller->request->getSession()->write('Flash', null);
 		$options = [
 			'userId' => 1
 		];
@@ -197,7 +182,7 @@ class RatingComponentTest extends TestCase {
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-		$sessionFlash = $this->Controller->request->session()->read('Flash.flash');
+		$sessionFlash = $this->Controller->request->getSession()->read('Flash.flash');
 		$expectedFlash = [
 			[
 				'message' => __d('ratings', 'Your rate was successful.'),
@@ -208,7 +193,7 @@ class RatingComponentTest extends TestCase {
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->request->session()->write('Flash', null);
+		$this->Controller->request->getSession()->write('Flash', null);
 		$params['?']['rate'] = '1';
 		$result = $this->_initControllerAndRatings($params);
 
@@ -226,7 +211,7 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testStartupAcceptPost() {
-		$this->Controller->request->session()->write('Auth.User.id', 1);
+		$this->Controller->request->getSession()->write('Auth.User.id', 1);
 		/*
 		$this->AuthComponent
 			->expects($this->any())
@@ -259,8 +244,6 @@ class RatingComponentTest extends TestCase {
 		$result = $this->_initControllerAndRatings($params);
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
-
-		//$this->Controller->request->session()->expects($this->any())->method('setFlash');
 	}
 
 	/**

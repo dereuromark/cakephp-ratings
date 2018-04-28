@@ -38,7 +38,7 @@ class RatingsTable extends Table {
 	public function initialize(array $config) {
 		$table = Configure::read('Ratings.table');
 		if ($table) {
-			$this->table($table);
+			$this->setTable($table);
 		}
 
 		$userClass = Configure::read('Ratings.userClass');

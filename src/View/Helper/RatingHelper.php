@@ -374,7 +374,7 @@ class RatingHelper extends Helper {
 		$inputOptions += $htmlAttributes;
 
 		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
-		$result .= $this->Form->input($inputField, $inputOptions);
+		$result .= $this->Form->control($inputField, $inputOptions);
 		$result .= '</div>';
 		if ($options['createForm']) {
 			if (!empty($options['target']) && !empty($options['createForm']['url']) && !empty($options['createForm']['ajaxOptions'])) {
