@@ -15,7 +15,7 @@ The recommended way to install and maintain the database is using the [Migration
 To set up the **Ratings** plugin tables run this command:
 
 ```
-cake Migrations migrate -p Ratings
+cake migrations migrate -p Ratings
 ```
 
 Alternately you can copy-and-paste the SQL commands from the migration files.

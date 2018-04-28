@@ -69,7 +69,7 @@ class RatingComponent extends Component {
 			$modelName = $this->Controller->modelClass;
 		}
 		list(, $modelName) = pluginSplit($modelName);
-		$this->config('modelName', $modelName);
+		$this->setConfig('modelName', $modelName);
 		if (!$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
 			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
 		}
