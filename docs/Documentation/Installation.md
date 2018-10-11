@@ -1,6 +1,6 @@
 # Installation
 
-To install the plugin, composer it as `"dereuromark/cakephp-ratings":"dev-master"`.
+To install the plugin, composer it as `"dereuromark/cakephp-ratings"`.
 
 Then, include the following line in your `config/bootstrap.php` to load the plugin in your application.
 
@@ -31,3 +31,20 @@ Configure::write('Ratings.table', 'prefixed_special_ratings');
 You can use UUIDs for id, user_id columns. In that case just copy-and-paste the Migration to app level and adjust the type accordingly.
 In that case do not use the above migration command.
 
+### Entity accessible list
+In case your entities are not baked as 
+```php
+	protected $_accessible = [
+		'*' => true,
+		'id' => false,
+	];
+```
+but as explicitly whitelisted fields, please don't forget to also whitelist the new fields:
+```php
+	protected $_accessible = [
+		...
+		'rating' => true,
+		'rating_sum' => true,		
+		'rating_count' => true,
+	];
+```
