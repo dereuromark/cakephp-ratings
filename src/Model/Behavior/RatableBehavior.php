@@ -53,6 +53,13 @@ class RatableBehavior extends Behavior {
 	];
 
 	/**
+	 * Table instance.
+	 *
+	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
+	 */
+	protected $_table;
+
+	/**
 	 * Rating modes
 	 *
 	 * @var array
@@ -70,7 +77,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function initialize(array $config) {
 		if (empty($this->_config['modelClass'])) {
-			$this->_config['modelClass'] = $this->_table->alias();
+			$this->_config['modelClass'] = $this->_table->getAlias();
 		}
 
 		$this->_table->hasMany('Ratings', [
@@ -105,6 +112,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		$type = 'saveRating';
+		$update = $this->_config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 
@@ -112,10 +120,10 @@ class RatableBehavior extends Behavior {
 			$data = [];
 
 			$data['foreign_key'] = $foreignKey;
-			$data['model'] = $this->_table->alias();
+			$data['model'] = $this->_table->getAlias();
 			$data['user_id'] = $userId;
 			$data['value'] = $value;
-			if ($this->_config['update']) {
+			if ($update) {
 				$update = true;
 				$this->oldRating = $oldRating;
 				if (!empty($oldRating)) {
@@ -156,6 +164,7 @@ class RatableBehavior extends Behavior {
 	 */
 	public function removeRating($foreignKey, $userId) {
 		$type = 'removeRating';
+		$update = $this->_config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
@@ -200,6 +209,7 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
 	 * @return bool|float Boolean or calculated sum
+	 * @throws \InvalidArgumentException
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
 		if (!in_array($mode, array_keys($this->modes))) {
@@ -258,6 +268,7 @@ class RatableBehavior extends Behavior {
 	 * @param string $mode type of calculation
 	 * @param bool $update
 	 * @return bool|float Boolean or calculated sum
+	 * @throws \InvalidArgumentException
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!in_array($mode, array_keys($this->modes))) {
@@ -296,7 +307,6 @@ class RatableBehavior extends Behavior {
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
-			//$save[$this->_table->primaryKey()] = $id;
 			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
 
 			return $this->_table->save($r, [
@@ -330,13 +340,10 @@ class RatableBehavior extends Behavior {
 		$options = [
 			'contain' => [$this->_table->getAlias()],
 			'fields' => function ($query) use ($mode) {
-					/**
-						 *
-
-						 * @var \Cake\Database\Query
-						 */
+				/** @var \Cake\Database\Query $query */
+				$rating = $query->newExpr()->add($mode . '(value)');
 				return [
-					'rating' => $query->newExpr()->add($mode . '(value)'),
+					'rating' => $rating,
 				];
 			},
 			'conditions' => [
