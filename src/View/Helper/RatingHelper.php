@@ -378,7 +378,7 @@ class RatingHelper extends Helper {
 		$result .= '</div>';
 		if ($options['createForm']) {
 			if (!empty($options['target']) && !empty($options['createForm']['url']) && !empty($options['createForm']['ajaxOptions'])) {
-				$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
+				//$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
 				$flush = true;
 			} else {
 				$result .= $this->Form->button(__d('ratings', 'Rate!')) . "\n";

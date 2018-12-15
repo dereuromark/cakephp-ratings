@@ -26,6 +26,11 @@ class RatingComponent extends Component {
 	public $components = ['RequestHandler', 'Flash'];
 
 	/**
+	 * @var \Cake\Controller\Controller
+	 */
+	protected $Controller;
+
+	/**
 	 * @var array
 	 */
 	protected $_defaultConfig = [
@@ -39,21 +44,13 @@ class RatingComponent extends Component {
 	/**
 	 * Callback
 	 *
-	 * @param array $config The configuration settings provided to this component.
-	 * @return void
-	 */
-	public function initialize(array $config) {
-		parent::initialize($config);
-	}
-
-	/**
-	 * Callback
-	 *
 	 * @param \Cake\Event\Event $event
-	 * @return \Cake\Network\Response|array|null
+	 * @return \Cake\Http\Response|array|null
 	 */
 	public function startup(Event $event) {
-		$this->Controller = $event->getSubject();
+		/** @var \Cake\Controller\Controller $controller */
+		$controller = $event->getSubject();
+		$this->Controller = $controller;
 
 		$actions = $this->getConfig('actions');
 		if ($actions) {
@@ -95,7 +92,7 @@ class RatingComponent extends Component {
 	 * @param string $rating
 	 * @param string|int $user
 	 * @param bool|string|array $redirect boolean to redirect to same url or string or array to use it for Router::url()
-	 * @return \Cake\Network\Response|null
+	 * @return \Cake\Http\Response|null
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
@@ -146,7 +143,7 @@ class RatingComponent extends Component {
 		$params = array_merge($params, $this->Controller->request->params['pass']);
 
 		$ratingParams = array_keys($this->_config['params']);
-		foreach ($this->Controller->request->query as $name => $value) {
+		foreach ($this->Controller->request->getQuery() as $name => $value) {
 			if (!in_array($name, $ratingParams)) {
 				$params['?'][$name] = $value;
 			}
@@ -160,7 +157,7 @@ class RatingComponent extends Component {
 	 *
 	 * @param array|string $url
 	 * @param string|null $status
-	 * @return \Cake\Network\Response|null
+	 * @return \Cake\Http\Response|null
 	 */
 	public function redirect($url, $status = null) {
 		if (!empty($this->Controller->viewVars['authMessage']) && !empty($this->Controller->request->params['isJson'])) {
