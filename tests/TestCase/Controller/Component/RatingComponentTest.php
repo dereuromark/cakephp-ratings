@@ -44,10 +44,10 @@ class RatingComponentTest extends TestCase {
 	 * @var array
 	 */
 	public $fixtures = [
-		'core.sessions',
-		'plugin.ratings.ratings',
-		'plugin.ratings.articles',
-		'plugin.ratings.users'
+		'core.Sessions',
+		'plugin.Ratings.Ratings',
+		'plugin.Ratings.Articles',
+		'plugin.Ratings.Users'
 	];
 
 	/**

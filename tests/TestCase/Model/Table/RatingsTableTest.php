@@ -27,9 +27,9 @@ class RatingsTableTest extends TestCase {
 	 * @var array
 	 */
 	public $fixtures = [
-		'plugin.ratings.users',
-		'plugin.ratings.ratings',
-		'plugin.ratings.articles'
+		'plugin.Ratings.Users',
+		'plugin.Ratings.Ratings',
+		'plugin.Ratings.Articles'
 	];
 
 	/**

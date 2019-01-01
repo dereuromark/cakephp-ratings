@@ -38,10 +38,10 @@ class RatableBehaviorTest extends TestCase {
 	 * @var array
 	 */
 	public $fixtures = [
-		'plugin.ratings.ratings',
-		'plugin.ratings.articles',
-		'plugin.ratings.posts',
-		'plugin.ratings.users'
+		'plugin.Ratings.Ratings',
+		'plugin.Ratings.Articles',
+		'plugin.Ratings.Posts',
+		'plugin.Ratings.Users'
 	];
 
 	/**
