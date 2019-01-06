@@ -2,7 +2,7 @@
 	"name": "dereuromark/cakephp-ratings",
 	"type": "cakephp-plugin",
 	"description": "Ratings Plugin for CakePHP.",
-	"homepage": "http://github.com/dereuromark/cakephp-ratings",
+	"homepage": "https://github.com/dereuromark/cakephp-ratings",
 	"keywords": ["cakephp", "ratings", "plugin"],
 	"license": "MIT",
 	"authors": [
