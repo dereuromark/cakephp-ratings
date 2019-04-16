@@ -230,7 +230,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating'], '2.5000');
 
 		$userId = '1'; // phpnut
-		$this->assertFalse($this->Articles->saveRating(1, $userId, 4));
+		$this->assertNull($this->Articles->saveRating(1, $userId, 4));
 	}
 
 	/**
@@ -248,7 +248,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 5);
 
 		$userId = '1'; // phpnut
-		$this->assertFalse($this->Posts->saveRating(1, $userId, 4));
+		$this->assertNull($this->Posts->saveRating(1, $userId, 4));
 	}
 
 	/**
@@ -295,7 +295,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating'], '1.0000');
 
 		$userId = '1'; // phpnut
-		$this->assertFalse($this->Articles->saveRating(1, $userId, 4));
+		$this->assertNull($this->Articles->saveRating(1, $userId, 4));
 	}
 
 	/**
@@ -319,7 +319,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 1);
 
 		$userId = '5'; // somebody
-		$this->assertFalse($this->Posts->removeRating(1, $userId));
+		$this->assertNull($this->Posts->removeRating(1, $userId));
 	}
 
 	/**

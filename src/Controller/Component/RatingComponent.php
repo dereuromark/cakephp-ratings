@@ -89,7 +89,7 @@ class RatingComponent extends Component {
 	 * Adds as user rating for a model record
 	 *
 	 * @param string $rate the model record id
-	 * @param string $rating
+	 * @param float $rating
 	 * @param string|int $user
 	 * @param bool|string|array $redirect boolean to redirect to same url or string or array to use it for Router::url()
 	 * @return \Cake\Http\Response|null
@@ -107,7 +107,7 @@ class RatingComponent extends Component {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
 			$Model = $Controller->{$this->getConfig('modelName')};
 			$newRating = $Model->saveRating($rate, $user, $rating);
-			if ($newRating) {
+			if ($newRating !== null) {
 				$rating = round($newRating->newRating);
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';

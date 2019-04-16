@@ -103,7 +103,7 @@ class RatableBehavior extends Behavior {
 	 * @param string $foreignKey
 	 * @param string|int $userId
 	 * @param int $value
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|null Calculated sum or null
 	 * @throws \Exception
 	 */
 	public function saveRating($foreignKey, $userId, $value) {
@@ -151,7 +151,7 @@ class RatableBehavior extends Behavior {
 				return $result;
 			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -159,8 +159,8 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @param string $foreignKey
 	 * @param string $userId
-	 * @return bool|float Boolean or calculated sum
-	 * @throws \Exception
+	 * @return float|null Calculated sum or null
+	 * @throws \InvalidArgumentException
 	 */
 	public function removeRating($foreignKey, $userId) {
 		$type = 'removeRating';
@@ -168,11 +168,11 @@ class RatableBehavior extends Behavior {
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
-			return false;
+			return null;
 		}
 
 		if (is_array($foreignKey)) {
-			throw new Exception();
+			throw new InvalidArgumentException();
 		}
 
 		$data['foreign_key'] = $foreignKey;
@@ -194,6 +194,7 @@ class RatableBehavior extends Behavior {
 			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 		}
 		$this->afterRateCallback(compact('foreignKey', 'userId', 'result', 'update', 'oldRating', 'type'));
+
 		return $result;
 	}
 
@@ -208,7 +209,7 @@ class RatableBehavior extends Behavior {
 	 * @param int $value Value of new rating
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|null Calculated sum or null
 	 * @throws \InvalidArgumentException
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
@@ -216,6 +217,7 @@ class RatableBehavior extends Behavior {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 
+		/** @var \Ratings\Model\Entity\Rating $rating */
 		$rating = $this->_table->find('all', [
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $id],
@@ -249,9 +251,16 @@ class RatableBehavior extends Behavior {
 
 			$rating = $this->_table->patchEntity($rating, $save, ['validate' => $this->_config['modelValidate']]);
 
-			return $this->_table->save($rating, [
+			/** @var \Ratings\Model\Entity\Rating $result */
+			$result = $this->_table->save($rating, [
 				'callbacks' => $this->_config['modelCallbacks']]);
+			if ($result === false) {
+				return null;
+			}
+
+			return $result->value;
 		}
+
 		return $ratingSum;
 	}
 
@@ -267,7 +276,7 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update
-	 * @return bool|float Boolean or calculated sum
+	 * @return float Calculated
 	 * @throws \InvalidArgumentException
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
@@ -307,11 +316,18 @@ class RatableBehavior extends Behavior {
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
-			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
+			$result = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
 
-			return $this->_table->save($r, [
+			/** @var \Ratings\Model\Entity\Rating $result */
+			$result = $this->_table->save($result, [
 				'callbacks' => $this->_config['modelCallbacks']]);
+			if ($result === false) {
+				return null;
+			}
+
+			return $result->value;
 		}
+
 		return $rating;
 	}
 
@@ -325,7 +341,7 @@ class RatableBehavior extends Behavior {
 	 * @param string $foreignKey
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|null Calculated sum or null
 	 * @throws \Exception
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
@@ -333,7 +349,7 @@ class RatableBehavior extends Behavior {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 		if (is_array($foreignKey)) {
-			throw new Exception('Array not supported for $foreignKey here');
+			throw new InvalidArgumentException('Array not supported for $foreignKey here');
 		}
 
 		$mode = $this->modes[$mode];
@@ -379,12 +395,18 @@ class RatableBehavior extends Behavior {
 			$saveToField => $result[0]['rating'],
 		];
 
+		/** @var \Ratings\Model\Entity\Rating $rating */
 		$rating = $this->_table->find()->where([$this->_table->getPrimaryKey() => $foreignKey])->first();
 		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
 
-		return $this->_table->save($rating, [
+		$rating = $this->_table->save($rating, [
 			'callbacks' => $this->_config['modelCallbacks']
 		]);
+		if ($rating === false) {
+			return null;
+		}
+
+		return $rating->value;
 	}
 
 	/**
@@ -448,11 +470,12 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $rating Integer or string rating
 	 * @param array $options
 	 * @return bool
-	 * @throws \Exception
+	 * @throws \InvalidArgumentException
+	 * @throws \OutOfBoundsException
 	 */
 	public function rate($foreignKey, $userId, $rating, array $options = []) {
 		if (is_array($foreignKey)) {
-			throw new Exception('Array not supported for $foreignKey here');
+			throw new InvalidArgumentException('Array not supported for $foreignKey here');
 		}
 
 		$options = array_merge([
