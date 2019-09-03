@@ -120,12 +120,18 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 2);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIncrementRatingCalc() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1, false);
 		$this->assertEquals($result, '1.0000');
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIncrementRatingOtherField() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1, 'title')->toArray();
@@ -134,12 +140,18 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 2);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIncrementRatingCalc2() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(2, 1)->toArray();
 		$this->assertEquals($result['rating'], '2');
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testIncrementRatingNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$data = [
@@ -156,6 +168,9 @@ class RatableBehaviorTest extends TestCase {
 		//$this->Posts->incrementRating(1, 1, true, 'pow');
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDecrementRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1);
@@ -164,12 +179,18 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 0);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDecrementRatingCalc() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, false);
 		$this->assertEquals('0.0', $result);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDecrementRatingOtherField() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, 'title');
@@ -178,12 +199,18 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 0);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDecrementRatingCalc2() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(2, 1);
 		$this->assertEquals($result['rating'], '0');
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testDecrementRatingNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$data = [
@@ -267,6 +294,9 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 3);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testSaveUpdatedRatingForNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true]);
@@ -344,6 +374,9 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_sum'], 0);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testRemoveUpdatedRatingForNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true]);
@@ -433,6 +466,9 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_3'], 1);
 	}
 
+	/**
+	 * @return void
+	 */
 	public function testCacheRatingStatisticsForRemove() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$this->Articles->saveRating(1, 4, 3);
