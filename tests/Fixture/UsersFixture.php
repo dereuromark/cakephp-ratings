@@ -145,9 +145,6 @@ class UsersFixture extends TestFixture {
 		]
 	];
 
-	/**
-	 *
-	 */
 	public function __construct() {
 		parent::__construct();
 		foreach ($this->records as &$record) {
