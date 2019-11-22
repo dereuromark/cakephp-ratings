@@ -35,7 +35,7 @@ class ArticlesFixture extends TestFixture {
 		'rating_3' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'rating_4' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'rating_5' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
-		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]]
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
 	];
 
 	/**

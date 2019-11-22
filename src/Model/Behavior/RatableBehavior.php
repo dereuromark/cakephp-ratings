@@ -92,7 +92,7 @@ class RatableBehavior extends Behavior {
 			[
 				'className' => $this->_config['modelClass'],
 				'foreignKey' => 'foreign_key',
-				'counterCache' => $this->_config['countRates']
+				'counterCache' => $this->_config['countRates'],
 			]
 		);
 	}
@@ -130,7 +130,7 @@ class RatableBehavior extends Behavior {
 					$this->_table->Ratings->deleteAll([
 						'Ratings.model' => $this->_table->getAlias(),
 						'Ratings.foreign_key' => $foreignKey,
-						'Ratings.user_id' => $userId
+						'Ratings.user_id' => $userId,
 					]);
 				}
 			} else {
@@ -183,7 +183,7 @@ class RatableBehavior extends Behavior {
 		$this->_table->Ratings->deleteAll([
 			'Ratings.model' => $this->_table->getAlias(),
 			'Ratings.foreign_key' => $foreignKey,
-			'Ratings.user_id' => $userId
+			'Ratings.user_id' => $userId,
 		]);
 
 		$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
@@ -348,8 +348,8 @@ class RatableBehavior extends Behavior {
 			},
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
-				'Ratings.model' => $this->_table->getAlias()
-			]
+				'Ratings.model' => $this->_table->getAlias(),
+			],
 		];
 
 		$result = $this->_table->Ratings->find('all', $options);
@@ -383,7 +383,7 @@ class RatableBehavior extends Behavior {
 		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
 
 		return $this->_table->save($rating, [
-			'callbacks' => $this->_config['modelCallbacks']
+			'callbacks' => $this->_config['modelCallbacks'],
 		]);
 	}
 
@@ -399,8 +399,8 @@ class RatableBehavior extends Behavior {
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
-				'Ratings.model' => $this->_table->getAlias()
-			]
+				'Ratings.model' => $this->_table->getAlias(),
+			],
 		]);
 
 		return $entry;
@@ -462,8 +462,8 @@ class RatableBehavior extends Behavior {
 				'conditions' => [
 					$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $foreignKey]],
 			'values' => [
-				'up' => 1, 'down' => -1
-			]
+				'up' => 1, 'down' => -1,
+			],
 		], $options);
 
 		if (!in_array($rating, array_keys($options['values']))) {
@@ -536,7 +536,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		return $this->_table->save($data, [
-			'callbacks' => $this->_config['modelCallbacks']
+			'callbacks' => $this->_config['modelCallbacks'],
 		]);
 	}
 

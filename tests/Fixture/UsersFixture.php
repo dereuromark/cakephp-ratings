@@ -49,7 +49,7 @@ class UsersFixture extends TestFixture {
 		'last_activity' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'created' => ['type' => 'datetime', 'null' => true, 'default' => null],
 		'modified' => ['type' => 'datetime', 'null' => true, 'default' => null],
-		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_URL' => ['type' => 'unique', 'columns' => 'url']]
+		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_URL' => ['type' => 'unique', 'columns' => 'url']],
 	];
 
 	/**
@@ -78,7 +78,7 @@ class UsersFixture extends TestFixture {
 			'private_session_key' => '',
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
-			'modified' => '2008-03-25 02:45:46'
+			'modified' => '2008-03-25 02:45:46',
 		],
 		[
 			'id' => '2',
@@ -99,7 +99,7 @@ class UsersFixture extends TestFixture {
 			'private_session_key' => '',
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
-			'modified' => '2008-03-25 02:45:46'
+			'modified' => '2008-03-25 02:45:46',
 		],
 		[
 			'id' => '3',
@@ -120,7 +120,7 @@ class UsersFixture extends TestFixture {
 			'private_session_key' => '',
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
-			'modified' => '2008-03-25 02:45:46'
+			'modified' => '2008-03-25 02:45:46',
 		],
 		[
 			'id' => '4',
@@ -141,8 +141,8 @@ class UsersFixture extends TestFixture {
 			'private_session_key' => '',
 			'last_activity' => '2008-03-25 02:45:46',
 			'created' => '2008-03-25 02:45:46',
-			'modified' => '2008-03-25 02:45:46'
-		]
+			'modified' => '2008-03-25 02:45:46',
+		],
 	];
 
 	public function __construct() {

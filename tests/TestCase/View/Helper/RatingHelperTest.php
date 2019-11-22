@@ -111,7 +111,7 @@ class RatingHelperTest extends TestCase {
 			'type' => 'radio',
 			'stars' => 5,
 			'js' => true,
-			'createForm' => ['url' => ['?' => ['rate' => 3, 'redirect' => true]]]
+			'createForm' => ['url' => ['?' => ['rate' => 3, 'redirect' => true]]],
 		];
 		$attributes = ['legend' => false];
 

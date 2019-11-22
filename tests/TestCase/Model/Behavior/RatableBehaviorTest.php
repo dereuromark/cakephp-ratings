@@ -41,7 +41,7 @@ class RatableBehaviorTest extends TestCase {
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
 		'plugin.Ratings.Posts',
-		'plugin.Ratings.Users'
+		'plugin.Ratings.Users',
 	];
 
 	/**
@@ -217,7 +217,7 @@ class RatableBehaviorTest extends TestCase {
 			'foreign_key' => 1,
 			'model' => 'Posts',
 			'user_id' => '3',
-			'value' => 3.5
+			'value' => 3.5,
 		];
 		$rating = $this->Posts->Ratings->newEntity($data);
 		$this->Posts->Ratings->saveOrFail($rating);

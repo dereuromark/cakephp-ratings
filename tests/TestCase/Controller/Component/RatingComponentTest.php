@@ -47,7 +47,7 @@ class RatingComponentTest extends TestCase {
 		'core.Sessions',
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
-		'plugin.Ratings.Users'
+		'plugin.Ratings.Users',
 	];
 
 	/**
@@ -144,8 +144,8 @@ class RatingComponentTest extends TestCase {
 			'?' => [
 				'rating' => '5',
 				'rate' => '2',
-				'redirect' => true
-			]
+				'redirect' => true,
+			],
 		];
 		$expectedRedirect = [
 			'plugin' => null,
@@ -176,7 +176,7 @@ class RatingComponentTest extends TestCase {
 
 		$this->Controller->request->getSession()->write('Flash', null);
 		$options = [
-			'userId' => 1
+			'userId' => 1,
 		];
 		$result = $this->_initControllerAndRatings($params, $options);
 		$url = $result->getHeaderLine('Location');
@@ -227,13 +227,13 @@ class RatingComponentTest extends TestCase {
 			'pass' => [],
 			'?' => [
 				'rate' => '2',
-				'redirect' => true
-			]
+				'redirect' => true,
+			],
 		];
 		$expectedRedirect = [
 			'plugin' => null,
 			'controller' => 'Articles',
-			'action' => 'test'
+			'action' => 'test',
 		];
 		$this->Controller->request->data = ['rating' => 2];
 
@@ -261,8 +261,8 @@ class RatingComponentTest extends TestCase {
 				'foo' => 'bar',
 				//'rating' => 'test',
 				'rate' => '5',
-				'redirect' => true
-			]
+				'redirect' => true,
+			],
 		];
 		$this->_initControllerAndRatings($params);
 
@@ -272,8 +272,8 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test',
 			'?' => [
-				'foo' => 'bar'
-			]
+				'foo' => 'bar',
+			],
 		];
 		$this->assertEquals($expected, $result);
 	}

@@ -87,7 +87,7 @@ class RatingHelper extends Helper {
 		$options += ['type' => 'fa'];
 		$matching = [
 			'fa' => 'FontAwesome',
-			'ui' => 'JqueryUi'
+			'ui' => 'JqueryUi',
 		];
 		$method = '_ratingImage' . $matching[$options['type']];
 
@@ -241,7 +241,7 @@ class RatingHelper extends Helper {
 
 		$attrContent = [
 			'class' => 'rating-stars', 'data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape'],
-			'style' => 'width: ' . $percent . '%'
+			'style' => 'width: ' . $percent . '%',
 		];
 		$content = $this->Html->div(null, '', $attrContent);
 
