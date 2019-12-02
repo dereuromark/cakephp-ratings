@@ -1,4 +1,5 @@
 <?php
+
 namespace Ratings\Model\Entity;
 
 use Cake\ORM\Entity;
