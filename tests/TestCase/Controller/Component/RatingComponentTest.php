@@ -153,9 +153,9 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test'];
 /*
-		$this->Controller->request->session()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
-		$this->Controller->request->session()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
-		$this->Controller->request->session()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
+		$this->Controller->request->getSession()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
+		$this->Controller->request->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
+		$this->Controller->request->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
 */
 		$this->Controller->request->getSession()->write('Flash', null);
 		ServerRequest::addDetector('post', function() { return true;
@@ -200,7 +200,7 @@ class RatingComponentTest extends TestCase {
 
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-//		$this->Controller->request->session()->write('Message', null);
+//		$this->Controller->request->getSession()->write('Message', null);
 		$params['?']['rate'] = 'invalid-record!';
 		$result = $this->_initControllerAndRatings($params);
 		$this->assertEquals(Router::url($expectedRedirect), $url);
