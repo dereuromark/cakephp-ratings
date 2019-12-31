@@ -268,7 +268,7 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update
-	 * @return bool|float Boolean or calculated sum
+	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 * @throws \InvalidArgumentException
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
@@ -326,7 +326,7 @@ class RatableBehavior extends Behavior {
 	 * @param string $foreignKey
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @return bool|float Boolean or calculated sum
+	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 * @throws \Exception
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {

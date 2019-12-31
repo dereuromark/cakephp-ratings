@@ -25,7 +25,7 @@ class RatingHelperTest extends TestCase {
 	 *
 	 * @var \Ratings\View\Helper\RatingHelper
 	 */
-	public $Rating;
+	protected $Rating;
 
 	/**
 	 * @var \Cake\Http\ServerRequest

@@ -22,18 +22,6 @@ use Cake\TestSuite\TestCase;
 class RatableBehaviorTest extends TestCase {
 
 	/**
-	 * Holds the instance of the model
-	 *
-	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
-	 */
-	public $Articles;
-
-	/**
-	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
-	 */
-	protected $Posts;
-
-	/**
 	 * Fixtures
 	 *
 	 * @var array
@@ -44,6 +32,18 @@ class RatableBehaviorTest extends TestCase {
 		'plugin.Ratings.Posts',
 		'plugin.Ratings.Users',
 	];
+
+	/**
+	 * Holds the instance of the model
+	 *
+	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
+	 */
+	protected $Articles;
+
+	/**
+	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
+	 */
+	protected $Posts;
 
 	/**
 	 * startTest
