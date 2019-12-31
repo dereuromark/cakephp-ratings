@@ -65,10 +65,15 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @var array
 	 */
-	public $modes = [
+	protected $modes = [
 		'average' => 'avg',
 		'sum' => 'sum',
 	];
+
+	/**
+	 * @var \Ratings\Model\Entity\Rating|null
+	 */
+	protected $oldRating;
 
 	/**
 	 * Setup
@@ -115,6 +120,7 @@ class RatableBehavior extends Behavior {
 		$type = 'saveRating';
 		$update = $this->_config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
+		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 
 		if (!$oldRating || $this->_config['update']) {
@@ -167,6 +173,7 @@ class RatableBehavior extends Behavior {
 		$type = 'removeRating';
 		$update = $this->_config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
+		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
 			return false;
@@ -502,41 +509,40 @@ class RatableBehavior extends Behavior {
 	 * @return bool True on success
 	 * @throws \Exception
 	 */
-	public function cacheRatingStatistics($data = []) {
-		extract($data);
-
-		if (!$result) {
+	public function cacheRatingStatistics(array $data = []) {
+		if (empty($data['result'])) {
 			return false;
 		}
 
-		if ($type === 'removeRating') {
-			$value = $oldRating['value'];
+		if ($data['type'] === 'removeRating') {
+			$data['value'] = $data['oldRating']['value'];
 		}
 
-		if (!$this->_table->hasField($this->_fieldName(round($value, 0)))) {
+		if (!$this->_table->hasField($this->_fieldName(round($data['value'], 0)))) {
 			return false;
 		}
 
-		if (is_array($foreignKey)) {
+		if (is_array($data['foreignKey'])) {
 			throw new Exception('Array not supported for $foreignKey here');
 		}
 
-		$data = $this->_table->find('all', [
+		/** @var \Ratings\Model\Entity\Rating $rating */
+		$rating = $this->_table->find('all', [
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $foreignKey],
-		])->first();
+				$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $data['foreignKey']],
+		])->firstOrFail();
 
-		if (($update || $type === 'removeRating') && !empty($oldRating)) {
-			$oldId = round($oldRating['value']);
-			$data[$this->_fieldName($oldId)] -= 1;
+		if (($data['update'] || $data['type'] === 'removeRating') && !empty($data['oldRating'])) {
+			$oldId = round($data['oldRating']['value']);
+			$rating[$this->_fieldName($oldId)] -= 1;
 		}
 
-		if ($type === 'saveRating') {
-			$newId = round($value);
-			$data[$this->_fieldName($newId)] += 1;
+		if ($data['type'] === 'saveRating') {
+			$newId = round($data['value']);
+			$rating[$this->_fieldName($newId)] += 1;
 		}
 
-		return $this->_table->save($data, [
+		return $this->_table->save($rating, [
 			'callbacks' => $this->_config['modelCallbacks'],
 		]);
 	}
