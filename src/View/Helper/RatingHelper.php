@@ -19,6 +19,7 @@ use Exception;
  * @property \Cake\View\Helper\HtmlHelper $Html
  * @property \Cake\View\Helper\FormHelper $Form
  * @property \Cake\View\Helper\NumberHelper $Number
+ * @property \Cake\Http\ServerRequest $request
  */
 class RatingHelper extends Helper {
 
@@ -331,7 +332,6 @@ class RatingHelper extends Helper {
 	 */
 	public function starForm($options, $htmlAttributes = []) {
 		$options += $this->defaults;
-		$flush = false;
 		if (empty($options['item'])) {
 			throw new Exception('You must set the id of the item you want to rate.');
 		}
@@ -339,7 +339,7 @@ class RatingHelper extends Helper {
 
 		if (!$options['url']) {
 			$options['url']['?']['redirect'] = true;
-			foreach ($this->request->params['pass'] as $passedParam) {
+			foreach ($this->request->getParam('pass') as $passedParam) {
 				$options['url'][] = $passedParam;
 			}
 		}
@@ -380,7 +380,6 @@ class RatingHelper extends Helper {
 		if ($options['createForm']) {
 			if (!empty($options['target']) && !empty($options['createForm']['url']) && !empty($options['createForm']['ajaxOptions'])) {
 				//$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
-				$flush = true;
 			} else {
 				$result .= $this->Form->button(__d('ratings', 'Rate!')) . "\n";
 			}

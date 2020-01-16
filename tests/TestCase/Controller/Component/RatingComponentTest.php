@@ -26,20 +26,6 @@ use TestApp\Controller\ArticlesController;
 class RatingComponentTest extends TestCase {
 
 	/**
-	 * Controller using the tested component
-	 *
-	 * @var \Cake\Controller\Controller|\TestApp\Controller\ArticlesController
-	 */
-	public $Controller;
-
-	/**
-	 * Mock AuthComponent object
-	 *
-	 * @var \Cake\Controller\Component\AuthComponent
-	 */
-	public $AuthComponent;
-
-	/**
 	 * Fixtures
 	 *
 	 * @var array
@@ -50,6 +36,20 @@ class RatingComponentTest extends TestCase {
 		'plugin.Ratings.Articles',
 		'plugin.Ratings.Users',
 	];
+
+	/**
+	 * Controller using the tested component
+	 *
+	 * @var \Cake\Controller\Controller|\TestApp\Controller\ArticlesController
+	 */
+	protected $Controller;
+
+	/**
+	 * Mock AuthComponent object
+	 *
+	 * @var \Cake\Controller\Component\AuthComponent
+	 */
+	protected $AuthComponent;
 
 	/**
 	 * startTest method

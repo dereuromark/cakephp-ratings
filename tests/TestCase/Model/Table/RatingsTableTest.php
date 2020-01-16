@@ -14,13 +14,9 @@ namespace Ratings\Test\TestCase\Model;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use Ratings\Model\Table\RatingsTable;
 
 class RatingsTableTest extends TestCase {
-
-	/**
-	 * @var \Ratings\Model\Table\RatingsTable
-	 */
-	public $Ratings;
 
 	/**
 	 * Fixtures
@@ -34,9 +30,13 @@ class RatingsTableTest extends TestCase {
 	];
 
 	/**
+	 * @var \Ratings\Model\Table\RatingsTable
+	 */
+	protected $Ratings;
+
+	/**
 	 * Start Test callback
 	 *
-	 * @param string $method
 	 * @return void
 	 */
 	public function setUp() {
@@ -52,7 +52,7 @@ class RatingsTableTest extends TestCase {
 	 * @return void
 	 */
 	public function testRatingInstance() {
-		$this->assertInstanceOf('Ratings\Model\Table\RatingsTable', $this->Ratings);
+		$this->assertInstanceOf(RatingsTable::class, $this->Ratings);
 	}
 
 	/**

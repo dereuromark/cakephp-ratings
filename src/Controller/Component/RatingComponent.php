@@ -55,13 +55,16 @@ class RatingComponent extends Component {
 
 		$actions = $this->getConfig('actions');
 		if ($actions) {
-			$action = !empty($this->Controller->request->params['action']) ? $this->Controller->request->params['action'] : '';
-			if (!in_array($action, $actions)) {
+			$action = $this->getController()->getRequest()->getParam('action') ?: '';
+			if (!in_array($action, $actions, true)) {
 				return null;
 			}
 		}
 
-		$this->Controller->request->params['isJson'] = (isset($this->Controller->request->params['url']['_ext']) && $this->Controller->request->params['url']['_ext'] === 'json');
+		$isJson = ($this->getController()->getRequest()->getParam('_ext') && $this->getController()->getRequest()->getParam('_ext') === 'json');
+		$request = $this->getController()->getRequest()->withParam('isJson', $isJson);
+		$this->Controller->setRequest($request);
+
 		$modelName = $this->getConfig('modelName');
 		if (empty($modelName)) {
 			$modelName = $this->Controller->modelClass;
@@ -73,17 +76,19 @@ class RatingComponent extends Component {
 		}
 		$this->Controller->helpers[] = 'Ratings.Rating';
 
-		if (!$this->request->is('post')) {
+		if (!$this->getController()->getRequest()->is('post')) {
 			return null;
 		}
 
-		$params = $this->request->getData() + $this->request->getQuery() + $this->_config['params'];
+		$params = $this->getController()->getRequest()->getData() + $this->getController()->getRequest()->getQuery() + $this->_config['params'];
 		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			if (isset($params['rate']) && isset($params['rating'])) {
 				$userId = $this->getConfig('userId') ?: $this->Controller->Auth->user($this->getConfig('userIdField'));
 				return $this->rate($params['rate'], $params['rating'], $userId, $params['redirect']);
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -140,12 +145,16 @@ class RatingComponent extends Component {
 	 * @return array
 	 */
 	public function buildUrl() {
-		$params = ['plugin' => $this->Controller->request->params['plugin'], 'controller' => $this->Controller->request->params['controller'], 'action' => $this->Controller->request->params['action']];
-		$params = array_merge($params, $this->Controller->request->params['pass']);
+		$params = [
+			'plugin' => $this->getController()->getRequest()->getParam('plugin'),
+			'controller' => $this->getController()->getRequest()->getParam('controller'),
+			'action' => $this->getController()->getRequest()->getParam('action'),
+		];
+		$params = array_merge($params, $this->getController()->getRequest()->getParam('pass'));
 
 		$ratingParams = array_keys($this->_config['params']);
-		foreach ($this->Controller->request->getQuery() as $name => $value) {
-			if (!in_array($name, $ratingParams)) {
+		foreach ($this->getController()->getRequest()->getQuery() as $name => $value) {
+			if (!in_array($name, $ratingParams, true)) {
 				$params['?'][$name] = $value;
 			}
 		}
@@ -161,7 +170,7 @@ class RatingComponent extends Component {
 	 * @return \Cake\Http\Response|null
 	 */
 	public function redirect($url, $status = null) {
-		if (!empty($this->Controller->viewVars['authMessage']) && !empty($this->Controller->request->params['isJson'])) {
+		if (!empty($this->Controller->viewVars['authMessage']) && $this->getController()->getRequest()->getParam('isJson')) {
 			$this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewVars['authMessage']);
 			$this->Controller->set('status', 'error');
@@ -169,11 +178,11 @@ class RatingComponent extends Component {
 			return $this->response;
 		}
 
-		if (!empty($this->viewVars['authMessage'])) {
-			$this->Flash->error($this->viewVars['authMessage']);
+		if (!empty($this->Controller->viewVars['authMessage'])) {
+			$this->Flash->error($this->Controller->viewVars['authMessage']);
 		}
-		if (!empty($this->Controller->request->params['isAjax']) || !empty($this->Controller->request->params['isJson'])) {
-			$this->Controller->setAction('rated', $this->Controller->request->params['named']['rate']);
+		if ($this->getController()->getRequest()->getParam('isAjax') || $this->getController()->getRequest()->getParam('isJson')) {
+			$this->Controller->setAction('rated', $this->getController()->getRequest()->params['named']['rate']);
 			return $this->Controller->render('rated');
 		}
 		if (isset($this->Controller->viewVars['status']) && isset($this->Controller->viewVars['message'])) {

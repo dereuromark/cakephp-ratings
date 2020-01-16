@@ -1,5 +1,10 @@
 parameters:
-    autoload_files:
-        - tests/bootstrap.php
+	autoload_files:
+		- bootstrap.php
 
-    ignoreErrors:
+	ignoreErrors:
+		- '#Access to an undefined property Cake\\ORM\\Table|Ratings\\Model\\Behavior\\RatableBehavior::\$Ratings#'
+
+		- '#Binary operation "+" between array|string|null and array|string|null results in an error.#'
+		- '#Cannot access property $newRating on float|true.#'
+		- '#Access to protected property .+ServerRequest::\$params.#'
