@@ -69,7 +69,7 @@ class RatingsTableTest extends TestCase {
 		];
 		$rating = $this->Ratings->newEntity($data);
 		$result = $this->Ratings->save($rating);
-		$this->assertTrue((bool)$result, print_r($rating->errors(), true));
+		$this->assertTrue((bool)$result, print_r($rating->getErrors(), true));
 	}
 
 }

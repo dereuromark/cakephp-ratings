@@ -339,7 +339,8 @@ class RatingHelper extends Helper {
 
 		if (!$options['url']) {
 			$options['url']['?']['redirect'] = true;
-			foreach ($this->request->getParam('pass') as $passedParam) {
+			$passedParams = $this->_View->getRequest()->getParam('pass');
+			foreach ($passedParams as $passedParam) {
 				$options['url'][] = $passedParam;
 			}
 		}
@@ -412,7 +413,7 @@ class RatingHelper extends Helper {
 })(jQuery);
 </script>
 HTML;
-				$this->_View->Blocks->concat('script', $script);
+				$this->_View->append('script', $script);
 			}
 		}
 
@@ -474,7 +475,7 @@ HTML;
 	/**
 	 * Rounds the value according to the steps used (between min/max inclusivly)
 	 *
-	 * @param int $value
+	 * @param float $value
 	 * @param int $steps
 	 * @param int $min
 	 * @param int $max

@@ -16,8 +16,7 @@ use Cake\Controller\Component\AuthComponent;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Cake\Network\Request;
-use Cake\Network\Session;
+use Cake\Http\Session;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -61,7 +60,7 @@ class RatingComponentTest extends TestCase {
 
 		$this->session = new Session();
 
-		$this->Controller = new ArticlesController(new Request());
+		$this->Controller = new ArticlesController(new ServerRequest());
 		$this->Controller->setEventManager(new EventManager());
 
 		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
