@@ -81,7 +81,7 @@ class RatableBehavior extends Behavior {
 	 * @param array $config Config
 	 * @return void
 	 */
-	public function initialize(array $config) {
+	public function initialize(array $config): void {
 		if (empty($this->_config['modelClass'])) {
 			$this->_config['modelClass'] = $this->_table->getAlias();
 		}
@@ -220,7 +220,7 @@ class RatableBehavior extends Behavior {
 	 * @throws \InvalidArgumentException
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
-		if (!in_array($mode, array_keys($this->modes))) {
+		if (!in_array($mode, array_keys($this->modes), true)) {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 
@@ -279,7 +279,7 @@ class RatableBehavior extends Behavior {
 	 * @throws \InvalidArgumentException
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
-		if (!in_array($mode, array_keys($this->modes))) {
+		if (!in_array($mode, array_keys($this->modes), true)) {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 
@@ -337,7 +337,7 @@ class RatableBehavior extends Behavior {
 	 * @throws \Exception
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
-		if (!in_array($mode, array_keys($this->modes))) {
+		if (!in_array($mode, array_keys($this->modes), true)) {
 			throw new InvalidArgumentException('Invalid rating mode ' . $mode);
 		}
 		if (is_array($foreignKey)) {

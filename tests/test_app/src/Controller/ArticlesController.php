@@ -2,7 +2,7 @@
 
 namespace TestApp\Controller;
 
-use Cake\Controller\Controller;
+use Shim\Controller\Controller;
 
 /**
  * @property \Ratings\Controller\Component\RatingComponent $Rating

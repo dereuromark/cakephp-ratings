@@ -17,7 +17,6 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\Http\Session;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use TestApp\Controller\ArticlesController;
@@ -29,7 +28,7 @@ class RatingComponentTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
+	protected $fixtures = [
 		'core.Sessions',
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
@@ -39,7 +38,7 @@ class RatingComponentTest extends TestCase {
 	/**
 	 * Controller using the tested component
 	 *
-	 * @var \Cake\Controller\Controller|\TestApp\Controller\ArticlesController
+	 * @var \TestApp\Controller\ArticlesController
 	 */
 	protected $Controller;
 
@@ -55,7 +54,7 @@ class RatingComponentTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->session = new Session();
@@ -74,11 +73,11 @@ class RatingComponentTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
-		$this->Controller->request->getSession()->destroy();
+		$this->Controller->getRequest()->getSession()->destroy();
 		unset($this->Controller);
-		TableRegistry::clear();
+		//TableRegistry::clear();
 	}
 
 	/**
@@ -134,7 +133,7 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testStartup() {
-		$this->Controller->request->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash', null);
 
 		$params = [
 			'plugin' => null,
@@ -152,18 +151,18 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test'];
 /*
-		$this->Controller->request->getSession()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
-		$this->Controller->request->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
-		$this->Controller->request->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
+		$this->Controller->getRequest()->getSession()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
+		$this->Controller->getRequest()->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
+		$this->Controller->getRequest()->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
 */
-		$this->Controller->request->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash', null);
 		ServerRequest::addDetector('post', function() { return true;
 });
 		$result = $this->_initControllerAndRatings($params);
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-		$sessionFlash = $this->Controller->request->getSession()->read('Flash.flash');
+		$sessionFlash = $this->Controller->getRequest()->getSession()->read('Flash.flash');
 		$expectedFlash = [
 			[
 				'message' => __d('ratings', 'Not logged in'),
@@ -174,7 +173,7 @@ class RatingComponentTest extends TestCase {
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->request->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash', null);
 		$options = [
 			'userId' => 1,
 		];
@@ -182,7 +181,7 @@ class RatingComponentTest extends TestCase {
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-		$sessionFlash = $this->Controller->request->getSession()->read('Flash.flash');
+		$sessionFlash = $this->Controller->getRequest()->getSession()->read('Flash.flash');
 		$expectedFlash = [
 			[
 				'message' => __d('ratings', 'Your rate was successful.'),
@@ -193,13 +192,13 @@ class RatingComponentTest extends TestCase {
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->request->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash', null);
 		$params['?']['rate'] = '1';
 		$result = $this->_initControllerAndRatings($params);
 
 		$this->assertEquals(Router::url($expectedRedirect), $url);
 
-//		$this->Controller->request->getSession()->write('Message', null);
+//		$this->Controller->getRequest()->getSession()->write('Message', null);
 		$params['?']['rate'] = 'invalid-record!';
 		$result = $this->_initControllerAndRatings($params);
 		$this->assertEquals(Router::url($expectedRedirect), $url);
@@ -211,7 +210,7 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testStartupAcceptPost() {
-		$this->Controller->request->getSession()->write('Auth.User.id', 1);
+		$this->Controller->getRequest()->getSession()->write('Auth.User.id', 1);
 		/*
 		$this->AuthComponent
 			->expects($this->any())
@@ -235,10 +234,12 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test',
 		];
-		$this->Controller->request->data = ['rating' => 2];
+		$request = $this->Controller->getRequest()->withData(['rating' => 2]);
+		$this->Controller->setRequest($request);
 
-		ServerRequest::addDetector('post', function() { return true;
-});
+		ServerRequest::addDetector('post', function() {
+			return true;
+		});
 
 		/** @var \Cake\Http\Response $result */
 		$result = $this->_initControllerAndRatings($params);
@@ -287,10 +288,12 @@ class RatingComponentTest extends TestCase {
 	 */
 	protected function _initControllerAndRatings(array $params = [], array $options = []) {
 		$_default = ['?' => [], 'pass' => []];
-		$this->Controller->request->params = array_merge($_default, $params);
-		if (!empty($this->Controller->request->params['?'])) {
-			$this->Controller->request->query = $this->Controller->request->params['?'];
+		$this->Controller->getRequest()->params = array_merge($_default, $params);
+		/*
+		if ($this->Controller->getRequest()->params['?'])) {
+			$this->Controller->getRequest()->query = $this->Controller->getRequest()->params['?'];
 		}
+		*/
 
 		$this->Controller->components()->unload('Rating');
 

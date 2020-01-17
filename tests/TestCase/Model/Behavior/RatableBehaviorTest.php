@@ -11,6 +11,7 @@
 
 namespace Ratings\Test\TestCase\Model\Behavior;
 
+use BadMethodCallException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 
@@ -26,7 +27,7 @@ class RatableBehaviorTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
+	protected $fixtures = [
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
 		'plugin.Ratings.Posts',
@@ -50,7 +51,7 @@ class RatableBehaviorTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->Articles = TableRegistry::get('Articles');
 		$this->Posts = TableRegistry::get('Posts');
@@ -61,7 +62,7 @@ class RatableBehaviorTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Articles);
 		unset($this->Posts);
@@ -82,7 +83,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals('1.0000', $result);
 
 		$result = $this->Articles->calculateRating(1, 'title');
-		$this->assertEquals($result['title'], '1.0000');
+		$this->assertSame('1', $result['title']);
 
 		$result = $this->Articles->calculateRating(2);
 		$this->assertEquals($result['rating'], '0');
@@ -101,10 +102,11 @@ class RatableBehaviorTest extends TestCase {
 	/**
 	 * Testing calculation of the rating
 	 *
-	 * @expectedException \BadMethodCallException
 	 * @return void
 	 */
 	public function testCalculateRatingException() {
+		$this->expectException(BadMethodCallException::class);
+
 		$this->Articles->calculateRating(1, true, 'pow');
 	}
 
@@ -136,9 +138,10 @@ class RatableBehaviorTest extends TestCase {
 	public function testIncrementRatingOtherField() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->incrementRating(1, 1, 'title')->toArray();
-		$this->assertEquals($result['title'], '1.0000');
-		$this->assertEquals($result['rating_count'], 2);
-		$this->assertEquals($result['rating_sum'], 2);
+
+		$this->assertSame('1', $result['title']);
+		$this->assertSame(2, $result['rating_count']);
+		$this->assertSame(2.0, $result['rating_sum']);
 	}
 
 	/**
@@ -195,9 +198,9 @@ class RatableBehaviorTest extends TestCase {
 	public function testDecrementRatingOtherField() {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->decrementRating(1, 1, 'title');
-		$this->assertEquals($result['title'], '0.0000');
-		$this->assertEquals($result['rating_count'], 0);
-		$this->assertEquals($result['rating_sum'], 0);
+		$this->assertSame('0', $result['title']);
+		$this->assertSame(0, $result['rating_count']);
+		$this->assertSame(0.0, $result['rating_sum']);
 	}
 
 	/**
@@ -238,10 +241,11 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * @expectedException \BadMethodCallException
 	 * @return void
 	 */
 	public function testDecrementRatingException() {
+		$this->expectException(BadMethodCallException::class);
+
 		$this->Posts->decrementRating(1, 1, true, 'pow');
 	}
 
