@@ -17,8 +17,10 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\Http\Session;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use InvalidArgumentException;
 use TestApp\Controller\ArticlesController;
 
 class RatingComponentTest extends TestCase {
@@ -65,7 +67,9 @@ class RatingComponentTest extends TestCase {
 		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
 		$this->AuthComponent = $this->getMockBuilder(AuthComponent::class)->setMethods(['user'])->disableOriginalConstructor()->getMock();
 
-		Router::reload();
+		Router::scope('/', function (RouteBuilder $routes) {
+			$routes->fallbacks();
+		});
 	}
 
 	/**
@@ -87,7 +91,8 @@ class RatingComponentTest extends TestCase {
 	 */
 	public function testInitialize() {
 		$this->_initControllerAndRatings();
-		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
+		$helpers = $this->Controller->viewBuilder()->getHelpers();
+		$this->assertTrue(in_array('Ratings.Rating', $helpers));
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 	}
 
@@ -97,16 +102,17 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testInitializeWithParamsForBehavior() {
-		$this->Controller->components = [
-			'Ratings.Rating' => [
-				'update' => true],
-			'Auth'];
+		$this->Controller->components()->unload('Rating');
+		$this->Controller->loadComponent('Auth');
+		$this->Controller->loadComponent('Ratings.Rating', [
+			'update' => true,
+		]);
 
 		$this->_initControllerAndRatings([]);
-		$this->assertEquals([
-			'Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
+		$helpers = $this->Controller->viewBuilder()->getHelpers();
+		$this->assertTrue(in_array('Ratings.Rating', $helpers));
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
-		$this->assertTrue($this->Controller->Articles->behaviors()->Ratable->config('update'), 'Ratable behavior should be updatable.');
+		$this->assertTrue($this->Controller->Articles->behaviors()->Ratable->getConfig('update'), 'Ratable behavior should be updatable.');
 	}
 
 	/**
@@ -115,13 +121,15 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testInitializeWithParamsForComponent() {
-		$this->Controller->components = [
-			'Ratings.Rating' => [
-				'actions' => ['show']],
-			'Auth'];
+		$this->Controller->components()->unload('Rating');
+		$this->Controller->loadComponent('Auth');
+		$this->Controller->loadComponent('Ratings.Rating', [
+				'actions' => ['show'],
+		]);
 
 		$this->_initControllerAndRatings(['action' => 'show']);
-		$this->assertEquals(['Html' => null, 'Form' => null, 'Ratings.Rating'], $this->Controller->helpers);
+		$helpers = $this->Controller->viewBuilder()->getHelpers();
+		$this->assertTrue(in_array('Ratings.Rating', $helpers, true), print_r($helpers, true));
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		$this->assertEquals(['show'], $this->Controller->Rating->getConfig('actions'));
 	}
@@ -149,7 +157,8 @@ class RatingComponentTest extends TestCase {
 		$expectedRedirect = [
 			'plugin' => null,
 			'controller' => 'Articles',
-			'action' => 'test'];
+			'action' => 'test',
+		];
 /*
 		$this->Controller->getRequest()->getSession()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
 		$this->Controller->getRequest()->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
@@ -167,7 +176,7 @@ class RatingComponentTest extends TestCase {
 			[
 				'message' => __d('ratings', 'Not logged in'),
 				'key' => 'flash',
-				'element' => 'Flash/error',
+				'element' => 'flash/error',
 				'params' => [],
 			],
 		];
@@ -186,22 +195,47 @@ class RatingComponentTest extends TestCase {
 			[
 				'message' => __d('ratings', 'Your rate was successful.'),
 				'key' => 'flash',
-				'element' => 'Flash/success',
+				'element' => 'flash/success',
 				'params' => [],
 			],
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->getRequest()->getSession()->write('Flash', null);
-		$params['?']['rate'] = '1';
-		$result = $this->_initControllerAndRatings($params);
+		//$this->Controller->getRequest()->getSession()->write('Flash', null);
+		//$params['?']['rate'] = '1';
+		//$result = $this->_initControllerAndRatings($params);
 
 		$this->assertEquals(Router::url($expectedRedirect), $url);
+	}
 
-//		$this->Controller->getRequest()->getSession()->write('Message', null);
+	/**
+	 * Get with data in URL completely.
+	 * Invalid get is not accepted. Value must be posted as payload or at least as part of the query.
+	 *
+	 * @return void
+	 */
+	public function testStartupInvalid() {
+		$options = [
+			'userId' => 1,
+		];
+
+		$params = [
+			'plugin' => null,
+			'controller' => 'Articles',
+			'action' => 'test',
+			'pass' => [],
+			'?' => [
+				'rating' => '5',
+				'rate' => '2',
+				'redirect' => true,
+			],
+		];
+
 		$params['?']['rate'] = 'invalid-record!';
-		$result = $this->_initControllerAndRatings($params);
-		$this->assertEquals(Router::url($expectedRedirect), $url);
+
+		$this->expectException(InvalidArgumentException::class);
+
+		$this->_initControllerAndRatings($params, $options);
 	}
 
 	/**
@@ -234,7 +268,7 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test',
 		];
-		$request = $this->Controller->getRequest()->withData(['rating' => 2]);
+		$request = $this->Controller->getRequest()->withData('rating', 2);
 		$this->Controller->setRequest($request);
 
 		ServerRequest::addDetector('post', function() {
@@ -284,24 +318,33 @@ class RatingComponentTest extends TestCase {
 	 *
 	 * @param array $params Controller params
 	 * @param array $options
-	 * @return \Cake\Http\Response|null
+	 * @return \Cake\Http\Response
 	 */
 	protected function _initControllerAndRatings(array $params = [], array $options = []) {
-		$_default = ['?' => [], 'pass' => []];
-		$this->Controller->getRequest()->params = array_merge($_default, $params);
+		//$_default = ['?' => [], 'pass' => []];
+		//$this->Controller->getRequest()->params = array_merge($_default, $params);
 		/*
 		if ($this->Controller->getRequest()->params['?'])) {
 			$this->Controller->getRequest()->query = $this->Controller->getRequest()->params['?'];
 		}
 		*/
+		$request = $this->Controller->getRequest();
+		foreach ($params as $key => $param) {
+			$request = $request->withParam($key, $param);
+		}
+		if (isset($params['?'])) {
+			$request = $request->withQueryParams($params['?']);
+		}
 
+		$this->Controller->setRequest($request);
+
+		$defaultOptions = $this->Controller->components()->get('Rating')->getConfig();
 		$this->Controller->components()->unload('Rating');
 
-		$defaultOptions = isset($this->Controller->components['Ratings.Rating']) ? $this->Controller->components['Ratings.Rating'] : [];
 		$this->Controller->loadComponent('Ratings.Rating', $options + $defaultOptions);
 		$event = new Event('startup', $this->Controller);
 
-		return $this->Controller->Rating->startup($event);
+		return $this->Controller->Rating->startup($event) ?: $this->Controller->getResponse();
 	}
 
 }

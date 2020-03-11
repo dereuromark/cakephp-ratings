@@ -9,7 +9,8 @@
 
 The **Ratings** plugin will allow you by simply adding the ratings component to your controller to rate anyting. The component will auto load a helper and behavior.
 
-The core part of this plugin is the ratable behavior that is attached to your models. In most cases you don't need attach it yourself, because the rating component will take care of it.
+The core part of this plugin is the Ratable behavior that is attached to your models.
+In most cases you don't need attach it yourself, because the Rating component will take care of it.
 
 Note: This branch is for **CakePHP 4.0+**. For details see [version map](https://github.com/dereuromark/cakephp-ratings/wiki#cakephp-version-map).
 

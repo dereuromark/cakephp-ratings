@@ -14,6 +14,8 @@ namespace Ratings\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
+use Cake\Http\Response;
+use ReflectionClass;
 
 /**
  * @property \Cake\Controller\Component\RequestHandlerComponent $RequestHandler
@@ -67,10 +69,9 @@ class RatingComponent extends Component {
 
 		$modelName = $this->getConfig('modelName');
 		if (empty($modelName)) {
-			//FIXME
-			$modelName = $this->Controller->modelClass;
+			$modelName = $this->invokeProperty($this->Controller, 'modelClass');
 		}
-		list(, $modelName) = pluginSplit($modelName);
+		[, $modelName] = pluginSplit($modelName);
 		$this->setConfig('modelName', $modelName);
 		if (!$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
 			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
@@ -85,7 +86,8 @@ class RatingComponent extends Component {
 		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			if (isset($params['rate']) && isset($params['rating'])) {
 				$userId = $this->getConfig('userId') ?: $this->Controller->Auth->user($this->getConfig('userIdField'));
-				return $this->rate($params['rate'], $params['rating'], $userId, $params['redirect']);
+
+				return $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
 			}
 		}
 
@@ -93,10 +95,32 @@ class RatingComponent extends Component {
 	}
 
 	/**
+	 * Gets protected/private property of a class.
+	 *
+	 * So
+	 *   $this->invokeProperty($object, '_foo');
+	 * is equal to
+	 *   $object->_foo
+	 * (assuming the property was directly publicly accessible)
+	 *
+	 * @param object $object Instantiated object that we want the property off.
+	 * @param string $name Property name to fetch.
+	 *
+	 * @return mixed Property value.
+	 */
+	protected function invokeProperty(&$object, string $name) {
+		$reflection = new ReflectionClass(get_class($object));
+		$property = $reflection->getProperty($name);
+		$property->setAccessible(true);
+
+		return $property->getValue($object);
+	}
+
+	/**
 	 * Adds as user rating for a model record
 	 *
-	 * @param string $rate the model record id
-	 * @param string $rating
+	 * @param string|int $rate the model record id
+	 * @param float|int $rating
 	 * @param string|int $user
 	 * @param bool|string|array $redirect boolean to redirect to same url or string or array to use it for Router::url()
 	 * @return \Cake\Http\Response|null
@@ -167,11 +191,11 @@ class RatingComponent extends Component {
 	 * require a list of current favorites to be returned.
 	 *
 	 * @param array|string $url
-	 * @param string|null $status
+	 * @param int $status
 	 * @return \Cake\Http\Response|null
 	 */
-	public function redirect($url, $status = null) {
-		if (!empty($this->Controller->viewVars['authMessage']) && $this->Controller->getRequest()->getParam('isJson')) {
+	public function redirect($url, int $status = 302): ?Response {
+		if ($this->Controller->viewBuilder()->getVar('authMessage') && $this->Controller->getRequest()->getParam('isJson')) {
 			$this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
@@ -185,7 +209,7 @@ class RatingComponent extends Component {
 			$this->Flash->error($this->Controller->viewBuilder()->getVar('authMessage'));
 		}
 		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
-			$this->Controller->setAction('rated', $this->Controller->getRequest()->params['named']['rate']);
+			$this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
 			return $this->Controller->render('rated');
 		}
 		if ($this->Controller->viewBuilder()->getVar('status') !== null && $this->Controller->viewBuilder()->getVar('message') !== null) {

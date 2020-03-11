@@ -21,28 +21,27 @@ Your controller could look like this:
 ```php
 class PostsController extends AppController {
 
-	/**
-	 * @var array
-	 */
-	public $components = [
-		'Ratings.Rating' => ['actions' => ['view']],
-	];
+	public function initialize(): void {
+        parent::initialize();
+
+        $this->loadComponent('Ratings.Rating', ['actions' => ['view']);
+	}
 
 	/**
-	 * @param int|null $id
+	 * @param string|int|null $id
 	 * @return void
 	 */
-	public function view($postId = null) {
+	public function view($id = null) {
 		$post = $this->Posts->get($id);
-		
+
 		$this->set('post', $post);
 		$this->set('isRated', $this->Posts->isRatedBy($id, $this->Auth->user('id')));
 	}
-	
+
 }
 ```
 
-All you have to do is to add the Rating component to your controllers component array. 
+All you have to do is to add the Rating component to your controllers component array.
 This will already make ratings work and load the behavior for the controllers current `$modelClass` and also load the helper.
 
 This line
@@ -56,12 +55,12 @@ is not required but shows you how you can check if the current record was alread
 ## Template
 
 ### Rating
-In your ```view.ctp``` add this.
+In your ```view.php``` add this.
 
 ```php
 if (!$isRated) {
 	echo $this->Rating->control([
-		'item' => $post['id'],
+		'item' => $post->id,
 		'js' => true,
 	]);
 } else {
@@ -70,8 +69,8 @@ if (!$isRated) {
 }
 ```
 
-The RatingHelper::display() method needs two options, the `item` to rate and the target `url`. 
-The `item` is the id of the record you want to rate. The `url` will take by default the current URL but you'll have to additional parameters to it. 
+The RatingHelper::display() method needs two options, the `item` to rate and the target `url`.
+The `item` is the id of the record you want to rate. The `url` will take by default the current URL but you'll have to additional parameters to it.
 In our case we want to go back to the view we're currently on so we need to pass the post record id here as well.
 
 JS can be included to generate a nice star rating widget to click on instead of just an input, radio or dropdown. Use `'js' => true` for this.

@@ -451,7 +451,7 @@ HTML;
 
 		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
 		$innerContent = str_replace('%value%', $this->Number->format($value, $this->_config), $options['innerHtml']);
-		$innerContent = str_replace('%percentage%', $percentage, $innerContent);
+		$innerContent = str_replace('%percentage%', (string)$percentage, $innerContent);
 		$inner = $this->Html->div($options['innerClass'], $innerContent, $options['innerOptions']);
 
 		return $this->Html->div($options['outerClass'], $inner, $options['outerOptions']);
@@ -460,14 +460,14 @@ HTML;
 	/**
 	 * Calculates the percentage value
 	 *
-	 * @param int $value
+	 * @param float|int $value 0...1
 	 * @param int $total amount
 	 * @param int $precision Precision of rounding
-	 * @return float|int Based on the precision value
+	 * @return int Based on the precision value
 	 */
-	public function percentage($value, $total, $precision = 2) {
+	public function percentage($value, int $total, int $precision = 2): int {
 		if ($total > 0) {
-			return round($value / $total, $precision) * 100;
+			return (int)(round($value / $total, $precision) * 100);
 		}
 		return 0;
 	}
@@ -475,13 +475,13 @@ HTML;
 	/**
 	 * Rounds the value according to the steps used (between min/max inclusivly)
 	 *
-	 * @param float $value
+	 * @param float|int $value
 	 * @param int $steps
 	 * @param int $min
 	 * @param int $max
-	 * @return int Value
+	 * @return float|int Value
 	 */
-	public function round($value, $steps = 4, $min = 0, $max = 5) {
+	public function round($value, int $steps = 4, int $min = 0, int $max = 5) {
 		if ($value <= $min) {
 			return $min;
 		}
