@@ -1,6 +1,6 @@
 # Ratings Plugin for CakePHP
 
-[![Build Status](https://secure.travis-ci.org/dereuromark/cakephp-ratings.svg)](http://travis-ci.org/dereuromark/cakephp-ratings)
+[![Build Status](https://secure.travis-ci.org/dereuromark/cakephp-ratings.svg)](https://travis-ci.com/dereuromark/cakephp-ratings)
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-ratings/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.png)](https://packagist.org/packages/dereuromark/cakephp-ratings)
