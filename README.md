@@ -1,7 +1,7 @@
 Ratings Plugin for CakePHP
 ==========================
 
-[![Bake Status](https://secure.travis-ci.org/CakeDC/ratings.png?branch=master)](http://travis-ci.org/CakeDC/ratings)
+[![Bake Status](https://secure.travis-ci.org/CakeDC/ratings.png?branch=master)](https://travis-ci.com/CakeDC/ratings)
 [![Downloads](https://poser.pugx.org/CakeDC/ratings/d/total.png)](https://packagist.org/packages/CakeDC/ratings)
 [![Latest Version](https://poser.pugx.org/CakeDC/ratings/v/stable.png)](https://packagist.org/packages/CakeDC/ratings)
 
