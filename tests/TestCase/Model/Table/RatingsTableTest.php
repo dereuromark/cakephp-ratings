@@ -23,7 +23,7 @@ class RatingsTableTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	public $fixtures = [
+	protected $fixtures = [
 		'plugin.Ratings.Users',
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
@@ -39,7 +39,7 @@ class RatingsTableTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		Configure::delete('Ratings');
 		parent::setUp();
 

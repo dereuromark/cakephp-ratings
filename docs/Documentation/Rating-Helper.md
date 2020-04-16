@@ -4,7 +4,7 @@ Use the helper in your views to generate links that generate star ratings:
 
 ```php
 echo $this->Rating->display([
-	'item' => $post['id'],
+	'item' => $post->id,
 	'type' => 'select',
 	'stars' => 5,
 	'js' => true,
@@ -12,7 +12,7 @@ echo $this->Rating->display([
 ```
 
 ## Assets
-This generated form will be compatible with [bootstrap-star-rating](https://github.com/kartik-v/bootstrap-star-rating). 
+This generated form will be compatible with [bootstrap-star-rating](https://github.com/kartik-v/bootstrap-star-rating).
 This jQuery plugin needs to be manually included. If you use bower:
 ```
 bower install bootstrap-star-rating --save

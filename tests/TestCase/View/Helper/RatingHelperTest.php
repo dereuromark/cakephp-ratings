@@ -12,17 +12,17 @@
 namespace Ratings\Test\TestCase\View\Helper;
 
 use Cake\Controller\Controller;
-use Cake\Network\Request;
+use Cake\Http\ServerRequest;
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\View\View;
+use Exception;
 use Ratings\View\Helper\RatingHelper;
 
 class RatingHelperTest extends TestCase {
 
 	/**
-	 * Helper being tested
-	 *
 	 * @var \Ratings\View\Helper\RatingHelper
 	 */
 	protected $Rating;
@@ -42,14 +42,17 @@ class RatingHelperTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
-		$this->request = new Request();
+		$this->request = new ServerRequest();
 		$this->Controller = new Controller();
 		$this->View = new View($this->request);
 		$this->Rating = new RatingHelper($this->View);
 
 		Router::reload();
+		Router::scope('/', function (RouteBuilder $routes) {
+			$routes->fallbacks();
+		});
 	}
 
 	/**
@@ -58,9 +61,9 @@ class RatingHelperTest extends TestCase {
 	 * @return void
 	 */
 	public function testPercentage() {
-		$this->assertSame(40.0, $this->Rating->percentage(2, 5));
+		$this->assertSame(40, $this->Rating->percentage(2, 5));
 		$this->assertSame(0, $this->Rating->percentage(0, 0));
-		$this->assertSame(100.0, $this->Rating->percentage(6, 6));
+		$this->assertSame(100, $this->Rating->percentage(6, 6));
 	}
 
 	/**
@@ -112,13 +115,13 @@ class RatingHelperTest extends TestCase {
 			'type' => 'radio',
 			'stars' => 5,
 			'js' => true,
-			'createForm' => ['url' => ['?' => ['rate' => 3, 'redirect' => true]]],
+			'createForm' => ['url' => ['controller' => 'MyController', 'action' => 'myAction', '?' => ['rate' => 3, 'redirect' => true]]],
 		];
 		$attributes = ['legend' => false];
 
 		$result = $this->Rating->control($options, $attributes);
-		$this->assertTextContains('<form method="post" accept-charset="utf-8" action="/?rate=3&amp;redirect=1">', $result);
-		$this->assertTextContains('<input type="hidden" name="_method" value="POST"/>', $result);
+		$this->assertTextContains('<form method="post" accept-charset="utf-8" action="/my-controller/my-action?rate=3&amp;redirect=1">', $result);
+		$this->assertTextContains('<input type="hidden" name="rate" value="3"/>', $result);
 		$this->assertTextContains('<select name="rating" id="', $result);
 	}
 
@@ -126,9 +129,10 @@ class RatingHelperTest extends TestCase {
 	 * Tests control() method exception
 	 *
 	 * @return void
-	 * @expectedException \Exception
 	 */
 	public function testControlException() {
+		$this->expectException(Exception::class);
+
 		$this->Rating->control([]);
 	}
 
@@ -211,7 +215,7 @@ class RatingHelperTest extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Rating);
 	}

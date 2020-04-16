@@ -2,7 +2,7 @@
 
 namespace TestApp\Controller;
 
-use Cake\Controller\Controller;
+use Shim\Controller\Controller;
 
 /**
  * @property \Ratings\Controller\Component\RatingComponent $Rating
@@ -14,20 +14,20 @@ class ArticlesController extends Controller {
 	 *
 	 * @var string
 	 */
-	public $modelClass = 'Articles';
+	protected $modelClass = 'Articles';
 
 	/**
 	 * Helpers used
 	 *
 	 * @var array
 	 */
-	public $helpers = ['Html', 'Form'];
+	protected $helpers = ['Html', 'Form'];
 
 	/**
 	 * Components used
 	 *
 	 * @var array
 	 */
-	public $components = ['Ratings.Rating', 'Auth', 'Flash'];
+	protected $components = ['Ratings.Rating', 'Auth', 'Flash'];
 
 }

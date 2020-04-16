@@ -36,7 +36,7 @@ class RatingsTable extends Table {
 	 * @param array $config
 	 * @return void
 	 */
-	public function initialize(array $config) {
+	public function initialize(array $config): void {
 		$table = Configure::read('Ratings.table');
 		if ($table) {
 			$this->setTable($table);
@@ -61,7 +61,7 @@ class RatingsTable extends Table {
 	 * @param \Cake\Validation\Validator $validator Validator instance.
 	 * @return \Cake\Validation\Validator
 	 */
-	public function validationDefault(Validator $validator) {
+	public function validationDefault(Validator $validator): Validator {
 		$validator
 			->scalar('user_id')
 			->requirePresence('user_id')
