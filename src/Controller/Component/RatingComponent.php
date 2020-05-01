@@ -82,10 +82,14 @@ class RatingComponent extends Component {
 			return null;
 		}
 
-		$params = $this->Controller->getRequest()->getData() + $this->Controller->getRequest()->getQuery() + $this->_config['params'];
+		$params = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery() + (array)$this->_config['params'];
 		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			if (isset($params['rate']) && isset($params['rating'])) {
-				$userId = $this->getConfig('userId') ?: $this->Controller->Auth->user($this->getConfig('userIdField'));
+				$userId = $this->getConfig('userId') ?: null;
+				if (!$userId && isset($this->Controller->Auth)) {
+					$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
+				}
+
 
 				return $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
 			}
@@ -217,7 +221,7 @@ class RatingComponent extends Component {
 			$this->Flash->$method($this->Controller->viewBuilder()->getVar('message'));
 		}
 
-		return $this->Controller->redirect($url, $status);
+		return $this->Controller->redirect($url, $status ?: 302);
 	}
 
 }
