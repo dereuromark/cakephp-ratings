@@ -90,7 +90,6 @@ class RatingComponent extends Component {
 					$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
 				}
 
-
 				return $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
 			}
 		}
