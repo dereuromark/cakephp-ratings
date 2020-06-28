@@ -12,7 +12,6 @@
 namespace Ratings\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Http\Response;
 use ReflectionClass;
@@ -162,8 +161,10 @@ class RatingComponent extends Component {
 			if ($redirect === true) {
 				return $this->redirect($this->buildUrl());
 			}
+
 			return $this->redirect($redirect);
 		}
+
 		return null;
 	}
 
@@ -186,11 +187,12 @@ class RatingComponent extends Component {
 				$params['?'][$name] = $value;
 			}
 		}
+
 		return $params;
 	}
 
 	/**
-	 * Overload Redirect.  Many actions are invoked via Xhr, most of these
+	 * Overload Redirect. Many actions are invoked via Xhr, most of these
 	 * require a list of current favorites to be returned.
 	 *
 	 * @param array|string $url
@@ -213,6 +215,7 @@ class RatingComponent extends Component {
 		}
 		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
 			$this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
+
 			return $this->Controller->render('rated');
 		}
 		if ($this->Controller->viewBuilder()->getVar('status') !== null && $this->Controller->viewBuilder()->getVar('message') !== null) {

@@ -18,8 +18,8 @@ use Cake\TestSuite\Fixture\TestFixture;
  *
  * User fixture
  *
- * @package     ratings
- * @subpackage     ratings.tests.fixtures
+ * @package ratings
+ * @subpackage ratings.tests.fixtures
  */
 
 class UsersFixture extends TestFixture {

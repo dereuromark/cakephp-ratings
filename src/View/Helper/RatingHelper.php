@@ -147,6 +147,7 @@ class RatingHelper extends Helper {
 			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $options['stars']),
 		];
 		$attributes += $defaults;
+
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
@@ -194,6 +195,7 @@ class RatingHelper extends Helper {
 					# try to use a single image if possible
 					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
 						$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
+
 						break;
 					}
 				}
@@ -207,6 +209,7 @@ class RatingHelper extends Helper {
 			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $stars),
 		];
 		$attributes += $defaults;
+
 		return $this->Html->div('ratingStars clearfix', $res, $attributes);
 	}
 
@@ -253,6 +256,7 @@ class RatingHelper extends Helper {
 
 		$attributes += ['title' => $title];
 		$attributes = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
+
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 
 		/*
@@ -327,8 +331,8 @@ class RatingHelper extends Helper {
 	 *
 	 * @param array $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
-	 * @return string markup that displays the rating options
 	 * @throws \Exception
+	 * @return string markup that displays the rating options
 	 */
 	public function starForm($options, $htmlAttributes = []) {
 		$options += $this->defaults;
@@ -469,6 +473,7 @@ HTML;
 		if ($total > 0) {
 			return (int)(round($value / $total, $precision) * 100);
 		}
+
 		return 0;
 	}
 
@@ -486,6 +491,7 @@ HTML;
 			return $min;
 		}
 		$v = round($value * $steps) / $steps;
+
 		return min($v, $max);
 	}
 

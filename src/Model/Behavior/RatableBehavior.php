@@ -23,18 +23,18 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Default settings
 	 *
-	 * modelClass		- must be set in the case of a plugin model to make the behavior work with plugin models like 'Plugin.Model'
-	 * rateClass		- name of the rate class model
-	 * foreignKey		- foreign key field
-	 * saveToField		- boolean, true if the calculated result should be saved in the rated model
-	 * field 			- name of the field that is updated with the calculated rating
-	 * fieldSummary		- optional cache field that will store summary of all ratings that allow to implement quick rating calculation
-	 * fieldCounter		- optional cache field that will store count of all ratings that allow to implement quick rating calculation
-	 * calculation		- 'average' or 'sum', default is average
-	 * update			- boolean flag, that define permission to rerate(change previous rating)
+	 * modelClass - must be set in the case of a plugin model to make the behavior work with plugin models like 'Plugin.Model'
+	 * rateClass - name of the rate class model
+	 * foreignKey - foreign key field
+	 * saveToField - boolean, true if the calculated result should be saved in the rated model
+	 * field - name of the field that is updated with the calculated rating
+	 * fieldSummary - optional cache field that will store summary of all ratings that allow to implement quick rating calculation
+	 * fieldCounter - optional cache field that will store count of all ratings that allow to implement quick rating calculation
+	 * calculation - 'average' or 'sum', default is average
+	 * update - boolean flag, that define permission to rerate(change previous rating)
 	 * modelValidate	- validate the model before save, default is false
 	 * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
-	 * countRates       - counter cache
+	 * countRates - counter cache
 	 *
 	 * @var array
 	 */
@@ -109,8 +109,8 @@ class RatableBehavior extends Behavior {
 	 * @param string|int|array $foreignKey
 	 * @param string|int $userId
 	 * @param int $value
-	 * @return bool|float Boolean or calculated sum
 	 * @throws \Exception
+	 * @return bool|float Boolean or calculated sum
 	 */
 	public function saveRating($foreignKey, $userId, $value) {
 		if (is_array($foreignKey)) {
@@ -158,9 +158,11 @@ class RatableBehavior extends Behavior {
 					$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 				}
 				$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
+
 				return $result;
 			}
 		}
+
 		return false;
 	}
 
@@ -169,8 +171,8 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @param string|int|array $foreignKey
 	 * @param string|int $userId
-	 * @return bool|float Boolean or calculated sum
 	 * @throws \Exception
+	 * @return bool|float Boolean or calculated sum
 	 */
 	public function removeRating($foreignKey, $userId) {
 		if (is_array($foreignKey)) {
@@ -208,6 +210,7 @@ class RatableBehavior extends Behavior {
 			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 		}
 		$this->afterRateCallback(compact('foreignKey', 'userId', 'result', 'update', 'oldRating', 'type'));
+
 		return $result;
 	}
 
@@ -222,8 +225,8 @@ class RatableBehavior extends Behavior {
 	 * @param int $value Value of new rating
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @return bool|float Boolean or calculated sum
 	 * @throws \InvalidArgumentException
+	 * @return bool|float Boolean or calculated sum
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -266,6 +269,7 @@ class RatableBehavior extends Behavior {
 			return $this->_table->save($rating, [
 				'callbacks' => $this->_config['modelCallbacks']]);
 		}
+
 		return $ratingSum;
 	}
 
@@ -281,8 +285,8 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update
-	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 * @throws \InvalidArgumentException
+	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -326,6 +330,7 @@ class RatableBehavior extends Behavior {
 			return $this->_table->save($r, [
 				'callbacks' => $this->_config['modelCallbacks']]);
 		}
+
 		return $rating;
 	}
 
@@ -339,8 +344,8 @@ class RatableBehavior extends Behavior {
 	 * @param string|int|array $foreignKey
 	 * @param bool|string $saveToField boolean or field name
 	 * @param string $mode type of calculation
-	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 * @throws \Exception
+	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -356,6 +361,7 @@ class RatableBehavior extends Behavior {
 			'fields' => function ($query) use ($mode) {
 				/** @var \Cake\Database\Query $query */
 				$rating = $query->newExpr()->add($mode . '(value)');
+
 				return [
 					'rating' => $rating,
 				];
@@ -469,8 +475,8 @@ class RatableBehavior extends Behavior {
 	 * @param int|string $userId User id
 	 * @param mixed $rating Integer or string rating
 	 * @param array $options
-	 * @return bool
 	 * @throws \Exception
+	 * @return bool
 	 */
 	public function rate($foreignKey, $userId, $rating, array $options = []) {
 		if (is_array($foreignKey)) {
@@ -520,8 +526,8 @@ class RatableBehavior extends Behavior {
 	 * a rating of 2 will increase "rating_2" by one...
 	 *
 	 * @param array $data Data passed to afterRate() or similar structure
-	 * @return bool True on success
 	 * @throws \Exception
+	 * @return bool True on success
 	 */
 	public function cacheRatingStatistics(array $data = []) {
 		if (empty($data['result'])) {
@@ -573,6 +579,7 @@ class RatableBehavior extends Behavior {
 		if ($value < 0) {
 			$postfix = 'neg' . abs($value);
 		}
+
 		return $prefix . $postfix;
 	}
 

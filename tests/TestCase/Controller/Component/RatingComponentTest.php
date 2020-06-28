@@ -11,8 +11,8 @@
 
 namespace Ratings\Test\TestCase\Controller\Component;
 
-use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Component\AuthComponent;
+use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
@@ -165,7 +165,8 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->getRequest()->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
 */
 		$this->Controller->getRequest()->getSession()->write('Flash', null);
-		ServerRequest::addDetector('post', function() { return true;
+		ServerRequest::addDetector('post', function() {
+ return true;
 });
 		$result = $this->_initControllerAndRatings($params);
 		$url = $result->getHeaderLine('Location');
