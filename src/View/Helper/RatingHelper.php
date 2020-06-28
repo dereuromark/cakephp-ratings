@@ -76,14 +76,18 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @param float $value (0...X)
-	 * @param array $options
+	 * Generats rating image.
+	 *
+	 * Options:
 	 * - type: defaults to fa (font-awesome), also possible: ui (jquery-ui)
 	 * - stars (defaults to 5)
 	 * - steps per image (defaults to 2 => 1/2 accuracy)
 	 * - ...
+	 *
+	 * @param float $value Value (0...X)
+	 * @param array $options
 	 * @param array $attributes for div container (id, style, ...)
-	 * @return string $divContainer with rating images
+	 * @return string Container with rating images
 	 */
 	public function ratingImage($value, array $options = [], array $attributes = []) {
 		$options += ['type' => 'fa'];
@@ -97,13 +101,15 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @param float $value (0...X)
-	 * @param array $options
+	 * Options:
 	 * - stars (defaults to 5)
 	 * - steps per image (defaults to 2 => 1/2 accuracy)
 	 * - ...
+	 *
+	 * @param float $value Value (0...X)
+	 * @param array $options
 	 * @param array $attributes for div container (id, style, ...)
-	 * @return string $divContainer with rating images
+	 * @return string Container with rating images
 	 */
 	protected function _ratingImageFontAwesome($value, array $options = [], array $attributes = []) {
 		$array = [
@@ -152,13 +158,15 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @param float $value (0...X)
-	 * @param array $options
+	 * Options:
 	 * - stars (defaults to 5)
 	 * - steps per image (defaults to 4 => 1/4 accuracy)
 	 * - ...
+	 *
+	 * @param float $value Value (0...X)
+	 * @param array $options
 	 * @param array $attributes for div container (id, style, ...)
-	 * @return string $divContainer with rating images
+	 * @return string Container with rating images
 	 */
 	protected function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
 		$size = !empty($options['size']) ? $options['size'] : '';
@@ -214,19 +222,20 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @deprecated //FIXME or make ratingImage() to image()
-	 *
-	 * @param float $value (0...X)
-	 * @param array $options
+	 * Options:
 	 * - stars (defaults to 5)
 	 * - steps per image (defaults to 4 => 1/4 accuracy)
 	 * - ...
+	 *
+	 * @deprecated //FIXME or make ratingImage() to image()
+	 *
+	 * @param float $value Value (0...X)
+	 * @param array $options
 	 * @param array $attributes for div container (id, style, ...)
-	 * @return string $divContainer with rating images
+	 * @return string Container with rating images
 	 */
 	public function image($value, array $options = [], array $attributes = []) {
 		$defaults = [
-			//'type' => 'bootstrap',
 			'data-symbol' => '&#xf005;',
 			'escape' => false,
 			'data-rating-class' => 'rating-fa',

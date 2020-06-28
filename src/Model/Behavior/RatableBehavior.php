@@ -191,9 +191,6 @@ class RatableBehavior extends Behavior {
 			return false;
 		}
 
-		$data['foreign_key'] = $foreignKey;
-		$data['model'] = $this->_table->getAlias();
-		$data['user_id'] = $userId;
 		$this->oldRating = $oldRating;
 
 		$this->_table->Ratings->deleteAll([
