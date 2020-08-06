@@ -28,7 +28,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @var array
 	 */
-	public $helpers = ['Html', 'Form', 'Number'];
+	protected $helpers = ['Html', 'Form', 'Number'];
 
 	/**
 	 * Default settings

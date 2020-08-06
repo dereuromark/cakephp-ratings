@@ -25,7 +25,7 @@ class RatingComponent extends Component {
 	/**
 	 * @var array
 	 */
-	public $components = ['RequestHandler', 'Flash'];
+	protected $components = ['RequestHandler', 'Flash'];
 
 	/**
 	 * @var \Cake\Controller\Controller
