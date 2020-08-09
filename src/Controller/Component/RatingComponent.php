@@ -12,7 +12,7 @@
 namespace Ratings\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use ReflectionClass;
 
@@ -46,10 +46,10 @@ class RatingComponent extends Component {
 	/**
 	 * Callback
 	 *
-	 * @param \Cake\Event\Event $event
+	 * @param \Cake\Event\EventInterface $event
 	 * @return \Cake\Http\Response|array|null
 	 */
-	public function startup(Event $event) {
+	public function startup(EventInterface $event) {
 		/** @var \Cake\Controller\Controller $controller */
 		$controller = $event->getSubject();
 		$this->Controller = $controller;
