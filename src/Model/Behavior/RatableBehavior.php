@@ -18,6 +18,9 @@ use LogicException;
 use OutOfBoundsException;
 use RuntimeException;
 
+/**
+ * @property \Cake\ORM\Table&\Ratings\Model\Behavior\RatableBehavior $_table
+ */
 class RatableBehavior extends Behavior {
 
 	/**
@@ -36,7 +39,7 @@ class RatableBehavior extends Behavior {
 	 * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
 	 * countRates - counter cache
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_defaultConfig = [
 		'modelClass' => null,
@@ -52,13 +55,6 @@ class RatableBehavior extends Behavior {
 		'modelValidate' => false,
 		'modelCallbacks' => false,
 	];
-
-	/**
-	 * Table instance.
-	 *
-	 * @var \Cake\ORM\Table|\Ratings\Model\Behavior\RatableBehavior
-	 */
-	protected $_table;
 
 	/**
 	 * Rating modes
@@ -91,7 +87,7 @@ class RatableBehavior extends Behavior {
 				'foreignKey' => $this->_config['foreignKey'],
 				'unique' => true,
 				'dependent' => true,
-			]
+			],
 		);
 
 		$this->_table->Ratings->belongsTo($this->_config['modelClass'],
@@ -99,18 +95,18 @@ class RatableBehavior extends Behavior {
 				'className' => $this->_config['modelClass'],
 				'foreignKey' => 'foreign_key',
 				'counterCache' => $this->_config['countRates'],
-			]
+			],
 		);
 	}
 
 	/**
 	 * Saves a new rating
 	 *
-	 * @param string|int|array $foreignKey
+	 * @param array|string|int $foreignKey
 	 * @param string|int $userId
 	 * @param int $value
 	 * @throws \Exception
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|false Boolean or calculated sum
 	 */
 	public function saveRating($foreignKey, $userId, $value) {
 		if (is_array($foreignKey)) {
@@ -169,10 +165,10 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Remove exists rating
 	 *
-	 * @param string|int|array $foreignKey
+	 * @param array|string|int $foreignKey
 	 * @param string|int $userId
 	 * @throws \Exception
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|bool Boolean or calculated sum
 	 */
 	public function removeRating($foreignKey, $userId) {
 		if (is_array($foreignKey)) {
@@ -218,12 +214,12 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @see Ratable::calculateRating()
 	 *
-	 * @param int|string $id Foreign key
+	 * @param string|int $id Foreign key
 	 * @param int $value Value of new rating
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
 	 * @throws \InvalidArgumentException
-	 * @return bool|float Boolean or calculated sum
+	 * @return float|bool Boolean or calculated sum
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -277,13 +273,13 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @see Ratable::calculateRating()
 	 *
-	 * @param int|string $id foreignKey
+	 * @param string|int $id foreignKey
 	 * @param int $value of new rating
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update
 	 * @throws \InvalidArgumentException
-	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
+	 * @return \Ratings\Model\Entity\Rating|float|false Boolean or calculated sum
 	 */
 	public function incrementRating($id, $value, $saveToField = true, $mode = 'average', $update = false) {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -338,11 +334,11 @@ class RatableBehavior extends Behavior {
 	 * and SUM(). Please note that this is relatively slow compared to incrementing
 	 * the values, see Ratable::incrementRating()
 	 *
-	 * @param string|int|array $foreignKey
-	 * @param bool|string $saveToField boolean or field name
+	 * @param array|string|int $foreignKey
+	 * @param string|bool $saveToField boolean or field name
 	 * @param string $mode type of calculation
 	 * @throws \Exception
-	 * @return bool|float|\Ratings\Model\Entity\Rating Boolean or calculated sum
+	 * @return \Ratings\Model\Entity\Rating|float|false Boolean or calculated sum
 	 */
 	public function calculateRating($foreignKey, $saveToField = true, $mode = 'average') {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -396,11 +392,7 @@ class RatableBehavior extends Behavior {
 			$saveToField => $result[0]['rating'],
 		];
 
-		$rating = $this->_table->find()->where([$this->_table->getPrimaryKey() => $foreignKey])->first();
-		if (!$rating) {
-			debug($this->_table);
-			dd($foreignKey);
-		}
+		$rating = $this->_table->find()->where([$this->_table->getPrimaryKey() => $foreignKey])->firstOrFail();
 
 		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
 
@@ -415,8 +407,8 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Method to check if an entry is rated by a certain user
 	 *
-	 * @param int|string $foreignKey Foreign key as uuid or int
-	 * @param int|string $userId
+	 * @param string|int $foreignKey Foreign key as uuid or int
+	 * @param string|int $userId
 	 * @return \Cake\ORM\Query
 	 */
 	public function isRatedBy($foreignKey, $userId) {
@@ -432,8 +424,8 @@ class RatableBehavior extends Behavior {
 	}
 
 	/**
-	 * @param int|string $foreignKey Foreign key as uuid or int
-	 * @param int|string $userId
+	 * @param string|int $foreignKey Foreign key as uuid or int
+	 * @param string|int $userId
 	 *
 	 * @return bool
 	 */
@@ -468,8 +460,8 @@ class RatableBehavior extends Behavior {
 	/**
 	 * More intelligent version of saveRating - checks record existence and ratings
 	 *
-	 * @param int|string|array $foreignKey Integer or string uuid
-	 * @param int|string $userId User id
+	 * @param array|string|int $foreignKey Integer or string uuid
+	 * @param string|int $userId User id
 	 * @param mixed $rating Integer or string rating
 	 * @param array $options
 	 * @throws \Exception

@@ -33,7 +33,7 @@ class RatingComponent extends Component {
 	protected $Controller;
 
 	/**
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $_defaultConfig = [
 		'actions' => [], // Empty: all
@@ -124,7 +124,7 @@ class RatingComponent extends Component {
 	 * @param string|int $rate the model record id
 	 * @param float|int $rating
 	 * @param string|int $user
-	 * @param bool|string|array $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 * @param array|string|bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
 	 * @return \Cake\Http\Response|null
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {

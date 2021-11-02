@@ -139,7 +139,7 @@ class RatingHelperTest extends TestCase {
 	/**
 	 * Test display method
 	 *
-	 * @deprecated
+	 * @deprecated Not in use.
 	 *
 	 * @return void
 	 */

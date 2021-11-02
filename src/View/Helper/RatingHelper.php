@@ -399,7 +399,7 @@ class RatingHelper extends Helper {
 			}
 			$result .= $this->Form->end() . "\n";
 
-			$disabled = empty($editable) ? false : 'disabled';
+			$disabled = empty($options['editable']) ? false : 'disabled';
 			if ($disabled) {
 				$split = 4;
 			} else {

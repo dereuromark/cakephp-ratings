@@ -23,10 +23,10 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
  * @method \Ratings\Model\Entity\Rating get($primaryKey, $options = [])
  * @method \Ratings\Model\Entity\Rating newEntity($data = null, array $options = [])
- * @method \Ratings\Model\Entity\Rating[] newEntities(array $data, array $options = [])
+ * @method array<\Ratings\Model\Entity\Rating> newEntities(array $data, array $options = [])
  * @method \Ratings\Model\Entity\Rating|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Ratings\Model\Entity\Rating patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Ratings\Model\Entity\Rating[] patchEntities($entities, array $data, array $options = [])
+ * @method array<\Ratings\Model\Entity\Rating> patchEntities($entities, array $data, array $options = [])
  * @method \Ratings\Model\Entity\Rating findOrCreate($search, callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -49,7 +49,7 @@ class RatingsTable extends Table {
 
 		$this->belongsTo('Users', [
 				'className' => $userClass, 'foreignKey' => 'user_id',
-			]
+			],
 		);
 
 		$this->addBehavior('Timestamp');
