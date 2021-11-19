@@ -159,15 +159,15 @@ class RatingComponentTest extends TestCase {
 			'controller' => 'Articles',
 			'action' => 'test',
 		];
-/*
+		/*
 		$this->Controller->getRequest()->getSession()->expectAt(0, 'setFlash', array('Your rate was successfull.', 'default', array(), 'success'));
 		$this->Controller->getRequest()->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
 		$this->Controller->getRequest()->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
-*/
+		*/
 		$this->Controller->getRequest()->getSession()->write('Flash', null);
 		ServerRequest::addDetector('post', function() {
- return true;
-});
+			return true;
+		});
 		$result = $this->_initControllerAndRatings($params);
 		$url = $result->getHeaderLine('Location');
 		$this->assertEquals(Router::url($expectedRedirect), $url);
