@@ -35,8 +35,8 @@ class RatableBehavior extends Behavior {
 	 * fieldCounter - optional cache field that will store count of all ratings that allow to implement quick rating calculation
 	 * calculation - 'average' or 'sum', default is average
 	 * update - boolean flag, that define permission to rerate(change previous rating)
-	 * modelValidate	- validate the model before save, default is false
-	 * modelCallbacks	- run model callbacks when the rating is saved to the model, default is false
+	 * modelValidate - validate the model before save, default is false
+	 * modelCallbacks - run model callbacks when the rating is saved to the model, default is false
 	 * countRates - counter cache
 	 *
 	 * @var array<string, mixed>
@@ -87,10 +87,10 @@ class RatableBehavior extends Behavior {
 				'foreignKey' => $this->_config['foreignKey'],
 				'unique' => true,
 				'dependent' => true,
-			],
-		);
+		]);
 
-		$this->_table->Ratings->belongsTo($this->_config['modelClass'],
+		$this->_table->Ratings->belongsTo(
+            $this->_config['modelClass'],
 			[
 				'className' => $this->_config['modelClass'],
 				'foreignKey' => 'foreign_key',
