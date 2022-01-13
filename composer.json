@@ -3,7 +3,11 @@
 	"type": "cakephp-plugin",
 	"description": "Ratings Plugin for CakePHP.",
 	"homepage": "https://github.com/dereuromark/cakephp-ratings",
-	"keywords": ["cakephp", "ratings", "plugin"],
+	"keywords": [
+		"cakephp",
+		"ratings",
+		"plugin"
+	],
 	"license": "MIT",
 	"authors": [
 		{
@@ -11,7 +15,8 @@
 			"email": "euromark@web.de",
 			"homepage": "https://github.com/dereuromark/cakephp-ratings",
 			"role": "maintainer"
-		}, {
+		},
+		{
 			"name": "Cake Development Corporation",
 			"email": "team@cakedc.com",
 			"homepage": "https://cakedc.com",
@@ -23,7 +28,7 @@
 		"wiki": "https://github.com/dereuromark/cakephp-ratings/blob/master/docs",
 		"source": "https://github.com/dereuromark/cakephp-ratings"
 	},
-	"require":{
+	"require": {
 		"php": ">=7.3",
 		"cakephp/cakephp": "^4.2.0"
 	},
@@ -55,5 +60,10 @@
 		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.0.0 && mv composer.backup composer.json",
 		"cs-check": "phpcs -p -s --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --ignore=/config/Migrations/ --extensions=php src/ tests/ config/",
 		"cs-fix": "phpcbf -p --standard=vendor/fig-r/psr2r-sniffer/PSR2R/ruleset.xml --ignore=/config/Migrations/ --extensions=php src/ tests/ config/"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
 	}
 }
