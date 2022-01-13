@@ -90,7 +90,7 @@ class RatableBehavior extends Behavior {
 		]);
 
 		$this->_table->Ratings->belongsTo(
-            $this->_config['modelClass'],
+			$this->_config['modelClass'],
 			[
 				'className' => $this->_config['modelClass'],
 				'foreignKey' => 'foreign_key',
