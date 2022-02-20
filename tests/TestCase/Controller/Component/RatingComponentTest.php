@@ -318,7 +318,7 @@ class RatingComponentTest extends TestCase {
 	 * Convenience method for testing: Initializes the controller and the Ratings component
 	 *
 	 * @param array $params Controller params
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @return \Cake\Http\Response
 	 */
 	protected function _initControllerAndRatings(array $params = [], array $options = []) {

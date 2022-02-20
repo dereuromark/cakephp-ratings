@@ -463,7 +463,7 @@ class RatableBehavior extends Behavior {
 	 * @param array|string|int $foreignKey Integer or string uuid
 	 * @param string|int $userId User id
 	 * @param mixed $rating Integer or string rating
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @throws \Exception
 	 * @return bool
 	 */

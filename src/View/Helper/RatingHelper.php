@@ -67,7 +67,7 @@ class RatingHelper extends Helper {
 	 * Displays a bunch of rating links wrapped into a list element of your choice
 	 *
 	 * @param float $value
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
 	 * @return string Markup that displays the rating options as ul/li list
 	 */
@@ -85,7 +85,7 @@ class RatingHelper extends Helper {
 	 * - ...
 	 *
 	 * @param float $value Value (0...X)
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
@@ -107,7 +107,7 @@ class RatingHelper extends Helper {
 	 * - ...
 	 *
 	 * @param float $value Value (0...X)
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
@@ -164,7 +164,7 @@ class RatingHelper extends Helper {
 	 * - ...
 	 *
 	 * @param float $value Value (0...X)
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
@@ -230,7 +230,7 @@ class RatingHelper extends Helper {
 	 * @deprecated //FIXME or make ratingImage() to image()
 	 *
 	 * @param float $value Value (0...X)
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
@@ -325,7 +325,7 @@ class RatingHelper extends Helper {
 	}
 
 	/**
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $htmlAttributes
 	 * @return string HTML
 	 */
@@ -338,7 +338,7 @@ class RatingHelper extends Helper {
 	/**
 	 * Displays a star form
 	 *
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @param array $htmlAttributes Attributes for the rating links inside the list
 	 * @throws \Exception
 	 * @return string markup that displays the rating options
@@ -440,7 +440,7 @@ HTML;
 	 *
 	 * @param int $value
 	 * @param int $total amount of rates
-	 * @param array $options
+	 * @param array<string, mixed> $options
 	 * @return string
 	 */
 	public function bar($value, $total, array $options = []) {
