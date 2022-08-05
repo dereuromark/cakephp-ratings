@@ -13,6 +13,7 @@ namespace Ratings\Test\TestCase\View\Helper;
 
 use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -50,6 +51,7 @@ class RatingHelperTest extends TestCase {
 		$this->Rating = new RatingHelper($this->View);
 
 		Router::reload();
+		Router::defaultRouteClass(DashedRoute::class);
 		Router::scope('/', function (RouteBuilder $routes) {
 			$routes->fallbacks();
 		});
