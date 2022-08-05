@@ -6,4 +6,4 @@ parameters:
 		- tests/bootstrap.php
 
 	ignoreErrors:
-		- '#Cannot access property \$newRating on float#'
+		- '#Cannot access property \$rating on float#'
