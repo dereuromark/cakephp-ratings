@@ -141,7 +141,7 @@ class RatingComponent extends Component {
 			$Model = $Controller->{$this->getConfig('modelName')};
 			$newRating = $Model->saveRating($rate, $user, $rating);
 			if ($newRating) {
-				$rating = round($newRating->newRating);
+				$rating = round($newRating->rating);
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
 			} else {
