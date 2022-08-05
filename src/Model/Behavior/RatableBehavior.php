@@ -59,7 +59,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Rating modes
 	 *
-	 * @var array
+	 * @var array<string, string>
 	 */
 	protected $modes = [
 		'average' => 'avg',
@@ -74,7 +74,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Setup
 	 *
-	 * @param array $config Config
+	 * @param array<string, mixed> $config Config
 	 * @return void
 	 */
 	public function initialize(array $config): void {
@@ -102,7 +102,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Saves a new rating
 	 *
-	 * @param array|string|int $foreignKey
+	 * @param array<mixed>|string|int $foreignKey
 	 * @param string|int $userId
 	 * @param int $value
 	 * @throws \Exception
@@ -165,7 +165,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * Remove exists rating
 	 *
-	 * @param array|string|int $foreignKey
+	 * @param array<mixed>|string|int $foreignKey
 	 * @param string|int $userId
 	 * @throws \Exception
 	 * @return float|bool Boolean or calculated sum
@@ -334,7 +334,7 @@ class RatableBehavior extends Behavior {
 	 * and SUM(). Please note that this is relatively slow compared to incrementing
 	 * the values, see Ratable::incrementRating()
 	 *
-	 * @param array|string|int $foreignKey
+	 * @param array<mixed>|string|int $foreignKey
 	 * @param string|bool $saveToField boolean or field name
 	 * @param string $mode type of calculation
 	 * @throws \Exception
@@ -352,7 +352,7 @@ class RatableBehavior extends Behavior {
 		$options = [
 			'contain' => [$this->_table->getAlias()],
 			'fields' => function ($query) use ($mode) {
-				/** @var \Cake\Database\Query $query */
+				/** @var \Cake\Database\Query<mixed> $query */
 				$rating = $query->newExpr()->add($mode . '(value)');
 
 				return [
@@ -436,7 +436,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * afterRate callback to the model
 	 *
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return void
 	 */
 	public function afterRateCallback($data = []) {
@@ -448,7 +448,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * beforeRate callback to the model
 	 *
-	 * @param array $data
+	 * @param array<string, mixed> $data
 	 * @return void
 	 */
 	public function beforeRateCallback(array $data = []) {
@@ -460,7 +460,7 @@ class RatableBehavior extends Behavior {
 	/**
 	 * More intelligent version of saveRating - checks record existence and ratings
 	 *
-	 * @param array|string|int $foreignKey Integer or string uuid
+	 * @param array<mixed>|string|int $foreignKey Integer or string uuid
 	 * @param string|int $userId User id
 	 * @param mixed $rating Integer or string rating
 	 * @param array<string, mixed> $options
@@ -514,7 +514,7 @@ class RatableBehavior extends Behavior {
 	 * For example a rating of 1 will increase the value in the field "rating_1" by 1,
 	 * a rating of 2 will increase "rating_2" by one...
 	 *
-	 * @param array $data Data passed to afterRate() or similar structure
+	 * @param array<string, mixed> $data Data passed to afterRate() or similar structure
 	 * @throws \Exception
 	 * @return bool True on success
 	 */

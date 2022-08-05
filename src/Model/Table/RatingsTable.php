@@ -33,7 +33,7 @@ use Cake\Validation\Validator;
 class RatingsTable extends Table {
 
 	/**
-	 * @param array $config
+	 * @param array<string, mixed> $config
 	 * @return void
 	 */
 	public function initialize(array $config): void {

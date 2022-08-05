@@ -23,7 +23,7 @@ use ReflectionClass;
 class RatingComponent extends Component {
 
 	/**
-	 * @var array
+	 * @var array<mixed>
 	 */
 	public $components = ['RequestHandler', 'Flash'];
 
@@ -47,7 +47,7 @@ class RatingComponent extends Component {
 	 * Callback
 	 *
 	 * @param \Cake\Event\EventInterface $event
-	 * @return \Cake\Http\Response|array|null
+	 * @return \Cake\Http\Response|null
 	 */
 	public function startup(EventInterface $event) {
 		/** @var \Cake\Controller\Controller $controller */
@@ -124,7 +124,7 @@ class RatingComponent extends Component {
 	 * @param string|int $rate the model record id
 	 * @param float|int $rating
 	 * @param string|int $user
-	 * @param array|string|bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
+	 * @param array<mixed>|string|bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
 	 * @return \Cake\Http\Response|null
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
@@ -171,7 +171,7 @@ class RatingComponent extends Component {
 	/**
 	 * Clean url from rating parameters
 	 *
-	 * @return array
+	 * @return array<mixed>
 	 */
 	public function buildUrl() {
 		$params = [
@@ -195,7 +195,7 @@ class RatingComponent extends Component {
 	 * Overload Redirect. Many actions are invoked via Xhr, most of these
 	 * require a list of current favorites to be returned.
 	 *
-	 * @param array|string $url
+	 * @param array<mixed>|string $url
 	 * @param int $status
 	 * @return \Cake\Http\Response|null
 	 */

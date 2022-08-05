@@ -26,14 +26,14 @@ class RatingHelper extends Helper {
 	/**
 	 * helpers variable
 	 *
-	 * @var array
+	 * @var array<mixed>
 	 */
 	protected $helpers = ['Html', 'Form', 'Number'];
 
 	/**
 	 * Default settings
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	public $defaults = [
 		'stars' => 5,
@@ -52,14 +52,14 @@ class RatingHelper extends Helper {
 	/**
 	 * Allowed types of HTML list elements
 	 *
-	 * @var array
+	 * @var array<string>
 	 */
 	protected $allowedTypes = ['ul', 'ol', 'radio'];
 
 	/**
 	 * Sizes for rating image
 	 *
-	 * @var array
+	 * @var array<string, int>
 	 */
 	protected $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
@@ -68,7 +68,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param float $value
 	 * @param array<string, mixed> $options
-	 * @param array $htmlAttributes Attributes for the rating links inside the list
+	 * @param array<string, mixed> $htmlAttributes Attributes for the rating links inside the list
 	 * @return string Markup that displays the rating options as ul/li list
 	 */
 	public function display($value, array $options = [], array $htmlAttributes = []) {
@@ -86,7 +86,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param float $value Value (0...X)
 	 * @param array<string, mixed> $options
-	 * @param array $attributes for div container (id, style, ...)
+	 * @param array<string, mixed> $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
 	public function ratingImage($value, array $options = [], array $attributes = []) {
@@ -108,7 +108,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param float $value Value (0...X)
 	 * @param array<string, mixed> $options
-	 * @param array $attributes for div container (id, style, ...)
+	 * @param array<string, mixed> $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
 	protected function _ratingImageFontAwesome($value, array $options = [], array $attributes = []) {
@@ -165,7 +165,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param float $value Value (0...X)
 	 * @param array<string, mixed> $options
-	 * @param array $attributes for div container (id, style, ...)
+	 * @param array<string, mixed> $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
 	protected function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
@@ -231,7 +231,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @param float $value Value (0...X)
 	 * @param array<string, mixed> $options
-	 * @param array $attributes for div container (id, style, ...)
+	 * @param array<string, mixed> $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
 	public function image($value, array $options = [], array $attributes = []) {
@@ -326,7 +326,7 @@ class RatingHelper extends Helper {
 
 	/**
 	 * @param array<string, mixed> $options
-	 * @param array $htmlAttributes
+	 * @param array<string, mixed> $htmlAttributes
 	 * @return string HTML
 	 */
 	public function control(array $options, array $htmlAttributes = []) {
@@ -339,7 +339,7 @@ class RatingHelper extends Helper {
 	 * Displays a star form
 	 *
 	 * @param array<string, mixed> $options
-	 * @param array $htmlAttributes Attributes for the rating links inside the list
+	 * @param array<string, mixed> $htmlAttributes Attributes for the rating links inside the list
 	 * @throws \Exception
 	 * @return string markup that displays the rating options
 	 */
