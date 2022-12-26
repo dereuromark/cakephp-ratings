@@ -5,5 +5,7 @@ parameters:
 	bootstrapFiles:
 		- tests/bootstrap.php
 
+	checkGenericClassInNonGenericObjectType: false
+
 	ignoreErrors:
 		- '#Cannot access property \$rating on float#'
