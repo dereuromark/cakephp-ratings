@@ -23,7 +23,7 @@ class RatingsTableTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	protected $fixtures = [
+	protected array $fixtures = [
 		'plugin.Ratings.Users',
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
@@ -43,7 +43,7 @@ class RatingsTableTest extends TestCase {
 		Configure::delete('Ratings');
 		parent::setUp();
 
-		$this->Ratings = TableRegistry::get('Ratings.Ratings');
+		$this->Ratings = TableRegistry::getTableLocator()->get('Ratings.Ratings');
 	}
 
 	/**

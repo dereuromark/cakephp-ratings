@@ -25,7 +25,7 @@ class RatingsFixture extends TestFixture {
 	 *
 	 * @var array
 	 */
-	public $fields = [
+	public array $fields = [
 		'id' => ['type' => 'integer', 'null' => false],
 		'user_id' => ['type' => 'integer', 'null' => true, 'default' => null],
 		'foreign_key' => ['type' => 'string', 'null' => true, 'default' => null],
@@ -41,7 +41,7 @@ class RatingsFixture extends TestFixture {
 	 *
 	 * @var array
 	 */
-	public $records = [
+	public array $records = [
 		[
 			'id' => 1,
 			'user_id' => 1,

@@ -27,7 +27,7 @@ class RatableBehaviorTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	protected $fixtures = [
+	protected array $fixtures = [
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
 		'plugin.Ratings.Posts',
@@ -53,8 +53,8 @@ class RatableBehaviorTest extends TestCase {
 	 */
 	public function setUp(): void {
 		parent::setUp();
-		$this->Articles = TableRegistry::get('Articles');
-		$this->Posts = TableRegistry::get('Posts');
+		$this->Articles = TableRegistry::getTableLocator()->get('Articles');
+		$this->Posts = TableRegistry::getTableLocator()->get('Posts');
 	}
 
 	/**
@@ -66,7 +66,7 @@ class RatableBehaviorTest extends TestCase {
 		parent::tearDown();
 		unset($this->Articles);
 		unset($this->Posts);
-		TableRegistry::clear();
+		TableRegistry::getTableLocator()->clear();
 	}
 
 	/**
@@ -466,7 +466,7 @@ class RatableBehaviorTest extends TestCase {
 		$result = $this->Articles->cacheRatingStatistics($data);
 		$this->assertTrue(!empty($result));
 
-		$this->Articles->recursive = -1;
+		//this->Articles->recursive = -1;
 		$result = $this->Articles->get(1)->toArray();
 		$this->assertEquals($result['rating_3'], 1);
 	}
@@ -513,7 +513,7 @@ class RatableBehaviorTest extends TestCase {
 		$result = $this->Articles->cacheRatingStatistics($data);
 		$this->assertTrue(!empty($result));
 
-		$this->Articles->recursive = -1;
+		//$this->Articles->recursive = -1;
 		$result = $this->Articles->get(1)->toArray();
 		$this->assertEquals($result['rating_3'], 0);
 	}

@@ -12,16 +12,16 @@ class Plugin extends BasePlugin {
 	/**
 	 * @var bool
 	 */
-	protected $bootstrapEnabled = false;
+	protected bool $bootstrapEnabled = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $routesEnabled = false;
+	protected bool $routesEnabled = false;
 
 	/**
 	 * @var bool
 	 */
-	protected $consoleEnabled = false;
+	protected bool $consoleEnabled = false;
 
 }

@@ -11,12 +11,11 @@
 
 namespace Ratings\Test\TestCase\Controller\Component;
 
-use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\ComponentRegistry;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Cake\Http\Session;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -30,7 +29,7 @@ class RatingComponentTest extends TestCase {
 	 *
 	 * @var array
 	 */
-	protected $fixtures = [
+	protected array $fixtures = [
 		'core.Sessions',
 		'plugin.Ratings.Ratings',
 		'plugin.Ratings.Articles',
@@ -45,13 +44,6 @@ class RatingComponentTest extends TestCase {
 	protected $Controller;
 
 	/**
-	 * Mock AuthComponent object
-	 *
-	 * @var \Cake\Controller\Component\AuthComponent
-	 */
-	protected $AuthComponent;
-
-	/**
 	 * startTest method
 	 *
 	 * @return void
@@ -59,15 +51,13 @@ class RatingComponentTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->session = new Session();
-
 		$this->Controller = new ArticlesController(new ServerRequest());
 		$this->Controller->setEventManager(new EventManager());
 
 		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
-		$this->AuthComponent = $this->getMockBuilder(AuthComponent::class)->setMethods(['user'])->disableOriginalConstructor()->getMock();
+		//$this->AuthComponent = $this->getMockBuilder(AuthComponent::class)->setMethods(['user'])->disableOriginalConstructor()->getMock();
 
-		Router::scope('/', function (RouteBuilder $routes) {
+		Router::scope('/', function (RouteBuilder $routes): void {
 			$routes->fallbacks();
 		});
 	}
@@ -81,7 +71,7 @@ class RatingComponentTest extends TestCase {
 		parent::tearDown();
 		$this->Controller->getRequest()->getSession()->destroy();
 		unset($this->Controller);
-		//TableRegistry::clear();
+		TableRegistry::getTableLocator()->clear();
 	}
 
 	/**
@@ -103,7 +93,6 @@ class RatingComponentTest extends TestCase {
 	 */
 	public function testInitializeWithParamsForBehavior() {
 		$this->Controller->components()->unload('Rating');
-		$this->Controller->loadComponent('Auth');
 		$this->Controller->loadComponent('Ratings.Rating', [
 			'update' => true,
 		]);
@@ -122,7 +111,7 @@ class RatingComponentTest extends TestCase {
 	 */
 	public function testInitializeWithParamsForComponent() {
 		$this->Controller->components()->unload('Rating');
-		$this->Controller->loadComponent('Auth');
+		//$this->Controller->loadComponent('Auth');
 		$this->Controller->loadComponent('Ratings.Rating', [
 				'actions' => ['show'],
 		]);

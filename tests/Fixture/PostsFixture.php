@@ -26,7 +26,7 @@ class PostsFixture extends TestFixture {
 	 * @var array
 	 * @access public
 	 */
-	public $fields = [
+	public array $fields = [
 		'id' => ['type' => 'integer'],
 		'title' => ['type' => 'string', 'null' => false],
 		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
@@ -41,7 +41,7 @@ class PostsFixture extends TestFixture {
 	 * @var array
 	 * @access public
 	 */
-	public $records = [
+	public array $records = [
 		[
 			'id' => 1,
 			'title' => 'First Post',

@@ -25,7 +25,7 @@ class RatingComponent extends Component {
 	/**
 	 * @var array<mixed>
 	 */
-	public $components = ['RequestHandler', 'Flash'];
+	protected array $components = ['RequestHandler', 'Flash'];
 
 	/**
 	 * @var \Cake\Controller\Controller
@@ -35,7 +35,7 @@ class RatingComponent extends Component {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected $_defaultConfig = [
+	protected array $_defaultConfig = [
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
 		'params' => ['rate' => null, 'rating' => null, 'redirect' => true],
@@ -201,7 +201,8 @@ class RatingComponent extends Component {
 	 */
 	public function redirect($url, int $status = 302): ?Response {
 		if ($this->Controller->viewBuilder()->getVar('authMessage') && $this->Controller->getRequest()->getParam('isJson')) {
-			$this->RequestHandler->renderAs($this->Controller, 'json');
+			//FIXME
+			//$this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
@@ -214,7 +215,8 @@ class RatingComponent extends Component {
 			$this->Flash->error($this->Controller->viewBuilder()->getVar('authMessage'));
 		}
 		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
-			$this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
+			//FIXME
+			//$this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
 
 			return $this->Controller->render('rated');
 		}

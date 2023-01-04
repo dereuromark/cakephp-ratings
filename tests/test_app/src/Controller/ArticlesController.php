@@ -21,13 +21,13 @@ class ArticlesController extends Controller {
 	 *
 	 * @var array
 	 */
-	protected $helpers = ['Html', 'Form'];
+	protected array $helpers = ['Html', 'Form'];
 
 	/**
 	 * Components used
 	 *
 	 * @var array
 	 */
-	protected $components = ['Ratings.Rating', 'Auth', 'Flash'];
+	protected array $components = ['Ratings.Rating', 'Auth', 'Flash'];
 
 }

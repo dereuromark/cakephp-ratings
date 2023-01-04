@@ -12,6 +12,7 @@
 namespace Ratings\Model\Behavior;
 
 use Cake\ORM\Behavior;
+use Cake\ORM\Query\SelectQuery;
 use Exception;
 use InvalidArgumentException;
 use LogicException;
@@ -41,7 +42,7 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @var array<string, mixed>
 	 */
-	protected $_defaultConfig = [
+	protected array $_defaultConfig = [
 		'modelClass' => null,
 		'rateClass' => 'Ratings.Ratings',
 		'foreignKey' => 'foreign_key',
@@ -61,7 +62,7 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @var array<string, string>
 	 */
-	protected $modes = [
+	protected array $modes = [
 		'average' => 'avg',
 		'sum' => 'sum',
 	];
@@ -352,7 +353,7 @@ class RatableBehavior extends Behavior {
 		$options = [
 			'contain' => [$this->_table->getAlias()],
 			'fields' => function ($query) use ($mode) {
-				/** @var \Cake\Database\Query<mixed> $query */
+				/** @var \Cake\Database\Query $query */
 				$rating = $query->newExpr()->add($mode . '(value)');
 
 				return [
@@ -409,9 +410,9 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @param string|int $foreignKey Foreign key as uuid or int
 	 * @param string|int $userId
-	 * @return \Cake\ORM\Query
+	 * @return \Cake\ORM\Query\SelectQuery
 	 */
-	public function isRatedBy($foreignKey, $userId) {
+	public function isRatedBy($foreignKey, $userId): SelectQuery {
 		$entry = $this->_table->Ratings->find('all', [
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,

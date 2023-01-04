@@ -28,7 +28,7 @@ class RatingHelper extends Helper {
 	 *
 	 * @var array<mixed>
 	 */
-	protected $helpers = ['Html', 'Form', 'Number'];
+	protected array $helpers = ['Html', 'Form', 'Number'];
 
 	/**
 	 * Default settings
@@ -54,14 +54,14 @@ class RatingHelper extends Helper {
 	 *
 	 * @var array<string>
 	 */
-	protected $allowedTypes = ['ul', 'ol', 'radio'];
+	protected array $allowedTypes = ['ul', 'ol', 'radio'];
 
 	/**
 	 * Sizes for rating image
 	 *
 	 * @var array<string, int>
 	 */
-	protected $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
+	protected array $sizes = ['large' => 28, 'medium' => 16, 'small' => 12];
 
 	/**
 	 * Displays a bunch of rating links wrapped into a list element of your choice

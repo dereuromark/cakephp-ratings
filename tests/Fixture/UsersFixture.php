@@ -27,7 +27,7 @@ class UsersFixture extends TestFixture {
 	 * @var array
 	 * @access public
 	 */
-	public $fields = [
+	public array $fields = [
 		'id' => ['type' => 'uuid', 'null' => false, 'length' => 36],
 		'account_type' => ['type' => 'string', 'null' => false, 'length' => 8],
 		'url' => ['type' => 'string', 'null' => false],
@@ -56,7 +56,7 @@ class UsersFixture extends TestFixture {
 	 * @var array
 	 * @access public
 	 */
-	public $records = [
+	public array $records = [
 		[
 			'id' => '1',
 			'account_type' => 'local',
