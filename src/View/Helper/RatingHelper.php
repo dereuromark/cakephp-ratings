@@ -463,8 +463,8 @@ HTML;
 		}
 
 		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
-		$innerContent = str_replace('%value%', $this->Number->format($value, $this->_config), $options['innerHtml']);
-		$innerContent = str_replace('%percentage%', (string)$percentage, $innerContent);
+		$innerContent = (string)str_replace('%value%', $this->Number->format($value, $this->_config), $options['innerHtml']);
+		$innerContent = (string)str_replace('%percentage%', (string)$percentage, $innerContent);
 		$inner = $this->Html->div($options['innerClass'], $innerContent, $options['innerOptions']);
 
 		return $this->Html->div($options['outerClass'], $inner, $options['outerOptions']);

@@ -104,9 +104,9 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @param array<mixed>|string|int $foreignKey
 	 * @param string|int $userId
-	 * @param int $value
+	 * @param float|int $value
 	 * @throws \Exception
-	 * @return float|false Boolean or calculated sum
+	 * @return float|\Ratings\Model\Entity\Rating|false Boolean or calculated sum
 	 */
 	public function saveRating($foreignKey, $userId, $value) {
 		if (is_array($foreignKey)) {
@@ -168,7 +168,7 @@ class RatableBehavior extends Behavior {
 	 * @param array<mixed>|string|int $foreignKey
 	 * @param string|int $userId
 	 * @throws \Exception
-	 * @return float|bool Boolean or calculated sum
+	 * @return float|\Ratings\Model\Entity\Rating|bool Boolean or calculated sum
 	 */
 	public function removeRating($foreignKey, $userId) {
 		if (is_array($foreignKey)) {
@@ -274,7 +274,7 @@ class RatableBehavior extends Behavior {
 	 * @see Ratable::calculateRating()
 	 *
 	 * @param string|int $id foreignKey
-	 * @param int $value of new rating
+	 * @param float|int $value of new rating
 	 * @param mixed $saveToField boolean or fieldname
 	 * @param string $mode type of calculation
 	 * @param bool $update

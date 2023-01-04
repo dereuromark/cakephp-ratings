@@ -182,7 +182,7 @@ class RatingComponent extends Component {
 		$params = array_merge($params, $this->Controller->getRequest()->getParam('pass'));
 
 		$ratingParams = array_keys($this->_config['params']);
-		foreach ($this->Controller->getRequest()->getQuery() as $name => $value) {
+		foreach ((array)$this->Controller->getRequest()->getQuery() as $name => $value) {
 			if (!in_array($name, $ratingParams, true)) {
 				$params['?'][$name] = $value;
 			}
