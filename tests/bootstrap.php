@@ -7,6 +7,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Filesystem\Folder;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\Router;
+use Ratings\Plugin as RatingsPlugin;
 
 require dirname(__DIR__) . '/vendor/cakephp/cakephp/src/basics.php';
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -70,7 +71,7 @@ Cache::setConfig($cache);
 
 Router::defaultRouteClass(DashedRoute::class);
 
-Plugin::getCollection()->add(new Ratings\Plugin());
+Plugin::getCollection()->add(new RatingsPlugin());
 
 // Ensure default test connection is defined
 if (!getenv('db_class')) {

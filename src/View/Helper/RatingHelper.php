@@ -350,7 +350,7 @@ class RatingHelper extends Helper {
 		}
 		$id = $options['item'];
 
-		if (!$options['url']) {
+		if (empty($options['url'])) {
 			$options['url']['?']['redirect'] = true;
 			$passedParams = $this->_View->getRequest()->getParam('pass');
 			foreach ($passedParams as $passedParam) {
