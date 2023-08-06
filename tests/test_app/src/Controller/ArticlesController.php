@@ -19,15 +19,15 @@ class ArticlesController extends Controller {
 	/**
 	 * Helpers used
 	 *
-	 * @var array
+	 * @var array|null
 	 */
-	protected array $helpers = ['Html', 'Form'];
+	protected ?array $helpers = ['Html', 'Form'];
 
 	/**
 	 * Components used
 	 *
-	 * @var array
+	 * @var array|null
 	 */
-	protected array $components = ['Ratings.Rating', 'Auth', 'Flash'];
+	protected ?array $components = ['Ratings.Rating', 'Flash'];
 
 }

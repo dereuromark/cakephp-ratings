@@ -1,7 +1,17 @@
 <?php
-require dirname(__DIR__) . '/vendor/cakephp/cakephp/src/basics.php';
-require dirname(__DIR__) . '/vendor/autoload.php';
 
+use Cake\Cache\Cache;
+use Cake\Core\Configure;
+use Cake\Core\Plugin;
+use Cake\Datasource\ConnectionManager;
+use Shim\Filesystem\Folder;
+use Cake\Routing\Route\DashedRoute;
+use Cake\Routing\Router;
+use Ratings\RatingsPlugin;
+
+if (!defined('DS')) {
+	define('DS', DIRECTORY_SEPARATOR);
+}
 if (!defined('WINDOWS')) {
 	if (DS === '\\' || substr(PHP_OS, 0, 3) === 'WIN') {
 		define('WINDOWS', true);
@@ -25,10 +35,14 @@ define('CONFIG', dirname(__FILE__) . DS . 'config' . DS);
 
 ini_set('intl.default_locale', 'de-DE');
 
-Cake\Core\Configure::write('App', [
+require dirname(__DIR__) . '/vendor/autoload.php';
+require CORE_PATH . 'config/bootstrap.php';
+require CAKE_CORE_INCLUDE_PATH . '/src/functions.php';
+
+Configure::write('App', [
 		'namespace' => 'App',
 		'encoding' => 'UTF-8']);
-Cake\Core\Configure::write('debug', true);
+Configure::write('debug', true);
 
 mb_internal_encoding('UTF-8');
 
@@ -57,11 +71,11 @@ $cache = [
 		'duration' => '+10 seconds',
 	],
 ];
-Cake\Cache\Cache::setConfig($cache);
+Cache::setConfig($cache);
 
-Cake\Routing\Router::defaultRouteClass(Cake\Routing\Route\DashedRoute::class);
+Router::defaultRouteClass(DashedRoute::class);
 
-Cake\Core\Plugin::getCollection()->add(new Ratings\Plugin());
+Plugin::getCollection()->add(new RatingsPlugin());
 
 // Ensure default test connection is defined
 if (!getenv('db_class')) {
@@ -69,7 +83,7 @@ if (!getenv('db_class')) {
 	putenv('db_dsn=sqlite::memory:');
 }
 
-Cake\Datasource\ConnectionManager::setConfig('test', [
+ConnectionManager::setConfig('test', [
 	'className' => 'Cake\Database\Connection',
 	'driver' => getenv('db_class') ?: null,
 	'dsn' => getenv('db_dsn') ?: null,

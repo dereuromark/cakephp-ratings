@@ -7,7 +7,7 @@ use Cake\Core\BasePlugin;
 /**
  * Plugin for Ratings
  */
-class Plugin extends BasePlugin {
+class RatingsPlugin extends BasePlugin {
 
 	/**
 	 * @var bool

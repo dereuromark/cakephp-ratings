@@ -16,6 +16,7 @@ use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
@@ -55,9 +56,10 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->setEventManager(new EventManager());
 
 		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
-		//$this->AuthComponent = $this->getMockBuilder(AuthComponent::class)->setMethods(['user'])->disableOriginalConstructor()->getMock();
 
-		Router::scope('/', function (RouteBuilder $routes): void {
+		$builder = Router::createRouteBuilder('/');
+		$builder->setRouteClass(DashedRoute::class);
+		$builder->scope('/', function (RouteBuilder $routes): void {
 			$routes->fallbacks();
 		});
 	}
@@ -82,7 +84,7 @@ class RatingComponentTest extends TestCase {
 	public function testInitialize() {
 		$this->_initControllerAndRatings();
 		$helpers = $this->Controller->viewBuilder()->getHelpers();
-		$this->assertTrue(in_array('Ratings.Rating', $helpers));
+		$this->assertArrayHasKey('Rating', $helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 	}
 
@@ -99,7 +101,7 @@ class RatingComponentTest extends TestCase {
 
 		$this->_initControllerAndRatings([]);
 		$helpers = $this->Controller->viewBuilder()->getHelpers();
-		$this->assertTrue(in_array('Ratings.Rating', $helpers));
+		$this->assertArrayHasKey('Rating', $helpers);
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		$this->assertTrue($this->Controller->Articles->behaviors()->Ratable->getConfig('update'), 'Ratable behavior should be updatable.');
 	}
@@ -118,7 +120,7 @@ class RatingComponentTest extends TestCase {
 
 		$this->_initControllerAndRatings(['action' => 'show']);
 		$helpers = $this->Controller->viewBuilder()->getHelpers();
-		$this->assertTrue(in_array('Ratings.Rating', $helpers, true), print_r($helpers, true));
+		$this->assertArrayHasKey('Rating', $helpers, print_r($helpers, true));
 		$this->assertTrue($this->Controller->Articles->behaviors()->has('Ratable'), 'Ratable behavior should attached.');
 		$this->assertEquals(['show'], $this->Controller->Rating->getConfig('actions'));
 	}

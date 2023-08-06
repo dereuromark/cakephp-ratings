@@ -34,7 +34,7 @@
 	},
 	"require-dev": {
 		"dereuromark/cakephp-shim": "dev-cake5",
-		"phpunit/phpunit": "^9.5",
+		"phpunit/phpunit": "^10.2",
 		"fig-r/psr2r-sniffer": "dev-next"
 	},
 	"autoload": {

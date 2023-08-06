@@ -48,9 +48,9 @@ class RatingHelperTest extends TestCase {
 		$this->View = new View($this->request);
 		$this->Rating = new RatingHelper($this->View);
 
-		Router::reload();
-		Router::defaultRouteClass(DashedRoute::class);
-		Router::scope('/', function (RouteBuilder $routes): void {
+		$builder = Router::createRouteBuilder('/');
+		$builder->setRouteClass(DashedRoute::class);
+		$builder->scope('/', function (RouteBuilder $routes): void {
 			$routes->fallbacks();
 		});
 	}
@@ -121,7 +121,7 @@ class RatingHelperTest extends TestCase {
 
 		$result = $this->Rating->control($options, $attributes);
 		$this->assertTextContains('<form method="post" accept-charset="utf-8" action="/my-controller/my-action?rate=3&amp;redirect=1">', $result);
-		$this->assertTextContains('<input type="hidden" name="rate" value="3"/>', $result);
+		$this->assertTextContains('<input type="hidden" name="rate" value="3">', $result);
 		$this->assertTextContains('<select name="rating" id="', $result);
 	}
 
