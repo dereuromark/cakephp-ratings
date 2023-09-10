@@ -4,10 +4,11 @@ use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
-use Shim\Filesystem\Folder;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\Router;
+use Cake\TestSuite\Fixture\SchemaLoader;
 use Ratings\RatingsPlugin;
+use Shim\Filesystem\Folder;
 
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -46,7 +47,7 @@ Configure::write('debug', true);
 
 mb_internal_encoding('UTF-8');
 
-$Tmp = new Shim\Filesystem\Folder(TMP);
+$Tmp = new Folder(TMP);
 $Tmp->create(TMP . 'cache/models', 0770);
 $Tmp->create(TMP . 'cache/persistent', 0770);
 $Tmp->create(TMP . 'cache/views', 0770);
@@ -93,6 +94,6 @@ ConnectionManager::setConfig('test', [
 ]);
 
 if (env('FIXTURE_SCHEMA_METADATA')) {
-	$loader = new Cake\TestSuite\Fixture\SchemaLoader();
+	$loader = new SchemaLoader();
 	$loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
 }
