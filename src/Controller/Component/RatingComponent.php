@@ -14,6 +14,7 @@ namespace Ratings\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
+use Cake\ORM\Exception\MissingTableClassException;
 use ReflectionClass;
 
 /**
@@ -72,7 +73,11 @@ class RatingComponent extends Component {
 		}
 		$this->setConfig('modelName', $modelName);
 
-		$model = $this->Controller->getTableLocator()->get($modelName);
+		try {
+			$model = $this->Controller->getTableLocator()->get($modelName, ['allowFallbackClass' => false]);
+		} catch (MissingTableClassException) {
+			$model = null;
+		}
 		if ($model && !$model->behaviors()->has('Ratable')) {
 			$model->behaviors()->load('Ratings.Ratable', $this->_config);
 		}
@@ -137,7 +142,7 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->findById($rate)) {
+		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
 			$Model = $Controller->getTableLocator()->get($this->getConfig('modelName'));
 			$newRating = $Model->saveRating($rate, $user, $rating);
