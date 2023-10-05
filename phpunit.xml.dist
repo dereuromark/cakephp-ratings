@@ -11,7 +11,7 @@
 	</php>
 	<testsuites>
 		<testsuite name="ratings">
-			<directory>tests/</directory>
+			<directory>tests/TestCase/</directory>
 		</testsuite>
 	</testsuites>
 

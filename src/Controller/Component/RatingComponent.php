@@ -67,12 +67,12 @@ class RatingComponent extends Component {
 		$this->Controller->setRequest($request);
 
 		$modelName = $this->getConfig('modelName');
-		if (empty($modelName)) {
-			$modelName = $this->invokeProperty($this->Controller, 'modelClass');
+		if (!$modelName) {
+			$modelName = $this->invokeProperty($this->Controller, 'modelClass') ?: $this->invokeProperty($this->Controller, 'defaultTable');
 		}
 		[, $modelName] = pluginSplit($modelName);
 		$this->setConfig('modelName', $modelName);
-		if (!$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
+		if (isset($this->Controller->{$modelName}) && !$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
 			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
 		}
 		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
