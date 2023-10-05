@@ -42,6 +42,7 @@ class RatingComponent extends Component {
 		'params' => ['rate' => null, 'rating' => null, 'redirect' => true],
 		'userId' => null,
 		'userIdField' => 'id',
+		'allowFallbackClass' => true, // For model detection
 	];
 
 	/**
@@ -74,7 +75,7 @@ class RatingComponent extends Component {
 		$this->setConfig('modelName', $modelName);
 
 		try {
-			$model = $this->Controller->getTableLocator()->get($modelName);
+			$model = $this->Controller->getTableLocator()->get($modelName, ['allowFallbackClass' => $this->getConfig('allowFallbackClass')]);
 		} catch (MissingTableClassException) {
 			$model = null;
 		}
@@ -145,6 +146,7 @@ class RatingComponent extends Component {
 		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
 			$Model = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+			debug($Model);
 			$newRating = $Model->saveRating($rate, $user, $rating);
 			if ($newRating) {
 				$rating = round($newRating->rating);
