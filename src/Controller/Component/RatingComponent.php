@@ -70,10 +70,11 @@ class RatingComponent extends Component {
 		if (!$modelName) {
 			$modelName = $this->invokeProperty($this->Controller, 'modelClass') ?: $this->invokeProperty($this->Controller, 'defaultTable');
 		}
-		[, $modelName] = pluginSplit($modelName);
 		$this->setConfig('modelName', $modelName);
-		if (isset($this->Controller->{$modelName}) && !$this->Controller->{$modelName}->behaviors()->has('Ratable')) {
-			$this->Controller->{$modelName}->behaviors()->load('Ratings.Ratable', $this->_config);
+
+		$model = $this->Controller->getTableLocator()->get($modelName);
+		if ($model && !$model->behaviors()->has('Ratable')) {
+			$model->behaviors()->load('Ratings.Ratable', $this->_config);
 		}
 		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
 
@@ -136,9 +137,9 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->{$this->getConfig('modelName')}->findById($rate)) {
+		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->findById($rate)) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
-			$Model = $Controller->{$this->getConfig('modelName')};
+			$Model = $Controller->getTableLocator()->get($this->getConfig('modelName'));
 			$newRating = $Model->saveRating($rate, $user, $rating);
 			if ($newRating) {
 				$rating = round($newRating->rating);

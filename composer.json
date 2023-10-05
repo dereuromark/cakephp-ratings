@@ -33,7 +33,7 @@
 		"cakephp/cakephp": "^5.0.0"
 	},
 	"require-dev": {
-		"dereuromark/cakephp-shim": "dev-cake5",
+		"dereuromark/cakephp-shim": "^3.0.1",
 		"phpunit/phpunit": "^10.2",
 		"fig-r/psr2r-sniffer": "dev-next"
 	},
