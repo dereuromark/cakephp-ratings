@@ -74,7 +74,7 @@ class RatingComponent extends Component {
 		$this->setConfig('modelName', $modelName);
 
 		try {
-			$model = $this->Controller->getTableLocator()->get($modelName, ['allowFallbackClass' => false]);
+			$model = $this->Controller->getTableLocator()->get($modelName);
 		} catch (MissingTableClassException) {
 			$model = null;
 		}
