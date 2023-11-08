@@ -1,6 +1,6 @@
 # Ratings Plugin for CakePHP
 
-[![CI](https://github.com/dereuromark/cakephp-ratings/workflows/CI/badge.svg?branch=master)](https://github.com/dereuromark/cakephp-ratings/actions?query=workflow%3ACI+branch%3Amaster)
+[![CI](https://github.com/dereuromark/cakephp-ratings/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/dereuromark/cakephp-ratings/actions?query=workflow%3ACI+branch%3Amaster)
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-ratings/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.png)](https://packagist.org/packages/dereuromark/cakephp-ratings)
