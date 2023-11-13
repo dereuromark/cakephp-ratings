@@ -58,7 +58,7 @@ class UsersFixture extends TestFixture {
 	 */
 	public array $records = [
 		[
-			'id' => '1',
+			'id' => '481fc6d0-b920-43e0-a40d-6d1740cf8569',
 			'account_type' => 'local',
 			'url' => '/user/phpnut',
 			'slug' => 'phpnut',
@@ -79,7 +79,7 @@ class UsersFixture extends TestFixture {
 			'modified' => '2008-03-25 02:45:46',
 		],
 		[
-			'id' => '2',
+			'id' => '481fc6d0-b920-43e0-a40d-6d1740cf8568',
 			'account_type' => 'remote',
 			'url' => '/user/floriank',
 			'slug' => 'floriank',
@@ -100,7 +100,7 @@ class UsersFixture extends TestFixture {
 			'modified' => '2008-03-25 02:45:46',
 		],
 		[
-			'id' => '3',
+			'id' => '481fc6d0-b920-43e0-a40d-6d1740cf8567',
 			'account_type' => 'remote',
 			'url' => '/user/user1',
 			'slug' => 'user1',
@@ -121,7 +121,7 @@ class UsersFixture extends TestFixture {
 			'modified' => '2008-03-25 02:45:46',
 		],
 		[
-			'id' => '4',
+			'id' => '481fc6d0-b920-43e0-a40d-6d1740cf8566',
 			'account_type' => 'local',
 			'url' => '/user/oidtest',
 			'slug' => 'oistest',

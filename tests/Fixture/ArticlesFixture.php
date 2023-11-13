@@ -47,7 +47,6 @@ class ArticlesFixture extends TestFixture {
 	 */
 	public array $records = [
 		[
-			'id' => 1,
 			'user_id' => 0,
 			'title' => 'First Article',
 			'rating' => 1.0000,
@@ -57,7 +56,6 @@ class ArticlesFixture extends TestFixture {
 			'rating_4' => 0,
 			'rating_5' => 0],
 		[
-			'id' => 2,
 			'user_id' => 0,
 			'title' => 'First Article',
 			'rating' => 3.0000,

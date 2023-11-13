@@ -43,21 +43,18 @@ class PostsFixture extends TestFixture {
 	 */
 	public array $records = [
 		[
-			'id' => 1,
 			'title' => 'First Post',
 			'rating' => 1.0,
 			'rating_sum' => 1,
 			'rating_count' => 1,
 		],
 		[
-			'id' => 2,
 			'title' => 'Second Post',
 			'rating' => 3.0,
 			'rating_sum' => 3,
 			'rating_count' => 1,
 		],
 		[
-			'id' => 3,
 			'title' => '3rd Post',
 			'rating' => 0.0,
 			'rating_sum' => 0,
