@@ -146,7 +146,6 @@ class RatingComponent extends Component {
 		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
 			$Model = $Controller->getTableLocator()->get($this->getConfig('modelName'));
-			debug($Model);
 			$newRating = $Model->saveRating($rate, $user, $rating);
 			if ($newRating) {
 				$rating = round($newRating->rating);
