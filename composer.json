@@ -1,14 +1,13 @@
 {
 	"name": "dereuromark/cakephp-ratings",
-	"type": "cakephp-plugin",
 	"description": "Ratings Plugin for CakePHP.",
-	"homepage": "https://github.com/dereuromark/cakephp-ratings",
+	"license": "MIT",
+	"type": "cakephp-plugin",
 	"keywords": [
 		"cakephp",
 		"ratings",
 		"plugin"
 	],
-	"license": "MIT",
 	"authors": [
 		{
 			"name": "Mark Scherer",
@@ -23,6 +22,7 @@
 			"role": "original maintainer"
 		}
 	],
+	"homepage": "https://github.com/dereuromark/cakephp-ratings",
 	"support": {
 		"issues": "https://github.com/dereuromark/cakephp-ratings/issues",
 		"wiki": "https://github.com/dereuromark/cakephp-ratings/blob/master/docs",
@@ -34,9 +34,14 @@
 	},
 	"require-dev": {
 		"dereuromark/cakephp-shim": "^3.0.1",
-		"phpunit/phpunit": "^10.2",
-		"fig-r/psr2r-sniffer": "dev-next"
+		"fig-r/psr2r-sniffer": "dev-next",
+		"phpunit/phpunit": "^10.2"
 	},
+	"suggest": {
+		"cakephp/migrations": "For migrations to run."
+	},
+	"minimum-stability": "stable",
+	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
 			"Ratings\\": "src/",
@@ -45,27 +50,22 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Ratings\\Test\\": "tests/",
 			"Cake\\Test\\": "vendor/cakephp/cakephp/tests/",
+			"Ratings\\Test\\": "tests/",
 			"TestApp\\": "tests/test_app/src/"
 		}
-	},
-	"suggest": {
-		"cakephp/migrations": "For migrations to run."
-	},
-	"prefer-stable": true,
-	"minimum-stability": "stable",
-	"scripts": {
-		"test": "phpunit",
-		"test-coverage": "phpunit --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml",
-		"stan": "phpstan analyse",
-		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.0.0 && mv composer.backup composer.json",
-		"cs-check": "phpcs --extensions=php",
-		"cs-fix": "phpcbf --extensions=php"
 	},
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
 		}
+	},
+	"scripts": {
+		"cs-check": "phpcs --extensions=php",
+		"cs-fix": "phpcbf --extensions=php",
+		"stan": "phpstan analyse",
+		"stan-setup": "cp composer.json composer.backup && composer require --dev phpstan/phpstan:^1.0.0 && mv composer.backup composer.json",
+		"test": "phpunit",
+		"test-coverage": "phpunit --log-junit tmp/coverage/unitreport.xml --coverage-html tmp/coverage --coverage-clover tmp/coverage/coverage.xml"
 	}
 }
