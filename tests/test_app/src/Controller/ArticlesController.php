@@ -12,9 +12,9 @@ class ArticlesController extends Controller {
 	/**
 	 * Models used
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	protected $modelClass = 'Articles';
+	protected ?string $modelClass = 'Articles';
 
 	/**
 	 * Helpers used
