@@ -80,7 +80,7 @@ class RatingComponent extends Component {
 			$model = null;
 		}
 		if ($model && !$model->behaviors()->has('Ratable')) {
-			$model->behaviors()->load('Ratings.Ratable', $this->_config);
+			$model->behaviors()->load('Ratable', ['className' => 'Ratings.Ratable'] + $this->_config);
 		}
 		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
 
