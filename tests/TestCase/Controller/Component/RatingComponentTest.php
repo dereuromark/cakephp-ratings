@@ -333,7 +333,8 @@ class RatingComponentTest extends TestCase {
 		$defaultOptions = $this->Controller->components()->get('Rating')->getConfig();
 		$this->Controller->components()->unload('Rating');
 
-		$this->Controller->loadComponent('Ratings.Rating', $options + $defaultOptions);
+		$options['className'] = 'Ratings.Rating';
+		$this->Controller->loadComponent('Rating', $options + $defaultOptions);
 		$event = new Event('startup', $this->Controller);
 
 		return $this->Controller->Rating->startup($event) ?: $this->Controller->getResponse();
