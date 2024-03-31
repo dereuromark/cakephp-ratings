@@ -9,7 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace Ratings\Test\TestCase\Model;
+namespace Ratings\Test\TestCase\Model\Table;
 
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
