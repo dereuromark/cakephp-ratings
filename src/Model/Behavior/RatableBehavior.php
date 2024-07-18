@@ -476,7 +476,6 @@ class RatableBehavior extends Behavior {
 		$options = array_merge([
 			'userField' => 'user_id',
 			'find' => [
-				'contain' => [],
 				'conditions' => [
 					$this->_table->getAlias() . '.' . $this->_table->getPrimaryKey() => $foreignKey]],
 			'values' => [
