@@ -97,7 +97,7 @@ class RatingComponent extends Component {
 				} if (!$userId && $this->Controller->components()->has('Auth')) {
 					$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
 				} else {
-					$userId = $this->Controller->getRequest()->getSession()->read('Auth.User.id');
+					//$userId = $this->Controller->getRequest()->getSession()->read('Auth.User.id');
 				}
 
 				return $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
