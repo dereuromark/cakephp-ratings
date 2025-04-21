@@ -18,7 +18,6 @@ use Cake\ORM\Exception\MissingTableClassException;
 use ReflectionClass;
 
 /**
- * @property \Cake\Controller\Component\RequestHandlerComponent $RequestHandler
  * @property \Cake\Controller\Component\FlashComponent $Flash
  */
 class RatingComponent extends Component {
@@ -26,7 +25,7 @@ class RatingComponent extends Component {
 	/**
 	 * @var array<mixed>
 	 */
-	protected array $components = ['RequestHandler', 'Flash'];
+	protected array $components = ['Flash'];
 
 	/**
 	 * @var \Cake\Controller\Controller
@@ -70,7 +69,7 @@ class RatingComponent extends Component {
 
 		$modelName = $this->getConfig('modelName');
 		if (!$modelName) {
-			$modelName = $this->invokeProperty($this->Controller, 'modelClass') ?: $this->invokeProperty($this->Controller, 'defaultTable');
+			$modelName = $this->getController()->fetchTable()->getAlias();
 		}
 		$this->setConfig('modelName', $modelName);
 

@@ -6,7 +6,9 @@ parameters:
 		- tests/bootstrap.php
 
 	ignoreErrors:
+		- identifier: missingType.iterableValue
 		- identifier: missingType.generics
 		- '#Cannot access property \$rating on float#'
 		- '#Access to an undefined property Cake\\Controller\\Controller::\$AuthUser.#'
 		- '#Access to an undefined property Cake\\Controller\\Controller::\$Auth.#'
+		- '#Access to an undefined property .+\\Table.+::\$Ratings.#'
