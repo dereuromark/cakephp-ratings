@@ -220,7 +220,7 @@ class RatableBehavior extends Behavior {
 	 * @param mixed $saveToField boolean or field name
 	 * @param string $mode type of calculation
 	 * @throws \InvalidArgumentException
-	 * @return float|false|\Ratings\Model\Entity\Rating Boolean or calculated sum
+	 * @return \Ratings\Model\Entity\Rating|float|false Boolean or calculated sum
 	 */
 	public function decrementRating($id, $value, $saveToField = true, $mode = 'average') {
 		if (!array_key_exists($mode, $this->modes)) {
@@ -528,7 +528,7 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @param array<string, mixed> $data Data passed to afterRate() or similar structure
 	 * @throws \Exception
-	 * @return false|\Ratings\Model\Entity\Rating True on success
+	 * @return \Ratings\Model\Entity\Rating|false True on success
 	 */
 	public function cacheRatingStatistics(array $data = []) {
 		if (empty($data['result'])) {
