@@ -69,7 +69,7 @@ class RatingComponent extends Component {
 
 		$modelName = $this->getConfig('modelName');
 		if (!$modelName) {
-			// Weed the original field, as $this->getController()->fetchTable()->getAlias() only contains aliased version
+			// We need the original field, as $this->getController()->fetchTable()->getAlias() only contains aliased version
 			/** @phpstan-ignore-next-line */
 			$modelName = $this->invokeProperty($this->Controller, 'modelClass') ?: $this->invokeProperty($this->Controller, 'defaultTable');
 		}
