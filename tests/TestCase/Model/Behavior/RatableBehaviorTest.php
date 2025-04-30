@@ -478,7 +478,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$this->Articles->saveRating(1, 4, 3);
 
-		$oldRating = $this->Articles->Ratings->find('all', [
+		$oldRating = $this->Articles->Ratings->find('all', ...[
 			//'recursive' => -1,
 			'conditions' => [
 				'Ratings.model' => 'Articles',

@@ -229,7 +229,7 @@ class RatableBehavior extends Behavior {
 
 		/** @var string $key */
 		$key = $this->_table->getPrimaryKey();
-		$rating = $this->_table->find('all', [
+		$rating = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id],
 		])->first();
@@ -292,7 +292,7 @@ class RatableBehavior extends Behavior {
 
 		/** @var string $key */
 		$key = $this->_table->getPrimaryKey();
-		$data = $this->_table->find('all', [
+		$data = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id],
 		])->first();
@@ -375,7 +375,7 @@ class RatableBehavior extends Behavior {
 			],
 		];
 
-		$result = $this->ratingsTable()->find('all', $options)->toArray();
+		$result = $this->ratingsTable()->find('all', ...$options)->toArray();
 		if (empty($result[0]['rating'])) {
 			$result[0]['rating'] = 0;
 		}
@@ -422,7 +422,7 @@ class RatableBehavior extends Behavior {
 	 * @return \Cake\ORM\Query\SelectQuery
 	 */
 	public function isRatedBy($foreignKey, $userId): SelectQuery {
-		$entry = $this->ratingsTable()->find('all', [
+		$entry = $this->ratingsTable()->find('all', ...[
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
@@ -498,7 +498,7 @@ class RatableBehavior extends Behavior {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Rating'));
 		}
 
-		$record = $this->_table->find('all', $options['find'])->first();
+		$record = $this->_table->find('all', ...$options['find'])->first();
 
 		if (empty($record)) {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Record'));
@@ -550,7 +550,7 @@ class RatableBehavior extends Behavior {
 		/** @var string $key */
 		$key = $this->_table->getPrimaryKey();
 		/** @var \Ratings\Model\Entity\Rating $rating */
-		$rating = $this->_table->find('all', [
+		$rating = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $data['foreignKey']],
 		])->firstOrFail();
