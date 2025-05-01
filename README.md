@@ -12,7 +12,7 @@ The **Ratings** plugin will allow you by simply adding the ratings component to 
 The core part of this plugin is the Ratable behavior that is attached to your models.
 In most cases you don't need to attach it yourself, because the Rating component will take care of it.
 
-Note: This branch is for **CakePHP 5.0+**. For details see [version map](https://github.com/dereuromark/cakephp-ratings/wiki#cakephp-version-map).
+Note: This branch is for **CakePHP 5.1+**. For details see [version map](https://github.com/dereuromark/cakephp-ratings/wiki#cakephp-version-map).
 
 ### Recommended
 
