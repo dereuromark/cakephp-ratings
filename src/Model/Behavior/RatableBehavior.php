@@ -449,7 +449,7 @@ class RatableBehavior extends Behavior {
 	 * @param array<string, mixed> $data
 	 * @return void
 	 */
-	public function afterRateCallback($data = []) {
+	public function afterRateCallback($data = []): void {
 		if (method_exists($this->_table, 'afterRate')) {
 			$this->_table->afterRate($data);
 		}
@@ -461,7 +461,7 @@ class RatableBehavior extends Behavior {
 	 * @param array<string, mixed> $data
 	 * @return void
 	 */
-	public function beforeRateCallback(array $data = []) {
+	public function beforeRateCallback(array $data = []): void {
 		if (method_exists($this->_table, 'beforeRate')) {
 			$this->_table->beforeRate($data);
 		}
