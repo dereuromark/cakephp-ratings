@@ -48,9 +48,9 @@ class RatingComponent extends Component {
 	 * Callback
 	 *
 	 * @param \Cake\Event\EventInterface $event
-	 * @return \Cake\Http\Response|null
+	 * @return void
 	 */
-	public function startup(EventInterface $event) {
+	public function startup(EventInterface $event): void {
 		/** @var \Cake\Controller\Controller $controller */
 		$controller = $event->getSubject();
 		$this->Controller = $controller;
@@ -59,7 +59,7 @@ class RatingComponent extends Component {
 		if ($actions) {
 			$action = $this->Controller->getRequest()->getParam('action') ?: '';
 			if (!in_array($action, $actions, true)) {
-				return null;
+				return;
 			}
 		}
 
@@ -86,26 +86,34 @@ class RatingComponent extends Component {
 		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
 
 		if (!$this->Controller->getRequest()->is('post')) {
-			return null;
+			return;
 		}
 
 		$params = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery() + (array)$this->_config['params'];
-		if (!method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
-			if (isset($params['rate']) && isset($params['rating'])) {
-				$userId = $this->getConfig('userId') ?: null;
-				if (!$userId && $this->Controller->components()->has('AuthUser')) {
-					$userId = $this->Controller->AuthUser->user($this->getConfig('userIdField'));
-				} if (!$userId && $this->Controller->components()->has('Auth')) {
-					$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
-				} else {
-					//$userId = $this->Controller->getRequest()->getSession()->read('Auth.User.id');
-				}
-
-				return $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
-			}
+		if (method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
+			return;
 		}
 
-		return null;
+		if (!isset($params['rate']) || !isset($params['rating'])) {
+			return;
+		}
+
+		$userId = $this->getConfig('userId') ?: null;
+		if (!$userId && $this->Controller->getRequest()->getAttribute('identity')) {
+			$identity = $this->Controller->getRequest()->getAttribute('identity');
+			$userId = $identity->get($this->getConfig('userIdField'));
+		} elseif (!$userId && $this->Controller->components()->has('AuthUser')) {
+			$userId = $this->Controller->AuthUser->id();
+		} if (!$userId && $this->Controller->components()->has('Auth')) {
+			$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
+		} else {
+			//$userId = $this->Controller->getRequest()->getSession()->read('Auth.User.id');
+		}
+
+		$rate = $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
+		if ($rate) {
+			$event->setResult($rate);
+		}
 	}
 
 	/**

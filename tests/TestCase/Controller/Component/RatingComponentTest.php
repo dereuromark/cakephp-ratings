@@ -55,8 +55,6 @@ class RatingComponentTest extends TestCase {
 		$this->Controller = new ArticlesController(new ServerRequest());
 		$this->Controller->setEventManager(new EventManager());
 
-		$this->Collection = $this->getMockBuilder(ComponentRegistry::class)->setConstructorArgs([$this->Controller])->getMock();
-
 		$builder = Router::createRouteBuilder('/');
 		$builder->setRouteClass(DashedRoute::class);
 		$builder->scope('/', function (RouteBuilder $routes): void {
