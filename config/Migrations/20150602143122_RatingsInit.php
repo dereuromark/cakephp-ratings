@@ -1,8 +1,8 @@
 <?php
 
-use Phinx\Migration\AbstractMigration;
+use Migrations\BaseMigration;
 
-class RatingsInit extends AbstractMigration {
+class RatingsInit extends BaseMigration {
 
 	/**
 	 * Change Method.
