@@ -254,7 +254,9 @@ class RatingHelper extends Helper {
 		$title = __d('ratings', '{0} of {1} stars', $this->Number->format(min($roundedValue, $options['stars']), $this->_config), $options['stars']);
 
 		$attrContent = [
-			'class' => 'rating-stars', 'data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape'],
+			'class' => 'rating-stars',
+			'data-content' => str_repeat($options['data-symbol'], $options['stars']),
+			'escape' => $options['escape'],
 			'style' => 'width: ' . $percent . '%',
 		];
 		$content = $this->Html->div(null, '', $attrContent);
@@ -450,7 +452,9 @@ HTML;
 			'innerOptions' => [],
 			'outerClass' => 'bar-rating',
 			'outerOptions' => [],
-			'element' => null];
+			'element' => null,
+
+		];
 		$options += $defaultOptions;
 
 		$percentage = $this->percentage($value, $total);
@@ -459,7 +463,9 @@ HTML;
 			return $this->_View->element($options['element'], [
 				'value' => $value,
 				'percentage' => $percentage,
-				'total' => $total]);
+				'total' => $total,
+
+			]);
 		}
 
 		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';

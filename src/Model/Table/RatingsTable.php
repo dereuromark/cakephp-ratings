@@ -48,7 +48,8 @@ class RatingsTable extends Table {
 		}
 
 		$this->belongsTo('Users', [
-				'className' => $userClass, 'foreignKey' => 'user_id',
+			'className' => $userClass,
+			'foreignKey' => 'user_id',
 		]);
 
 		$this->addBehavior('Timestamp');

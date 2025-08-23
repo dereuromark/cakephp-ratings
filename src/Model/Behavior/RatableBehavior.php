@@ -84,10 +84,10 @@ class RatableBehavior extends Behavior {
 		}
 
 		$this->_table->hasMany('Ratings', [
-				'className' => $this->_config['rateClass'],
-				'foreignKey' => $this->_config['foreignKey'],
-				'unique' => true,
-				'dependent' => true,
+			'className' => $this->_config['rateClass'],
+			'foreignKey' => $this->_config['foreignKey'],
+			'unique' => true,
+			'dependent' => true,
 		]);
 
 		$this->ratingsTable()->belongsTo(
@@ -231,7 +231,9 @@ class RatableBehavior extends Behavior {
 		$key = $this->_table->getPrimaryKey();
 		$rating = $this->_table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $id],
+				$this->_table->getAlias() . '.' . $key => $id,
+
+			],
 		])->first();
 
 		$fieldSummary = $this->_config['fieldSummary'];
@@ -264,7 +266,9 @@ class RatableBehavior extends Behavior {
 
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($rating, [
-				'callbacks' => $this->_config['modelCallbacks']]);
+				'callbacks' => $this->_config['modelCallbacks'],
+
+			]);
 		}
 
 		return $ratingSum;
@@ -294,7 +298,9 @@ class RatableBehavior extends Behavior {
 		$key = $this->_table->getPrimaryKey();
 		$data = $this->_table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $id],
+				$this->_table->getAlias() . '.' . $key => $id,
+
+			],
 		])->first();
 
 		$fieldSummary = $this->_config['fieldSummary'];
@@ -331,7 +337,9 @@ class RatableBehavior extends Behavior {
 
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($r, [
-				'callbacks' => $this->_config['modelCallbacks']]);
+				'callbacks' => $this->_config['modelCallbacks'],
+
+			]);
 		}
 
 		return $rating;
@@ -488,9 +496,13 @@ class RatableBehavior extends Behavior {
 			'userField' => 'user_id',
 			'find' => [
 				'conditions' => [
-					$this->_table->getAlias() . '.' . $key => $foreignKey]],
+					$this->_table->getAlias() . '.' . $key => $foreignKey,
+				],
+
+			],
 			'values' => [
-				'up' => 1, 'down' => -1,
+				'up' => 1,
+				'down' => -1,
 			],
 		], $options);
 
@@ -552,7 +564,9 @@ class RatableBehavior extends Behavior {
 		/** @var \Ratings\Model\Entity\Rating $rating */
 		$rating = $this->_table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $data['foreignKey']],
+				$this->_table->getAlias() . '.' . $key => $data['foreignKey'],
+
+			],
 		])->firstOrFail();
 
 		if (($data['update'] || $data['type'] === 'removeRating') && !empty($data['oldRating'])) {

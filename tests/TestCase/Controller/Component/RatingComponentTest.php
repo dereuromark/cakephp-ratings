@@ -112,7 +112,7 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->components()->unload('Rating');
 		//$this->Controller->loadComponent('Auth');
 		$this->Controller->loadComponent('Ratings.Rating', [
-				'actions' => ['show'],
+			'actions' => ['show'],
 		]);
 
 		$this->_initControllerAndRatings(['action' => 'show']);

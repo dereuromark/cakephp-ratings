@@ -147,44 +147,52 @@ class RatingHelperTest extends TestCase {
 		$options = [
 			'item' => '42',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
-			'stars' => 5];
+			'stars' => 5,
+
+		];
 		$result = $this->Rating->display($options);
 		$expected =
-		'<ul class="rating rating-0">' .
-			'<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1&amp;redirect=1">1</a></li>' .
-			'<li class="star2"><a href="/articles/rate?rate=42&amp;rating=2&amp;redirect=1">2</a></li>' .
-			'<li class="star3"><a href="/articles/rate?rate=42&amp;rating=3&amp;redirect=1">3</a></li>' .
-			'<li class="star4"><a href="/articles/rate?rate=42&amp;rating=4&amp;redirect=1">4</a></li>' .
-			'<li class="star5"><a href="/articles/rate?rate=42&amp;rating=5&amp;redirect=1">5</a></li>' .
-		'</ul>';
+		'<ul class="rating rating-0">'
+			. '<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1&amp;redirect=1">1</a></li>'
+			. '<li class="star2"><a href="/articles/rate?rate=42&amp;rating=2&amp;redirect=1">2</a></li>'
+			. '<li class="star3"><a href="/articles/rate?rate=42&amp;rating=3&amp;redirect=1">3</a></li>'
+			. '<li class="star4"><a href="/articles/rate?rate=42&amp;rating=4&amp;redirect=1">4</a></li>'
+			. '<li class="star5"><a href="/articles/rate?rate=42&amp;rating=5&amp;redirect=1">5</a></li>'
+		. '</ul>';
 		$this->assertEquals($expected, $result);
 
 		$options = array_merge($options, [
 			'type' => 'ol',
 			'redirect' => false,
 			'value' => '2.25',
-			'stars' => '1']);
+			'stars' => '1',
+
+		]);
 		$result = $this->Rating->display($options);
 		$expected =
-		'<ol class="rating rating-2">' .
-			'<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1">1</a></li>' .
-		'</ol>';
+		'<ol class="rating rating-2">'
+			. '<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1">1</a></li>'
+		. '</ol>';
 		$this->assertEquals($expected, $result);
 
 		$options = array_merge($options, [
-			'type' => 'div']);
+			'type' => 'div',
+
+		]);
 		$result = $this->Rating->display($options);
 		$expected =
-		'<ul class="rating rating-2">' .
-			'<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1">1</a></li>' .
-		'</ul>';
+		'<ul class="rating rating-2">'
+			. '<li class="star1"><a href="/articles/rate?rate=42&amp;rating=1">1</a></li>'
+		. '</ul>';
 		$this->assertEquals($expected, $result);
 
 		$options = [
 			'item' => '42',
 			'type' => 'radio',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
-			'stars' => 2];
+			'stars' => 2,
+
+		];
 		$result = $this->Rating->display($options);
 
 		$expected = '<div class="input radio"><input type="radio" name="data[rating]" id="Rating1" value="1" /><label for="Rating1">1</label><input type="radio" name="data[rating]" id="Rating2" value="2" /><label for="Rating2">2</label></div>';
@@ -194,7 +202,9 @@ class RatingHelperTest extends TestCase {
 			'item' => '42',
 			'type' => 'radio',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
-			'stars' => 2];
+			'stars' => 2,
+
+		];
 		$result = $this->Rating->display($options);
 
 		$expected = '<div class="input radio"><input type="radio" name="data[rating]" id="Rating1" value="1" /><label for="Rating1">1</label><input type="radio" name="data[rating]" id="Rating2" value="2" /><label for="Rating2">2</label></div>';
