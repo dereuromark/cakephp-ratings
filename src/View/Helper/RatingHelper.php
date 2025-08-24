@@ -453,7 +453,6 @@ HTML;
 			'outerClass' => 'bar-rating',
 			'outerOptions' => [],
 			'element' => null,
-
 		];
 		$options += $defaultOptions;
 
@@ -464,7 +463,6 @@ HTML;
 				'value' => $value,
 				'percentage' => $percentage,
 				'total' => $total,
-
 			]);
 		}
 

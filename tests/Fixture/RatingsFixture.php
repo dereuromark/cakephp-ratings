@@ -49,7 +49,6 @@ class RatingsFixture extends TestFixture {
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12',
-
 		],
 		[
 			'user_id' => 1,
@@ -58,7 +57,6 @@ class RatingsFixture extends TestFixture {
 			'value' => 1,
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12',
-
 		],
 		[
 			'user_id' => 1,
@@ -68,7 +66,6 @@ class RatingsFixture extends TestFixture {
 			'created' => '2009-01-01 12:12:12',
 			'modified' => '2009-01-01 12:12:12',
 		],
-
 	];
 
 }

@@ -148,7 +148,6 @@ class RatingHelperTest extends TestCase {
 			'item' => '42',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
 			'stars' => 5,
-
 		];
 		$result = $this->Rating->display($options);
 		$expected =
@@ -166,7 +165,6 @@ class RatingHelperTest extends TestCase {
 			'redirect' => false,
 			'value' => '2.25',
 			'stars' => '1',
-
 		]);
 		$result = $this->Rating->display($options);
 		$expected =
@@ -177,7 +175,6 @@ class RatingHelperTest extends TestCase {
 
 		$options = array_merge($options, [
 			'type' => 'div',
-
 		]);
 		$result = $this->Rating->display($options);
 		$expected =
@@ -191,7 +188,6 @@ class RatingHelperTest extends TestCase {
 			'type' => 'radio',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
 			'stars' => 2,
-
 		];
 		$result = $this->Rating->display($options);
 
@@ -203,7 +199,6 @@ class RatingHelperTest extends TestCase {
 			'type' => 'radio',
 			'url' => ['controller' => 'Articles', 'action' => 'rate'],
 			'stars' => 2,
-
 		];
 		$result = $this->Rating->display($options);
 

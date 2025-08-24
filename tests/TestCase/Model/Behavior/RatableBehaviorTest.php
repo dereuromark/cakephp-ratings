@@ -93,7 +93,6 @@ class RatableBehaviorTest extends TestCase {
 			'model' => 'Articles',
 			'user_id' => '3',
 			'value' => 2.5000,
-
 		];
 		$rating = $this->Articles->Ratings->newEntity($data);
 		$this->Articles->Ratings->save($rating);
@@ -165,7 +164,6 @@ class RatableBehaviorTest extends TestCase {
 			'model' => 'Posts',
 			'user_id' => '3',
 			'value' => 2.5000,
-
 		];
 		$rating = $this->Posts->Ratings->newEntity($data);
 		$this->Posts->Ratings->save($rating);
@@ -295,7 +293,6 @@ class RatableBehaviorTest extends TestCase {
 	public function testSaveUpdatedRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true,
-
 		]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
@@ -311,7 +308,6 @@ class RatableBehaviorTest extends TestCase {
 	public function testSaveUpdatedRatingForNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true,
-
 		]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
@@ -373,7 +369,6 @@ class RatableBehaviorTest extends TestCase {
 	public function testRemoveUpdatedRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true,
-
 		]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(1, $userId, 3)->toArray();
@@ -395,7 +390,6 @@ class RatableBehaviorTest extends TestCase {
 	public function testRemoveUpdatedRatingForNewRating() {
 		$this->Posts->addBehavior('Ratings.Ratable', [
 			'update' => true,
-
 		]);
 		$userId = '1'; // phpnut
 		$result = $this->Posts->saveRating(3, $userId, 5)->toArray();
@@ -475,7 +469,6 @@ class RatableBehaviorTest extends TestCase {
 				'rating' => 2.00000000,
 				'id' => 1,
 			],
-
 		];
 
 		$result = $this->Articles->cacheRatingStatistics($data);
@@ -500,7 +493,6 @@ class RatableBehaviorTest extends TestCase {
 				'Ratings.foreign_key' => 1,
 				'Ratings.user_id' => 4,
 			],
-
 		])->first();
 		$result = $this->Articles->removeRating(1, 4);
 
@@ -515,7 +507,6 @@ class RatableBehaviorTest extends TestCase {
 				'rating' => 2.00000000,
 				'id' => 1,
 			],
-
 		];
 
 		$result = $this->Articles->cacheRatingStatistics($data);
@@ -531,7 +522,6 @@ class RatableBehaviorTest extends TestCase {
 				'rating' => 1.00000000,
 				'id' => 1,
 			],
-
 		];
 
 		$result = $this->Articles->cacheRatingStatistics($data);

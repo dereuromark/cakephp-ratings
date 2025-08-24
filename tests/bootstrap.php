@@ -43,7 +43,6 @@ require CAKE_CORE_INCLUDE_PATH . '/src/functions.php';
 Configure::write('App', [
 	'namespace' => 'App',
 	'encoding' => 'UTF-8',
-
 ]);
 Configure::write('debug', true);
 

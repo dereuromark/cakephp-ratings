@@ -232,7 +232,6 @@ class RatableBehavior extends Behavior {
 		$rating = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id,
-
 			],
 		])->first();
 
@@ -267,7 +266,6 @@ class RatableBehavior extends Behavior {
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($rating, [
 				'callbacks' => $this->_config['modelCallbacks'],
-
 			]);
 		}
 
@@ -299,7 +297,6 @@ class RatableBehavior extends Behavior {
 		$data = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id,
-
 			],
 		])->first();
 
@@ -338,7 +335,6 @@ class RatableBehavior extends Behavior {
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($r, [
 				'callbacks' => $this->_config['modelCallbacks'],
-
 			]);
 		}
 
@@ -498,7 +494,6 @@ class RatableBehavior extends Behavior {
 				'conditions' => [
 					$this->_table->getAlias() . '.' . $key => $foreignKey,
 				],
-
 			],
 			'values' => [
 				'up' => 1,
@@ -565,7 +560,6 @@ class RatableBehavior extends Behavior {
 		$rating = $this->_table->find('all', ...[
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $data['foreignKey'],
-
 			],
 		])->firstOrFail();
 
