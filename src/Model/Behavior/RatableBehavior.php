@@ -303,7 +303,7 @@ class RatableBehavior extends Behavior {
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
 
- 		if ($update && $this->oldRating !== null) {
+		if ($update && $this->oldRating !== null) {
 			$ratingSumNew = $data[$fieldSummary] - $this->oldRating['value'] + $value;
 			$ratingCountNew = $data[$fieldCounter];
 		} else {
