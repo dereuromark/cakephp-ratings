@@ -136,7 +136,6 @@ class RatingComponent extends Component {
 			return null;
 		}
 		$property = $reflection->getProperty($name);
-		$property->setAccessible(true);
 
 		return $property->getValue($object);
 	}
