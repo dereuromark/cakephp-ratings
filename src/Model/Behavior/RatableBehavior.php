@@ -366,8 +366,8 @@ class RatableBehavior extends Behavior {
 		$options = [
 			'contain' => [$this->_table->getAlias()],
 			'fields' => function ($query) use ($mode) {
-				/** @var \Cake\Database\Query $query */
-				$rating = $query->newExpr()->add($mode . '(value)');
+				/** @var \Cake\ORM\Query\SelectQuery $query */
+				$rating = $query->expr()->add($mode . '(value)');
 
 				return [
 					'rating' => $rating,
