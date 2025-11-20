@@ -223,8 +223,8 @@ class RatingComponent extends Component {
 	 */
 	public function redirect($url, int $status = 302): ?Response {
 		if ($this->Controller->viewBuilder()->getVar('authMessage') && $this->Controller->getRequest()->getParam('isJson')) {
-			//FIXME
-			//$this->RequestHandler->renderAs($this->Controller, 'json');
+			// TODO: Implement proper JSON rendering without deprecated RequestHandler
+			// Previously: $this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
@@ -237,8 +237,8 @@ class RatingComponent extends Component {
 			$this->Flash->error($this->Controller->viewBuilder()->getVar('authMessage'));
 		}
 		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
-			//FIXME
-			//$this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
+			// TODO: Re-evaluate if setAction() is needed for rated response
+			// Previously: $this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
 
 			return $this->Controller->render('rated');
 		}
