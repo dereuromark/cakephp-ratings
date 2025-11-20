@@ -227,14 +227,14 @@ class RatingHelper extends Helper {
 	 * - steps per image (defaults to 4 => 1/4 accuracy)
 	 * - ...
 	 *
-	 * @deprecated //FIXME or make ratingImage() to image()
+	 * @deprecated Use display() method instead. Will be removed in next major version.
 	 *
 	 * @param float $value Value (0...X)
 	 * @param array<string, mixed> $options
 	 * @param array<string, mixed> $attributes for div container (id, style, ...)
 	 * @return string Container with rating images
 	 */
-	public function image($value, array $options = [], array $attributes = []) {
+	public function image($value, array $options = [], array $attributes = []): string {
 		$defaults = [
 			'data-symbol' => '&#xf005;',
 			'escape' => false,
@@ -271,7 +271,8 @@ class RatingHelper extends Helper {
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 
 		/*
-		//FIXME or remove
+		// TODO: Remove deprecated pixel-based implementation in next major version
+		// The following code is kept for reference but should not be used
 		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];

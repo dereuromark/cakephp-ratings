@@ -317,7 +317,7 @@ class RatableBehavior extends Behavior {
 			$rating = $ratingSumNew;
 		}
 
-		//FIXME
+		// Store rating for callback access - dynamic property required for backward compatibility
 		/** @phpstan-ignore-next-line */
 		$this->_table->newRating = $rating;
 
@@ -384,7 +384,7 @@ class RatableBehavior extends Behavior {
 			$result[0]['rating'] = 0;
 		}
 
-		//FIXME
+		// Store rating for callback access - dynamic property required for backward compatibility
 		/** @phpstan-ignore-next-line */
 		$this->_table->newRating = $result[0]['rating'];
 		if (!$saveToField) {
@@ -443,7 +443,7 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @return bool
 	 */
-	public function hasRated($foreignKey, $userId) {
+	public function hasRated($foreignKey, $userId): bool {
 		return $this->isRatedBy($foreignKey, $userId)->count() > 0;
 	}
 
@@ -481,7 +481,7 @@ class RatableBehavior extends Behavior {
 	 * @throws \Exception
 	 * @return bool
 	 */
-	public function rate($foreignKey, $userId, $rating, array $options = []) {
+	public function rate($foreignKey, $userId, $rating, array $options = []): bool {
 		if (is_array($foreignKey)) {
 			throw new Exception('Array not supported for $foreignKey here');
 		}
@@ -518,7 +518,7 @@ class RatableBehavior extends Behavior {
 			}
 		}
 
-		//FIXME
+		// Call saveRating() via table - requires dynamic method access for backward compatibility
 		/** @phpstan-ignore-next-line */
 		if ($this->_table->saveRating($foreignKey, $userId, $options['values'][$rating])) {
 			return true;
