@@ -2,10 +2,10 @@
 
 To install the plugin, composer it as `"dereuromark/cakephp-ratings"`.
 
-Then, include the following line in your `config/bootstrap.php` to load the plugin in your application.
+Then, run this to load the plugin in your application.
 
 ```php
-Plugin::load('Ratings');
+bin/cake plugin load Ratings
 ```
 
 ## Database Setup
@@ -15,7 +15,7 @@ The recommended way to install and maintain the database is using the [Migration
 To set up the **Ratings** plugin tables run this command:
 
 ```
-cake migrations migrate -p Ratings
+bin/cake migrations migrate -p Ratings
 ```
 
 Alternately you can copy-and-paste the SQL commands from the migration files.
