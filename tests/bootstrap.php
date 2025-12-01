@@ -9,6 +9,8 @@ use Cake\Routing\Router;
 use Cake\TestSuite\Fixture\SchemaLoader;
 use Ratings\RatingsPlugin;
 use Shim\Filesystem\Folder;
+use TestApp\Model\Entity\User;
+use TestApp\Model\Table\UsersTable;
 
 if (!defined('DS')) {
 	define('DS', DIRECTORY_SEPARATOR);
@@ -96,5 +98,5 @@ if (env('FIXTURE_SCHEMA_METADATA')) {
 	$loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
 }
 
-class_alias(\TestApp\Model\Entity\User::class, 'App\Model\Entity\User');
-class_alias(\TestApp\Model\Table\UsersTable::class, 'App\Model\Table\UsersTable');
+class_alias(User::class, 'App\Model\Entity\User');
+class_alias(UsersTable::class, 'App\Model\Table\UsersTable');
