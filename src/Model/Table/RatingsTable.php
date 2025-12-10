@@ -20,7 +20,7 @@ use Cake\Validation\Validator;
  *
  * Rating model
  *
- * @property \App\Model\Table\UsersTable|\Cake\ORM\Association\BelongsTo $Users
+ * @property \Cake\ORM\Table|\Cake\ORM\Association\BelongsTo $Users
  * @method \Ratings\Model\Entity\Rating get($primaryKey, $options = [])
  * @method \Ratings\Model\Entity\Rating newEntity($data = null, array $options = [])
  * @method array<\Ratings\Model\Entity\Rating> newEntities(array $data, array $options = [])
