@@ -14,7 +14,7 @@ use Cake\ORM\Entity;
  * @property float $value
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
- * @property \App\Model\Entity\User $user
+ * @property \Cake\ORM\Entity $user
  */
 class Rating extends Entity {
 
