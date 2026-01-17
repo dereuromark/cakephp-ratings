@@ -30,7 +30,7 @@ class RatingsFixture extends TestFixture {
 		'user_id' => ['type' => 'integer', 'null' => true, 'default' => null],
 		'foreign_key' => ['type' => 'integer', 'null' => false, 'default' => null],
 		'model' => ['type' => 'string', 'null' => false, 'default' => null],
-		'value' => ['type' => 'decimal', 'null' => false, 'default' => '0', 'precision' => 8, 'scale' => 4],
+		'value' => ['type' => 'decimal', 'null' => false, 'default' => '0', 'length' => 8, 'precision' => 4],
 		'created' => ['type' => 'datetime', 'null' => false, 'default' => null],
 		'modified' => ['type' => 'datetime', 'null' => false, 'default' => null],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']], 'UNIQUE_RATING' => ['type' => 'unique', 'columns' => ['user_id', 'foreign_key', 'model']]],
