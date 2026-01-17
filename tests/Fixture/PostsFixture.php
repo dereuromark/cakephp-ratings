@@ -29,8 +29,8 @@ class PostsFixture extends TestFixture {
 	public array $fields = [
 		'id' => ['type' => 'integer'],
 		'title' => ['type' => 'string', 'null' => false],
-		'rating' => ['type' => 'decimal', 'null' => false, 'default' => '0', 'length' => 10, 'precision' => 2],
-		'rating_sum' => ['type' => 'decimal', 'null' => false, 'default' => '0', 'length' => 10, 'precision' => 2],
+		'rating' => ['type' => 'float', 'null' => false, 'default' => '0'],
+		'rating_sum' => ['type' => 'float', 'null' => false, 'default' => '0'],
 		'rating_count' => ['type' => 'integer', 'null' => false, 'default' => '0', 'length' => 10],
 		'_constraints' => ['primary' => ['type' => 'primary', 'columns' => ['id']]],
 	];
