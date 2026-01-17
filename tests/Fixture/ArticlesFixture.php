@@ -30,7 +30,7 @@ class ArticlesFixture extends TestFixture {
 		'id' => ['type' => 'integer'],
 		'user_id' => ['type' => 'integer', 'null' => false, 'length' => 10],
 		'title' => ['type' => 'string', 'null' => false],
-		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => '10,2'],
+		'rating' => ['type' => 'float', 'null' => false, 'default' => '0', 'length' => 10, 'precision' => 2],
 		'rating_1' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'rating_2' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
 		'rating_3' => ['type' => 'integer', 'null' => false, 'default' => 0, 'length' => 5],
