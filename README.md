@@ -4,7 +4,7 @@
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-ratings/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license.svg)](LICENSE)
 [![Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg)](https://php.net/)
+[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 The **Ratings** plugin will allow you by simply adding the ratings component to your controller to rate anything. The component will auto load a helper and behavior.
