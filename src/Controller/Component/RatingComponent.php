@@ -159,9 +159,10 @@ class RatingComponent extends Component {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
 		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
-			/** @var \Ratings\Model\Behavior\RatableBehavior $Model */
-			$Model = $Controller->getTableLocator()->get($this->getConfig('modelName'));
-			$newRating = $Model->saveRating($rate, $user, $rating);
+			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+			/** @var \Ratings\Model\Behavior\RatableBehavior $behavior */
+			$behavior = $table->getBehavior('Ratable');
+			$newRating = $behavior->saveRating($rate, $user, $rating);
 			if ($newRating) {
 				$rating = round($newRating->rating);
 				$message = __d('ratings', 'Your rate was successful.');
