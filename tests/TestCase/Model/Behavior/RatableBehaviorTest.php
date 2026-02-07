@@ -11,8 +11,8 @@
 
 namespace Ratings\Test\TestCase\Model\Behavior;
 
-use BadMethodCallException;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -101,12 +101,13 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * Testing calculation of the rating
+	 * Testing calculation of the rating with invalid mode
 	 *
 	 * @return void
 	 */
 	public function testCalculateRatingException() {
-		$this->expectException(BadMethodCallException::class);
+		$this->Articles->addBehavior('Ratings.Ratable', []);
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->Articles->getBehavior('Ratable')->calculateRating(1, true, 'pow');
 	}
@@ -246,7 +247,8 @@ class RatableBehaviorTest extends TestCase {
 	 * @return void
 	 */
 	public function testDecrementRatingException() {
-		$this->expectException(BadMethodCallException::class);
+		$this->Posts->addBehavior('Ratings.Ratable', []);
+		$this->expectException(InvalidArgumentException::class);
 
 		$this->Posts->getBehavior('Ratable')->decrementRating(1, 1, true, 'pow');
 	}
