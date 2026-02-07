@@ -12,8 +12,8 @@
 namespace Ratings\Test\TestCase\Model\Behavior;
 
 use Cake\ORM\TableRegistry;
-use InvalidArgumentException;
 use Cake\TestSuite\TestCase;
+use InvalidArgumentException;
 
 /**
  * CakePHP Ratings Plugin
