@@ -73,6 +73,13 @@ class RatableBehavior extends Behavior {
 	protected $oldRating;
 
 	/**
+	 * Stores the calculated rating value after rate() or calculateRating()
+	 *
+	 * @var float|int|null
+	 */
+	protected float|int|null $newRating = null;
+
+	/**
 	 * Setup
 	 *
 	 * @param array<string, mixed> $config Config
@@ -317,9 +324,8 @@ class RatableBehavior extends Behavior {
 			$rating = $ratingSumNew;
 		}
 
-		// Store rating for callback access - dynamic property required for backward compatibility
-		/** @phpstan-ignore-next-line */
-		$this->_table->newRating = $rating;
+		// Store rating for callback access
+		$this->newRating = $rating;
 
 		if ($saveToField || is_string($saveToField)) {
 			$save = [];
@@ -384,9 +390,8 @@ class RatableBehavior extends Behavior {
 			$result[0]['rating'] = 0;
 		}
 
-		// Store rating for callback access - dynamic property required for backward compatibility
-		/** @phpstan-ignore-next-line */
-		$this->_table->newRating = $result[0]['rating'];
+		// Store rating for callback access
+		$this->newRating = $result[0]['rating'];
 		if (!$saveToField) {
 			return $result[0]['rating'];
 		}
@@ -518,9 +523,7 @@ class RatableBehavior extends Behavior {
 			}
 		}
 
-		// Call saveRating() via table - requires dynamic method access for backward compatibility
-		/** @phpstan-ignore-next-line */
-		if ($this->_table->saveRating($foreignKey, $userId, $options['values'][$rating])) {
+		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating])) {
 			return true;
 		}
 
@@ -601,6 +604,15 @@ class RatableBehavior extends Behavior {
 	protected function ratingsTable() {
 		/** @var \Ratings\Model\Table\RatingsTable */
 		return $this->_table->Ratings->getTarget();
+	}
+
+	/**
+	 * Get the calculated rating value after rate() or calculateRating()
+	 *
+	 * @return float|int|null
+	 */
+	public function getNewRating(): float|int|null {
+		return $this->newRating;
 	}
 
 }
