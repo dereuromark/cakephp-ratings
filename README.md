@@ -1,10 +1,12 @@
 # Ratings Plugin for CakePHP
 
 [![CI](https://github.com/dereuromark/cakephp-ratings/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/dereuromark/cakephp-ratings/actions/workflows/ci.yml?query=branch%3Amaster)
+[![Coverage Status](https://img.shields.io/codecov/c/github/dereuromark/cakephp-ratings/master.svg)](https://codecov.io/github/dereuromark/cakephp-ratings/branch/master)
+[![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-ratings/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
-[![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license.svg)](LICENSE)
-[![Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
+[![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license.svg)](LICENSE)
+[![Total Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-yellow.svg)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
 The **Ratings** plugin will allow you by simply adding the ratings component to your controller to rate anything. The component will auto load a helper and behavior.
