@@ -6,7 +6,11 @@
 	"keywords": [
 		"cakephp",
 		"ratings",
-		"plugin"
+		"plugin",
+		"stars",
+		"reviews",
+		"voting",
+		"behavior"
 	],
 	"authors": [
 		{
