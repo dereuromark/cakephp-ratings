@@ -39,6 +39,8 @@ class RatableBehavior extends Behavior {
 	 * - modelValidate - validate the model before save, default is false
 	 * - modelCallbacks - run model callbacks when the rating is saved to the model, default is false
 	 * - countRates - counter cache
+	 * - userField - column on the rated model holding its owner user id; when present a user
+	 *   cannot rate their own record (set to null/false to disable the self-vote guard)
 	 *
 	 * @var array<string, mixed>
 	 */
@@ -55,6 +57,7 @@ class RatableBehavior extends Behavior {
 		'update' => false,
 		'modelValidate' => false,
 		'modelCallbacks' => false,
+		'userField' => 'user_id',
 	];
 
 	/**
@@ -123,6 +126,8 @@ class RatableBehavior extends Behavior {
 		if (!$foreignKey) {
 			throw new Exception('Empty $foreignKey is not allowed for saveRating()');
 		}
+
+		$this->assertNotSelfVote($foreignKey, $userId);
 
 		$type = 'saveRating';
 		$update = $this->_config['update'];
@@ -517,8 +522,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		if ($options['userField'] && $this->_table->hasField($options['userField'])) {
-			if ($record[$options['userField']] == $userId) {
-				//$this->_table->data = $record;
+			if ((string)$record[$options['userField']] === (string)$userId) {
 				throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 			}
 		}
@@ -528,6 +532,47 @@ class RatableBehavior extends Behavior {
 		}
 
 		throw new RuntimeException(__d('ratings', 'You have already rated this record'));
+	}
+
+	/**
+	 * Self-vote guard: throws when the rated record's owner equals $userId.
+	 *
+	 * Uses string-cast strict comparison so mixed int/string user ids (UUIDs vs ints,
+	 * leading-zero numeric strings) are compared as identifiers rather than via PHP's
+	 * loose numeric coercion.
+	 *
+	 * Skipped when no userField is configured, the rated model lacks that column,
+	 * the record cannot be loaded, or the userId is empty.
+	 *
+	 * @param string|int $foreignKey
+	 * @param string|int|null $userId
+	 * @throws \LogicException When the user is the owner of the rated record.
+	 * @return void
+	 */
+	protected function assertNotSelfVote($foreignKey, $userId): void {
+		if (!$userId) {
+			return;
+		}
+
+		$userField = $this->_config['userField'] ?? null;
+		if (!$userField || !$this->_table->hasField($userField)) {
+			return;
+		}
+
+		/** @var string $key */
+		$key = $this->_table->getPrimaryKey();
+		$record = $this->_table->find()
+			->select([$userField])
+			->where([$this->_table->getAlias() . '.' . $key => $foreignKey])
+			->first();
+
+		if (!$record) {
+			return;
+		}
+
+		if ((string)$record[$userField] === (string)$userId) {
+			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
+		}
 	}
 
 	/**

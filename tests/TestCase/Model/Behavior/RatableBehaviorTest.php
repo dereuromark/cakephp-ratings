@@ -14,6 +14,7 @@ namespace Ratings\Test\TestCase\Model\Behavior;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
+use LogicException;
 
 /**
  * CakePHP Ratings Plugin
@@ -424,6 +425,37 @@ class RatableBehaviorTest extends TestCase {
 		$foreignKey = 3;
 		$result = $this->Articles->getBehavior('Ratable')->isRatedBy($foreignKey, $userId)->count();
 		$this->assertSame(0, $result);
+	}
+
+	/**
+	 * The self-vote guard must trigger on the direct saveRating() path -
+	 * not just via the rate() wrapper - since RatingComponent uses saveRating().
+	 *
+	 * @return void
+	 */
+	public function testSaveRatingBlocksSelfVote() {
+		$this->Articles->addBehavior('Ratings.Ratable', []);
+
+		$this->expectException(LogicException::class);
+
+		// Article 3 is owned by user_id 5; same user must not be able to rate it.
+		$this->Articles->getBehavior('Ratable')->saveRating(3, 5, 4);
+	}
+
+	/**
+	 * Equivalent ints/strings ("5" vs 5) must still trip the guard so that a caller
+	 * cannot bypass it by varying the user-id type. Strict (string-cast) comparison
+	 * preserves this while rejecting unrelated ids.
+	 *
+	 * @return void
+	 */
+	public function testSaveRatingSelfVoteStringIntCoercion() {
+		$this->Articles->addBehavior('Ratings.Ratable', []);
+
+		$this->expectException(LogicException::class);
+
+		// String "5" vs stored int 5 - must still be rejected as self-vote.
+		$this->Articles->getBehavior('Ratable')->saveRating(3, '5', 4);
 	}
 
 	/**
