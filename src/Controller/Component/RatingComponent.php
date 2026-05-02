@@ -15,6 +15,7 @@ use Cake\Controller\Component;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\ORM\Exception\MissingTableClassException;
+use LogicException;
 use ReflectionClass;
 
 /**
@@ -98,22 +99,42 @@ class RatingComponent extends Component {
 			return;
 		}
 
-		$userId = $this->getConfig('userId') ?: null;
-		if (!$userId && $this->Controller->getRequest()->getAttribute('identity')) {
-			$identity = $this->Controller->getRequest()->getAttribute('identity');
-			$userId = $identity->get($this->getConfig('userIdField'));
-		} elseif (!$userId && $this->Controller->components()->has('AuthUser')) {
-			$userId = $this->Controller->AuthUser->id();
-		} if (!$userId && $this->Controller->components()->has('Auth')) {
-			$userId = $this->Controller->Auth->user($this->getConfig('userIdField'));
-		} else {
-			//$userId = $this->Controller->getRequest()->getSession()->read('Auth.User.id');
-		}
+		$userId = $this->resolveUserId();
 
 		$rate = $this->rate($params['rate'], (float)$params['rating'], $userId, $params['redirect']);
 		if ($rate) {
 			$event->setResult($rate);
 		}
+	}
+
+	/**
+	 * Resolves the active user id from configured override, the request identity
+	 * (Authentication plugin), or a legacy AuthUser/Auth component if attached.
+	 *
+	 * Returns null when no user can be resolved - callers must handle this.
+	 *
+	 * @return string|int|null
+	 */
+	protected function resolveUserId(): string|int|null {
+		$userId = $this->getConfig('userId');
+		if ($userId) {
+			return $userId;
+		}
+
+		$identity = $this->Controller->getRequest()->getAttribute('identity');
+		if ($identity) {
+			return $identity->get($this->getConfig('userIdField'));
+		}
+
+		if ($this->Controller->components()->has('AuthUser')) {
+			return $this->Controller->AuthUser->id();
+		}
+
+		if ($this->Controller->components()->has('Auth')) {
+			return $this->Controller->Auth->user($this->getConfig('userIdField'));
+		}
+
+		return null;
 	}
 
 	/**
@@ -145,7 +166,7 @@ class RatingComponent extends Component {
 	 *
 	 * @param string|int $rate the model record id
 	 * @param float|int $rating
-	 * @param string|int $user
+	 * @param string|int|null $user
 	 * @param array<mixed>|string|bool $redirect boolean to redirect to same url or string or array to use it for Router::url()
 	 * @return \Cake\Http\Response|null
 	 */
@@ -162,7 +183,24 @@ class RatingComponent extends Component {
 			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
 			/** @var \Ratings\Model\Behavior\RatableBehavior $behavior */
 			$behavior = $table->getBehavior('Ratable');
-			$newRating = $behavior->saveRating($rate, $user, $rating);
+			try {
+				$newRating = $behavior->saveRating($rate, $user, $rating);
+			} catch (LogicException $e) {
+				$result = ['status' => 'error', 'message' => $e->getMessage(), 'rating' => $rating];
+				$this->Controller->set($result);
+				if ($redirect) {
+					if (is_numeric($redirect)) {
+						$redirect = (bool)$redirect;
+					}
+					if ($redirect === true) {
+						return $this->redirect($this->buildUrl());
+					}
+
+					return $this->redirect($redirect);
+				}
+
+				return null;
+			}
 			if ($newRating) {
 				$rating = round($newRating->rating);
 				$message = __d('ratings', 'Your rate was successful.');

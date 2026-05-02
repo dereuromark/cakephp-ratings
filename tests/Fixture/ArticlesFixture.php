@@ -66,6 +66,16 @@ class ArticlesFixture extends TestFixture {
 			'rating_4' => 0,
 			'rating_5' => 0,
 		],
+		[
+			'user_id' => 5,
+			'title' => 'Owned Article',
+			'rating' => 0.0000,
+			'rating_1' => 0,
+			'rating_2' => 0,
+			'rating_3' => 0,
+			'rating_4' => 0,
+			'rating_5' => 0,
+		],
 	];
 
 }
