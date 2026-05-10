@@ -12,6 +12,7 @@
 namespace Ratings\Controller\Component;
 
 use Cake\Controller\Component;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\ORM\Exception\MissingTableClassException;
@@ -201,8 +202,8 @@ class RatingComponent extends Component {
 
 				return null;
 			}
-			if ($newRating) {
-				$rating = round($newRating->rating);
+			if ($newRating instanceof EntityInterface) {
+				$rating = round((float)$newRating->get('rating'));
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
 			} else {

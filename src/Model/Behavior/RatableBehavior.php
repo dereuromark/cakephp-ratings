@@ -245,7 +245,7 @@ class RatableBehavior extends Behavior {
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id,
 			],
-		])->first();
+		])->firstOrFail();
 
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
@@ -310,7 +310,7 @@ class RatableBehavior extends Behavior {
 			'conditions' => [
 				$this->_table->getAlias() . '.' . $key => $id,
 			],
-		])->first();
+		])->firstOrFail();
 
 		$fieldSummary = $this->_config['fieldSummary'];
 		$fieldCounter = $this->_config['fieldCounter'];
@@ -648,7 +648,7 @@ class RatableBehavior extends Behavior {
 	 */
 	protected function ratingsTable() {
 		/** @var \Ratings\Model\Table\RatingsTable */
-		return $this->_table->Ratings->getTarget();
+		return $this->_table->getAssociation('Ratings')->getTarget();
 	}
 
 	/**
