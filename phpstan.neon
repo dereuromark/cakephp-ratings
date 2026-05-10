@@ -8,8 +8,15 @@ parameters:
 	ignoreErrors:
 		- identifier: missingType.iterableValue
 		- identifier: missingType.generics
-		- identifier: argument.templateType
-		- '#Cannot access property \$rating on float#'
-		- '#Access to an undefined property Cake\\Controller\\Controller::\$AuthUser.#'
-		- '#Access to an undefined property Cake\\Controller\\Controller::\$Auth.#'
-		- '#Access to an undefined property .+\\Table.+::\$Ratings.#'
+		-
+			identifier: argument.templateType
+			path: src/Model/Behavior/RatableBehavior.php
+			count: 3
+		-
+			message: '#Access to an undefined property Cake\\Controller\\Controller::\$AuthUser\.#'
+			path: src/Controller/Component/RatingComponent.php
+			count: 1
+		-
+			message: '#Access to an undefined property Cake\\Controller\\Controller::\$Auth\.#'
+			path: src/Controller/Component/RatingComponent.php
+			count: 1
