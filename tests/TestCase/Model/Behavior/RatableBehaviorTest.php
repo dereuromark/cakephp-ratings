@@ -15,6 +15,7 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
 use LogicException;
+use TestApp\Model\Entity\LockedPost;
 
 /**
  * CakePHP Ratings Plugin
@@ -154,6 +155,41 @@ class RatableBehaviorTest extends TestCase {
 		$this->Posts->addBehavior('Ratings.Ratable', []);
 		$result = $this->Posts->getBehavior('Ratable')->incrementRating(2, 1)->toArray();
 		$this->assertEquals($result['rating'], '2');
+	}
+
+	/**
+	 * Regression: when the rated entity locks fields via `$_accessible = ['*' => false]`,
+	 * patchEntity used to silently drop the rating cache columns and the saved row
+	 * stayed at its pre-rating values. The behavior must force-bypass mass-assignment
+	 * guarding for the rating-cache columns since it owns those writes.
+	 *
+	 * @return void
+	 */
+	public function testIncrementRatingBypassesEntityAccessibleGuard(): void {
+		$this->Posts->setEntityClass(LockedPost::class);
+		$this->Posts->addBehavior('Ratings.Ratable', []);
+
+		$result = $this->Posts->getBehavior('Ratable')->incrementRating(1, 1)->toArray();
+
+		$this->assertEqualsWithDelta(1.0, (float)$result['rating'], 0.0001);
+		$this->assertSame(2, $result['rating_count']);
+		$this->assertEqualsWithDelta(2.0, (float)$result['rating_sum'], 0.0001);
+	}
+
+	/**
+	 * Mirror of the increment regression for decrementRating().
+	 *
+	 * @return void
+	 */
+	public function testDecrementRatingBypassesEntityAccessibleGuard(): void {
+		$this->Posts->setEntityClass(LockedPost::class);
+		$this->Posts->addBehavior('Ratings.Ratable', []);
+
+		$result = $this->Posts->getBehavior('Ratable')->decrementRating(1, 1)->toArray();
+
+		$this->assertEqualsWithDelta(0.0, (float)$result['rating'], 0.0001);
+		$this->assertSame(0, $result['rating_count']);
+		$this->assertEqualsWithDelta(0.0, (float)$result['rating_sum'], 0.0001);
 	}
 
 	/**

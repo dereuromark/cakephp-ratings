@@ -139,11 +139,12 @@ class RatingHelper extends Helper {
 			} else {
 				$k = 'empty';
 			}
-			if ($k === 'empty' && $roundedValue > $i && (2 * $roundedValue + 1) % 2 === 0) {
+			// Half-star slot: the integer part of the rating equals $i and the
+			// fractional remainder is at least half a step. The previous
+			// `(2 * $roundedValue + 1) % 2 === 0` was always false for any
+			// integer or half-integer value, so half-stars never rendered.
+			if ($k === 'empty' && $roundedValue > $i && $roundedValue - (int)$roundedValue >= 0.5) {
 				$k = 'half';
-			}
-
-			if (abs($roundedValue - $i) < 0.5) {
 			}
 
 			$res .= $array[$k];

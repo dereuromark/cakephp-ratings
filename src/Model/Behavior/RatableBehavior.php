@@ -132,47 +132,56 @@ class RatableBehavior extends Behavior {
 		$type = 'saveRating';
 		$update = $this->_config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
-		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
-		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 
-		if (!$oldRating || $this->_config['update']) {
-			$data = [];
+		// Wrap the entire isRatedBy → deleteAll → save → increment chain in a
+		// transaction so two concurrent requests for the same (foreign_key, user_id)
+		// can't both pass the isRatedBy check, both insert, and double-count via
+		// fieldCounter / fieldSummary. The DB-level unique constraint on
+		// (user_id, foreign_key, model) catches the race at the wire; this
+		// transactional wrapper makes the in-process logic atomic too.
+		return $this->ratingsTable()->getConnection()->transactional(function () use ($foreignKey, $userId, $value, $update, $type) {
+			/** @var \Ratings\Model\Entity\Rating|null $oldRating */
+			$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 
-			$data['foreign_key'] = $foreignKey;
-			$data['model'] = $this->_table->getAlias();
-			$data['user_id'] = $userId;
-			$data['value'] = $value;
-			if ($update) {
-				$update = true;
+			// Already rated and update mode is off → leave the existing row alone.
+			if ($oldRating && !$update) {
+				return false;
+			}
+
+			$wasUpdate = (bool)$oldRating;
+			if ($wasUpdate) {
 				$this->oldRating = $oldRating;
-				if ($oldRating) {
-					$this->ratingsTable()->deleteAll([
-						'Ratings.model' => $this->_table->getAlias(),
-						'Ratings.foreign_key' => $foreignKey,
-						'Ratings.user_id' => $userId,
-					]);
-				}
+				$this->ratingsTable()->deleteAll([
+					'Ratings.model' => $this->_table->getAlias(),
+					'Ratings.foreign_key' => $foreignKey,
+					'Ratings.user_id' => $userId,
+				]);
 			} else {
 				$oldRating = null;
-				$update = false;
 			}
 
-			$rating = $this->ratingsTable()->newEntity($data);
-			if ($this->ratingsTable()->save($rating)) {
-				$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
-				$fieldSummaryType = $this->_table->hasField($this->_config['fieldSummary']);
-				if ($fieldCounterType && $fieldSummaryType) {
-					$result = $this->incrementRating($foreignKey, $value, $this->_config['saveToField'], $this->_config['calculation'], $update);
-				} else {
-					$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
-				}
-				$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
-
-				return $result;
+			$rating = $this->ratingsTable()->newEntity([
+				'foreign_key' => $foreignKey,
+				'model' => $this->_table->getAlias(),
+				'user_id' => $userId,
+				'value' => $value,
+			]);
+			if (!$this->ratingsTable()->save($rating)) {
+				return false;
 			}
-		}
 
-		return false;
+			$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
+			$fieldSummaryType = $this->_table->hasField($this->_config['fieldSummary']);
+			if ($fieldCounterType && $fieldSummaryType) {
+				$result = $this->incrementRating($foreignKey, $value, $this->_config['saveToField'], $this->_config['calculation'], $wasUpdate);
+			} else {
+				$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
+			}
+			$update = $wasUpdate;
+			$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
+
+			return $result;
+		});
 	}
 
 	/**
@@ -273,7 +282,14 @@ class RatableBehavior extends Behavior {
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
 
-			$rating = $this->_table->patchEntity($rating, $save, ['validate' => $this->_config['modelValidate']]);
+			// Force the rating-cache fields accessible. The rated entity may
+			// (correctly) lock these in $_accessible to keep them out of mass
+			// assignment — but the behavior is the authoritative writer, so a
+			// table-level lockout would silently drop the cache update.
+			$rating = $this->_table->patchEntity($rating, $save, [
+				'validate' => $this->_config['modelValidate'],
+				'accessibleFields' => array_fill_keys(array_keys($save), true),
+			]);
 
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($rating, [
@@ -341,7 +357,12 @@ class RatableBehavior extends Behavior {
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
-			$r = $this->_table->patchEntity($data, $save, ['validate' => $this->_config['modelValidate']]);
+			// See note in decrementRating(): force the cache fields accessible
+			// so a locked-down entity definition can't silently drop the update.
+			$r = $this->_table->patchEntity($data, $save, [
+				'validate' => $this->_config['modelValidate'],
+				'accessibleFields' => array_fill_keys(array_keys($save), true),
+			]);
 
 			/** @var \Ratings\Model\Entity\Rating */
 			return $this->_table->save($r, [
