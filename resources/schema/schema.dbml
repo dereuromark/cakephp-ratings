@@ -1,0 +1,31 @@
+// cakephp-ratings — database schema snapshot (DBML)
+//
+// A merged snapshot of all plugin migrations under config/Migrations/.
+// Hand-maintained: update it when you add a migration that changes these tables.
+// Paste into https://dbdiagram.io (or any DBML tool) to view/diagram.
+// DBML reference: https://dbml.dbdiagram.io/docs
+//
+// Polymorphic column: foreign_key stores the PK of the rated record.
+// Its type follows the Polymorphic.type config (default: integer). Set
+// Polymorphic.type to biginteger or binaryuuid to change the stored type.
+
+Project cakephp_ratings {
+  database_type: 'Generic'
+  Note: 'Ratings plugin tables only.'
+}
+
+Table ratings {
+  id int [pk, increment]
+  user_id int [null]
+  foreign_key int [not null, note: 'Polymorphic foreign_key id; set Polymorphic.type to biginteger/uuid/binaryuuid to change']
+  model varchar(255) [not null]
+  value float [not null, default: 0]
+  created datetime [not null]
+  modified datetime [not null]
+
+  indexes {
+    (user_id, foreign_key, model) [unique, name: 'UNIQUE_RATING']
+    user_id
+    foreign_key
+  }
+}
