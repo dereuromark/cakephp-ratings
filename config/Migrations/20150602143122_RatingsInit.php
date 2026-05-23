@@ -1,5 +1,6 @@
 <?php
 
+use Cake\Core\Configure;
 use Migrations\BaseMigration;
 
 class RatingsInit extends BaseMigration {
@@ -7,47 +8,53 @@ class RatingsInit extends BaseMigration {
 	/**
 	 * Change Method.
 	 *
-	 * More information on this method is available here:
-	 * http://docs.phinx.org/en/latest/migrations.html#the-change-method
-	 *
-	 * Uncomment this method if you would like to use it.
-	 *
-	public function change()
-	{
-	}
-	*/
-
-	/**
-	 * Migrate Up.
-	 *
 	 * @return void
 	 */
-	public function up() {
-		$content = <<<SQL
-CREATE TABLE IF NOT EXISTS `ratings` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) DEFAULT NULL,
-  `foreign_key` int(10) DEFAULT NOT NULL,
-  `model` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` float(8,4) NOT NULL DEFAULT '0.0000',
-  `created` datetime NOT NULL,
-  `modified` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQUE_RATING` (`user_id`,`foreign_key`,`model`),
-  KEY `user_id` (`user_id`),
-  KEY `foreign_key` (`foreign_key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+	public function change(): void {
+		// foreign_key (the polymorphic host record's primary key, paired with model)
+		// follows the global Polymorphic.type config so apps using UUID primary keys
+		// can store matching foreign keys. user_id is a concrete FK to the app's users
+		// table. For integer types the signedness follows Migrations.unsigned_primary_keys
+		// (signed when unset); only MySQL honors signedness.
+		$type = (string)Configure::read('Polymorphic.type', 'integer');
+		$signed = !(bool)Configure::read('Migrations.unsigned_primary_keys', false);
 
-SQL;
-		$this->query($content);
-	}
+		$polymorphicOptions = [
+			'default' => null,
+			'null' => false,
+		];
+		if (in_array($type, ['integer', 'biginteger'], true)) {
+			$polymorphicOptions['signed'] = $signed;
+		}
 
-	/**
-	 * Migrate Down.
-	 *
-	 * @return void
-	 */
-	public function down() {
+		$this->table('ratings')
+			->addColumn('user_id', 'integer', [
+				'default' => null,
+				'null' => true,
+				'signed' => $signed,
+			])
+			->addColumn('foreign_key', $type, $polymorphicOptions)
+			->addColumn('model', 'string', [
+				'default' => null,
+				'limit' => 255,
+				'null' => false,
+			])
+			->addColumn('value', 'float', [
+				'default' => 0,
+				'null' => false,
+				'precision' => 8,
+				'scale' => 4,
+			])
+			->addColumn('created', 'datetime', [
+				'null' => false,
+			])
+			->addColumn('modified', 'datetime', [
+				'null' => false,
+			])
+			->addIndex(['user_id', 'foreign_key', 'model'], ['unique' => true, 'name' => 'UNIQUE_RATING'])
+			->addIndex(['user_id'])
+			->addIndex(['foreign_key'])
+			->create();
 	}
 
 }

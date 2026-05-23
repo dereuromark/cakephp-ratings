@@ -21,4 +21,13 @@ return [
 		// owner of a rating). When empty, defaults to 'Users'. Default: not set ('Users').
 		'userClass' => 'Users',
 	],
+
+	// Global (cross-plugin) convention read by the RatingsInit migration when creating
+	// the polymorphic `ratings.foreign_key` column. Must be set BEFORE running migrations
+	// on a fresh install. Accepted values: 'integer' (default), 'biginteger', 'uuid',
+	// 'binaryuuid'. For the integer variants the column signedness follows the migrations
+	// plugin's `Migrations.unsigned_primary_keys` flag (signed when unset).
+	'Polymorphic' => [
+		'type' => 'integer',
+	],
 ];
