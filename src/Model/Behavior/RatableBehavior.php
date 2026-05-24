@@ -131,7 +131,7 @@ class RatableBehavior extends Behavior {
 
 		$type = 'saveRating';
 		$update = $this->_config['update'];
-		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
+		$this->beforeRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'value' => $value, 'update' => $update, 'type' => $type]);
 
 		// Wrap the entire isRatedBy → deleteAll → save → increment chain in a
 		// transaction so two concurrent requests for the same (foreign_key, user_id)
@@ -178,7 +178,7 @@ class RatableBehavior extends Behavior {
 				$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 			}
 			$update = $wasUpdate;
-			$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
+			$this->afterRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'value' => $value, 'result' => $result, 'update' => $update, 'oldRating' => $oldRating, 'type' => $type]);
 
 			return $result;
 		});
@@ -202,7 +202,7 @@ class RatableBehavior extends Behavior {
 
 		$type = 'removeRating';
 		$update = $this->_config['update'];
-		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
+		$this->beforeRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'update' => $update, 'type' => $type]);
 		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
@@ -224,7 +224,7 @@ class RatableBehavior extends Behavior {
 		} else {
 			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 		}
-		$this->afterRateCallback(compact('foreignKey', 'userId', 'result', 'update', 'oldRating', 'type'));
+		$this->afterRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'result' => $result, 'update' => $update, 'oldRating' => $oldRating, 'type' => $type]);
 
 		return $result;
 	}
@@ -263,11 +263,7 @@ class RatableBehavior extends Behavior {
 		$ratingCountNew = $rating[$fieldCounter] - 1;
 
 		if ($mode === 'average') {
-			if ($ratingCountNew === 0) {
-				$ratingSum = 0;
-			} else {
-				$ratingSum = $ratingSumNew / $ratingCountNew;
-			}
+			$ratingSum = $ratingCountNew === 0 ? 0 : $ratingSumNew / $ratingCountNew;
 		} else {
 			$ratingSum = $ratingSumNew;
 		}
@@ -339,11 +335,7 @@ class RatableBehavior extends Behavior {
 			$ratingCountNew = $data[$fieldCounter] + 1;
 		}
 
-		if ($mode === 'average') {
-			$rating = $ratingSumNew / $ratingCountNew;
-		} else {
-			$rating = $ratingSumNew;
-		}
+		$rating = $mode === 'average' ? $ratingSumNew / $ratingCountNew : $ratingSumNew;
 
 		// Store rating for callback access
 		$this->newRating = $rating;
@@ -457,15 +449,13 @@ class RatableBehavior extends Behavior {
 	 * @return \Cake\ORM\Query\SelectQuery
 	 */
 	public function isRatedBy($foreignKey, $userId): SelectQuery {
-		$entry = $this->ratingsTable()->find('all', ...[
+		return $this->ratingsTable()->find('all', ...[
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
 				'Ratings.model' => $this->_table->getAlias(),
 			],
 		]);
-
-		return $entry;
 	}
 
 	/**
@@ -542,10 +532,8 @@ class RatableBehavior extends Behavior {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Record'));
 		}
 
-		if ($options['userField'] && $this->_table->hasField($options['userField'])) {
-			if ((string)$record[$options['userField']] === (string)$userId) {
-				throw new LogicException(__d('ratings', 'You can not vote on your own records'));
-			}
+		if ($options['userField'] && $this->_table->hasField($options['userField']) && (string)$record[$options['userField']] === (string)$userId) {
+			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 		}
 
 		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating])) {

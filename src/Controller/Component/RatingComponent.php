@@ -214,7 +214,7 @@ class RatingComponent extends Component {
 			$message = __d('ratings', 'Invalid rate.');
 			$status = 'error';
 		}
-		$result = compact('status', 'message', 'rating');
+		$result = ['status' => $status, 'message' => $message, 'rating' => $rating];
 		$this->Controller->set($result);
 		if ($redirect) {
 			if (is_numeric($redirect)) {
@@ -268,9 +268,7 @@ class RatingComponent extends Component {
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
-			$response = $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
-
-			return $response;
+			return $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
 		}
 
 		if ($this->Controller->viewBuilder()->getVar('authMessage')) {

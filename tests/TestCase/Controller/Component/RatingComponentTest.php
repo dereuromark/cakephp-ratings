@@ -129,7 +129,7 @@ class RatingComponentTest extends TestCase {
 	 * @return void
 	 */
 	public function testStartup() {
-		$this->Controller->getRequest()->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash');
 
 		$params = [
 			'plugin' => null,
@@ -152,7 +152,7 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->getRequest()->getSession()->expectAt(1, 'setFlash', array('You have already rated.', 'default', array(), 'error'));
 		$this->Controller->getRequest()->getSession()->expectAt(2, 'setFlash', array('Invalid rate.', 'default', array(), 'error'));
 		*/
-		$this->Controller->getRequest()->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash');
 		ServerRequest::addDetector('post', function() {
 			return true;
 		});
@@ -171,7 +171,7 @@ class RatingComponentTest extends TestCase {
 		];
 		$this->assertSame($expectedFlash, $sessionFlash);
 
-		$this->Controller->getRequest()->getSession()->write('Flash', null);
+		$this->Controller->getRequest()->getSession()->write('Flash');
 		$options = [
 			'userId' => 1,
 		];
