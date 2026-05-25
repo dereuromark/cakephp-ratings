@@ -146,7 +146,7 @@ class UsersFixture extends TestFixture {
 	public function __construct() {
 		parent::__construct();
 		foreach ($this->records as &$record) {
-			$record['passwd'] = sha1($record['passwd']); //, null, true
+			$record['passwd'] = sha1((string)$record['passwd']); //, null, true
 		}
 	}
 

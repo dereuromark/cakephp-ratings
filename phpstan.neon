@@ -9,10 +9,6 @@ parameters:
 		- identifier: missingType.iterableValue
 		- identifier: missingType.generics
 		-
-			identifier: argument.templateType
-			path: src/Model/Behavior/RatableBehavior.php
-			count: 3
-		-
 			message: '#Access to an undefined property Cake\\Controller\\Controller::\$AuthUser\.#'
 			path: src/Controller/Component/RatingComponent.php
 			count: 1

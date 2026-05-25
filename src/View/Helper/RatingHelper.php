@@ -134,11 +134,7 @@ class RatingHelper extends Helper {
 
 		$res = '';
 		for ($i = 0; $i < $options['stars']; $i++) {
-			if ((int)$roundedValue > $i) {
-				$k = 'full';
-			} else {
-				$k = 'empty';
-			}
+			$k = (int)$roundedValue > $i ? 'full' : 'empty';
 			// Half-star slot: the integer part of the rating equals $i and the
 			// fractional remainder is at least half a step. The previous
 			// `(2 * $roundedValue + 1) % 2 === 0` was always false for any
@@ -200,13 +196,11 @@ class RatingHelper extends Helper {
 				}
 				$v = $array[$disable];
 
-				if ($j === 0) {
-					# try to use a single image if possible
-					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
+				# try to use a single image if possible
+				if ($j === 0 && ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1)) {
+					$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
 
-						break;
-					}
+					break;
 				}
 
 				$margin = 0 - ($pixels / $steps) * $j;
@@ -245,18 +239,14 @@ class RatingHelper extends Helper {
 		];
 		$options += $defaults;
 
-		if ($value <= 0) {
-			$roundedValue = 0;
-		} else {
-			$roundedValue = round($value * $options['steps']) / $options['steps'];
-		}
+		$roundedValue = $value <= 0 ? 0 : round($value * $options['steps']) / $options['steps'];
 		$percent = $this->percentage($roundedValue, $options['stars']);
 
 		$title = __d('ratings', '{0} of {1} stars', $this->Number->format(min($roundedValue, $options['stars']), $this->_config), $options['stars']);
 
 		$attrContent = [
 			'class' => 'rating-stars',
-			'data-content' => str_repeat($options['data-symbol'], $options['stars']),
+			'data-content' => str_repeat((string)$options['data-symbol'], $options['stars']),
 			'escape' => $options['escape'],
 			'style' => 'width: ' . $percent . '%',
 		];
@@ -267,7 +257,7 @@ class RatingHelper extends Helper {
 		//</div>
 
 		$attributes += ['title' => $title];
-		$attributes = ['data-content' => str_repeat($options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
+		$attributes = ['data-content' => str_repeat((string)$options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
 
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 
@@ -404,11 +394,7 @@ class RatingHelper extends Helper {
 			$result .= $this->Form->end() . "\n";
 
 			$disabled = empty($options['editable']) ? false : 'disabled';
-			if ($disabled) {
-				$split = 4;
-			} else {
-				$split = 1;
-			}
+			$split = $disabled ? 4 : 1;
 
 			if ($options['js']) {
 				$script = <<<HTML
@@ -434,9 +420,7 @@ HTML;
 			}
 		}
 
-		$result = '<div class="star-rating">' . $result . '</div>';
-
-		return $result;
+		return '<div class="star-rating">' . $result . '</div>';
 	}
 
 	/**

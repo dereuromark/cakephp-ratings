@@ -263,11 +263,7 @@ class RatableBehavior extends Behavior {
 		$ratingCountNew = $rating[$fieldCounter] - 1;
 
 		if ($mode === 'average') {
-			if ($ratingCountNew === 0) {
-				$ratingSum = 0;
-			} else {
-				$ratingSum = $ratingSumNew / $ratingCountNew;
-			}
+			$ratingSum = $ratingCountNew === 0 ? 0 : $ratingSumNew / $ratingCountNew;
 		} else {
 			$ratingSum = $ratingSumNew;
 		}
@@ -339,11 +335,7 @@ class RatableBehavior extends Behavior {
 			$ratingCountNew = $data[$fieldCounter] + 1;
 		}
 
-		if ($mode === 'average') {
-			$rating = $ratingSumNew / $ratingCountNew;
-		} else {
-			$rating = $ratingSumNew;
-		}
+		$rating = $mode === 'average' ? $ratingSumNew / $ratingCountNew : $ratingSumNew;
 
 		// Store rating for callback access
 		$this->newRating = $rating;
@@ -457,15 +449,13 @@ class RatableBehavior extends Behavior {
 	 * @return \Cake\ORM\Query\SelectQuery
 	 */
 	public function isRatedBy($foreignKey, $userId): SelectQuery {
-		$entry = $this->ratingsTable()->find('all', ...[
+		return $this->ratingsTable()->find('all', ...[
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
 				'Ratings.model' => $this->_table->getAlias(),
 			],
 		]);
-
-		return $entry;
 	}
 
 	/**
@@ -542,10 +532,8 @@ class RatableBehavior extends Behavior {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Record'));
 		}
 
-		if ($options['userField'] && $this->_table->hasField($options['userField'])) {
-			if ((string)$record[$options['userField']] === (string)$userId) {
-				throw new LogicException(__d('ratings', 'You can not vote on your own records'));
-			}
+		if ($options['userField'] && $this->_table->hasField($options['userField']) && (string)$record[$options['userField']] === (string)$userId) {
+			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 		}
 
 		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating])) {

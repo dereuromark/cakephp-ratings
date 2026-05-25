@@ -268,9 +268,7 @@ class RatingComponent extends Component {
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
-			$response = $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
-
-			return $response;
+			return $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
 		}
 
 		if ($this->Controller->viewBuilder()->getVar('authMessage')) {
