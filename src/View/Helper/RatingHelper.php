@@ -166,13 +166,13 @@ class RatingHelper extends Helper {
 	 * @return string Container with rating images
 	 */
 	protected function _ratingImageJqueryUi($value, array $options = [], array $attributes = []) {
-		$size = empty($options['size']) ? '' : $options['size'];
+		$size = !empty($options['size']) ? $options['size'] : '';
 		if (!empty($size)) {
 			$options['pixels'] = $this->sizes[$size];
 		}
-		$pixels = empty($options['pixels']) ? 16 : $options['pixels'];
-		$steps = empty($options['steps']) ? 4 : $options['steps'];
-		$stars = empty($options['stars']) ? 5 : $options['stars'];
+		$pixels = !empty($options['pixels']) ? $options['pixels'] : 16;
+		$steps = !empty($options['steps']) ? $options['steps'] : 4;
+		$stars = !empty($options['stars']) ? $options['stars'] : 5;
 		if ($value <= 0) {
 			$roundedValue = 0;
 			if (empty($attributes['title'])) {
@@ -382,7 +382,7 @@ class RatingHelper extends Helper {
 		}
 		$inputOptions += $htmlAttributes;
 
-		$result .= '<div id="star_' . $id . '" class="' . (empty($options['class']) ? 'rating' : $options['class']) . '">';
+		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
 		$result .= $this->Form->control($inputField, $inputOptions);
 		$result .= '</div>';
 		if ($options['createForm']) {
