@@ -131,7 +131,7 @@ class RatableBehavior extends Behavior {
 
 		$type = 'saveRating';
 		$update = $this->_config['update'];
-		$this->beforeRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'value' => $value, 'update' => $update, 'type' => $type]);
+		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
 
 		// Wrap the entire isRatedBy → deleteAll → save → increment chain in a
 		// transaction so two concurrent requests for the same (foreign_key, user_id)
@@ -178,7 +178,7 @@ class RatableBehavior extends Behavior {
 				$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 			}
 			$update = $wasUpdate;
-			$this->afterRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'value' => $value, 'result' => $result, 'update' => $update, 'oldRating' => $oldRating, 'type' => $type]);
+			$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
 
 			return $result;
 		});
@@ -202,7 +202,7 @@ class RatableBehavior extends Behavior {
 
 		$type = 'removeRating';
 		$update = $this->_config['update'];
-		$this->beforeRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'update' => $update, 'type' => $type]);
+		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
 		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
 		if (!$oldRating) {
@@ -224,7 +224,7 @@ class RatableBehavior extends Behavior {
 		} else {
 			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
 		}
-		$this->afterRateCallback(['foreignKey' => $foreignKey, 'userId' => $userId, 'result' => $result, 'update' => $update, 'oldRating' => $oldRating, 'type' => $type]);
+		$this->afterRateCallback(compact('foreignKey', 'userId', 'result', 'update', 'oldRating', 'type'));
 
 		return $result;
 	}

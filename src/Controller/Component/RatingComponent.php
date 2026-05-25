@@ -214,7 +214,7 @@ class RatingComponent extends Component {
 			$message = __d('ratings', 'Invalid rate.');
 			$status = 'error';
 		}
-		$result = ['status' => $status, 'message' => $message, 'rating' => $rating];
+		$result = compact('status', 'message', 'rating');
 		$this->Controller->set($result);
 		if ($redirect) {
 			if (is_numeric($redirect)) {
