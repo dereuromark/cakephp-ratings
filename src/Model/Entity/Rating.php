@@ -8,7 +8,7 @@ use Cake\ORM\Entity;
  * Album Entity
  *
  * @property int $id
- * @property int|string $user_id
+ * @property int $user_id
  * @property string $model
  * @property int|string $foreign_key
  * @property float $value
