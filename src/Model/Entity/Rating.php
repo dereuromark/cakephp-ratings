@@ -10,7 +10,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property int $user_id
  * @property string $model
- * @property int $foreign_key
+ * @property int|string $foreign_key
  * @property float $value
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
