@@ -26,7 +26,7 @@ class RatingHelper extends Helper {
 	/**
 	 * helpers variable
 	 *
-	 * @var array<mixed>
+	 * @var array<int|string, array<string, mixed>|string>
 	 */
 	protected array $helpers = ['Html', 'Form', 'Number'];
 

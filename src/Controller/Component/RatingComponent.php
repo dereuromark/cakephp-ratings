@@ -25,7 +25,7 @@ use ReflectionClass;
 class RatingComponent extends Component {
 
 	/**
-	 * @var array<mixed>
+	 * @var array<int|string, array<string, mixed>|string>
 	 */
 	protected array $components = ['Flash'];
 
