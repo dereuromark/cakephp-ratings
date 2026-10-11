@@ -58,4 +58,15 @@ Call `cacheRatingStatistics($data)` from `afterRate()` when your table contains 
 
 Rating rows store the rated table's `getAlias()` value. Two TableLocator aliases for the same physical table keep their rating rows separate during writes, association loading, updates and deletion. `modelClass` selects the reverse association target; it does not replace the stored alias.
 
-Those aliases still share the same physical rated record. Its aggregate cache columns are shared unless each alias uses distinct `field`, `fieldSummary` and `fieldCounter` columns. To calculate each alias's aggregate without writing shared fields, disable the summary/counter columns and set `saveToField` to false.
+Those aliases still share the same physical rated record. Its aggregate cache columns are shared unless each alias uses distinct `field`, `fieldSummary` and `fieldCounter` columns. To calculate each alias's aggregate without writing shared fields, use these behavior options on each alias:
+
+```php
+$this->addBehavior('Ratings.Ratable', [
+    'field' => false,
+    'fieldSummary' => false,
+    'fieldCounter' => false,
+    'saveToField' => false,
+]);
+```
+
+With this configuration, saves recalculate from that alias's rating rows and return the numeric result. The physical record's rating cache fields remain unchanged.
