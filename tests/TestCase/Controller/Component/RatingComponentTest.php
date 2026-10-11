@@ -373,6 +373,7 @@ class RatingComponentTest extends TestCase {
 	}
 
 	public function testRequestCannotSupplyAnExternalRedirect(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
 		$this->expectException(BadRequestException::class);
 		$this->_initControllerAndRatings([
 			'controller' => 'Articles',
@@ -383,11 +384,12 @@ class RatingComponentTest extends TestCase {
 	}
 
 	public function testConfiguredRedirectTargetStillWorks(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
 		$this->_initControllerAndRatings([
 			'controller' => 'Articles',
 			'action' => 'view',
 			'pass' => [1],
-			'?' => ['rate' => 1, 'rating' => 4],
+			'?' => ['rate' => 1, 'rating' => 4, 'redirect' => '1'],
 		], ['userId' => 2, 'params' => ['redirect' => '/ratings/thanks']]);
 		$this->assertSame('/ratings/thanks', $this->Controller->getResponse()->getHeaderLine('Location'));
 	}
@@ -405,6 +407,26 @@ class RatingComponentTest extends TestCase {
 		$this->Controller->Rating->rate(5, 4, 2);
 		$this->assertSame('success', $this->Controller->viewBuilder()->getVar('status'));
 		$this->assertSame(4.0, $this->Controller->viewBuilder()->getVar('rating'));
+	}
+
+	public function testUnrelatedPostDoesNotValidateTheRedirect(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
+		$this->_initControllerAndRatings([
+			'controller' => 'Articles',
+			'action' => 'view',
+			'pass' => [1],
+			'?' => ['redirect' => '/posts/view/1'],
+		]);
+		$this->assertSame(200, $this->Controller->getResponse()->getStatusCode());
+	}
+
+	public function testAnonymousRateDoesNotRequireTableResolution(): void {
+		$this->Controller->components()->unload('Rating');
+		$this->Controller->loadComponent('Ratings.Rating');
+		$this->Controller->Rating->startup(new Event('startup', $this->Controller));
+		$this->Controller->Rating->setConfig('modelName', null);
+		$this->Controller->Rating->rate(1, 4, null);
+		$this->assertSame('Not logged in', $this->Controller->viewBuilder()->getVar('message'));
 	}
 
 }

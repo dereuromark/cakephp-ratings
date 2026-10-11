@@ -95,19 +95,24 @@ class RatingComponent extends Component {
 
 		$requestParams = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery();
 		$params = $requestParams + (array)$this->_config['params'];
-		if (array_key_exists('redirect', $requestParams)) {
-			$redirect = filter_var($requestParams['redirect'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-			if ($redirect === null) {
-				throw new BadRequestException('The redirect request parameter must be boolean.');
-			}
-			$params['redirect'] = $redirect;
-		}
+
 		if (method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			return;
 		}
 
 		if (!isset($params['rate']) || !isset($params['rating'])) {
 			return;
+		}
+
+		if (array_key_exists('redirect', $requestParams)) {
+			$redirect = filter_var($requestParams['redirect'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+			if ($redirect === null) {
+				throw new BadRequestException('The redirect request parameter must be boolean.');
+			}
+			$configuredRedirect = $this->_config['params']['redirect'] ?? true;
+			$params['redirect'] = $redirect && (is_string($configuredRedirect) || is_array($configuredRedirect))
+				? $configuredRedirect
+				: $redirect;
 		}
 
 		$userId = $this->resolveUserId();
@@ -183,10 +188,14 @@ class RatingComponent extends Component {
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
-		$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
-		$primaryKey = $table->getPrimaryKey();
-		if (!is_string($primaryKey)) {
-			throw new LogicException('Ratings require a single-column primary key.');
+		$table = null;
+		$primaryKey = null;
+		if ($rating && $user) {
+			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+			$primaryKey = $table->getPrimaryKey();
+			if (!is_string($primaryKey)) {
+				throw new LogicException('Ratings require a single-column primary key.');
+			}
 		}
 
 		if (!$rating) {
@@ -195,7 +204,7 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($table->find()->where([$primaryKey => $rate])->first()) {
+		} elseif ($table && $table->find()->where([$primaryKey => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $behavior */
 			$behavior = $table->getBehavior('Ratable');
 			try {
