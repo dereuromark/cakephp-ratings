@@ -20,7 +20,7 @@ use OutOfBoundsException;
 use RuntimeException;
 
 /**
- * @property \Cake\ORM\Table<array{Ratings: \Ratings\Model\Behavior\RatableBehavior}> $_table
+ * @property \Cake\ORM\Table<array{Ratings: \Ratings\Model\Behavior\RatableBehavior}> $table
  */
 class RatableBehavior extends Behavior {
 

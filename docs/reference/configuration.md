@@ -1,6 +1,6 @@
 # Configuration
 
-The [example configuration](https://github.com/dereuromark/cakephp-ratings/blob/master/config/app.example.php) can be merged into the array returned by your application configuration file. It does not replace that file.
+The [example configuration](https://github.com/dereuromark/cakephp-ratings/blob/cake6/config/app.example.php) can be merged into the array returned by your application configuration file. It does not replace that file.
 
 | Namespace | Key | Purpose |
 | --- | --- | --- |
@@ -26,7 +26,7 @@ Component and behavior settings are supplied when loading them; the `Ratings` na
 | userField | user_id | Owner field for the self-vote guard; null disables it |
 | modelValidate | false | Rated-record validation when patching calculated fields |
 
-`countRates` and `modelCallbacks` are retained legacy settings. CakePHP 5 does not implement the old association `counterCache` option or the save `callbacks` option used here. Do not rely on those flags to count votes or disable ORM events. Use the configured cache fields and normal CakePHP event handling.
+`countRates` and `modelCallbacks` are retained legacy settings. CakePHP 6 does not implement the old association `counterCache` option or the save `callbacks` option used here. Do not rely on those flags to count votes or disable ORM events. Use the configured cache fields and normal CakePHP event handling.
 
 ## Component settings
 
