@@ -12,7 +12,7 @@ public function initialize(): void {
 
 public function beforeFilter(\Cake\Event\EventInterface $event): void {
     parent::beforeFilter($event);
-    if ($this->getRequest()->is('post') && $this->getRequest()->getParam('action') === 'view') {
+    if ($this->getRequest()->is('post') && $this->getRequest()->getParam('action') === 'view' && $this->getRequest()->getData('rate') !== null) {
         $value = $this->getRequest()->getData('rating');
         if (filter_var($value, FILTER_VALIDATE_INT) === false || (int)$value < 1 || (int)$value > 5) {
             throw new \Cake\Http\Exception\BadRequestException('Choose a rating from 1 to 5.');
