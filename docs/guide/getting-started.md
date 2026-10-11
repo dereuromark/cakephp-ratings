@@ -15,7 +15,8 @@ public function view(string $id): void {
     $post = $posts->get($id);
     $identity = $this->getRequest()->getAttribute('identity');
     $userId = $identity ? $identity->get('id') : null;
-    $isRated = $userId ? $posts->hasRated($post->id, $userId) : false;
+    $behavior = $posts->getBehavior('Ratable');
+    $isRated = $userId ? $behavior->hasRated($post->id, $userId) : false;
     $this->set(compact('post', 'userId', 'isRated'));
 }
 ```

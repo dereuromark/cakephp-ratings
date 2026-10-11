@@ -11,10 +11,12 @@ $this->addBehavior('Ratings.Ratable', ['update' => false]);
 ```php
 $behavior = $posts->getBehavior('Ratable');
 $result = $behavior->saveRating($postId, $userId, 4);
-$alreadyRated = $posts->hasRated($postId, $userId);
-$previous = $posts->isRatedBy($postId, $userId)->first();
+$alreadyRated = $behavior->hasRated($postId, $userId);
+$previous = $behavior->isRatedBy($postId, $userId)->first();
 $removed = $behavior->removeRating($postId, $userId);
 ```
+
+Call methods on the behavior obtained with `getBehavior()`. Calling exposed behavior methods directly on the table is deprecated in current CakePHP.
 
 `isRatedBy()` returns a query, not an entity. Call `first()` to retrieve a vote. `hasRated()` returns a boolean.
 
@@ -37,7 +39,7 @@ With both configured summary and counter fields present, saves update cached tot
 ## Up and down votes
 
 ```php
-$posts->rate($postId, $userId, 'up', [
+$posts->getBehavior('Ratable')->rate($postId, $userId, 'up', [
     'values' => ['up' => 1, 'down' => -1],
 ]);
 ```
