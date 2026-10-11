@@ -11,6 +11,7 @@
 
 namespace Ratings\Test\TestCase\Model\Behavior;
 
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
@@ -79,10 +80,10 @@ class RatableBehaviorTest extends TestCase {
 	public function testCalculateRating() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1);
-		$this->assertEquals('1.0000', $result['rating']);
+		$this->assertEquals(1.0, (float)$result['rating']);
 
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1, false);
-		$this->assertEquals('1.0000', $result);
+		$this->assertEquals(1.0, (float)$result);
 
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1, 'title');
 		$this->assertSame('1', $result['title']);
@@ -630,6 +631,60 @@ class RatableBehaviorTest extends TestCase {
 		$this->Posts->addBehavior('Ratings.Ratable', ['calculation' => 'sum', 'saveToField' => false]);
 		$this->assertTrue($this->Posts->getBehavior('Ratable')->rate(1, 2, 'down'));
 		$this->assertTrue($this->Posts->getBehavior('Ratable')->hasRated(1, 2));
+	}
+
+	public function testTwoAliasesOfTheSameTableKeepRatingRowsSeparate(): void {
+		$locator = TableRegistry::getTableLocator();
+		$first = $locator->get('FirstPosts', ['className' => Table::class, 'table' => 'posts']);
+		$second = $locator->get('SecondPosts', ['className' => Table::class, 'table' => 'posts']);
+		$first->addBehavior('Ratings.Ratable', ['userField' => null, 'update' => true]);
+		$second->addBehavior('Ratings.Ratable', ['userField' => null]);
+
+		$first->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$second->getBehavior('Ratable')->saveRating(1, 3, 2);
+		$firstPost = $first->get(1, contain: ['Ratings']);
+		$secondPost = $second->get(1, contain: ['Ratings']);
+		$this->assertCount(1, $firstPost->ratings);
+		$this->assertCount(1, $secondPost->ratings);
+		$this->assertSame('FirstPosts', $firstPost->ratings[0]->model);
+		$this->assertSame('SecondPosts', $secondPost->ratings[0]->model);
+		$this->assertEquals(4, $firstPost->ratings[0]->value);
+		$this->assertEquals(2, $secondPost->ratings[0]->value);
+
+		$first->getBehavior('Ratable')->saveRating(1, 3, 5);
+		$this->assertEquals(2, $second->getBehavior('Ratable')->isRatedBy(1, 3)->firstOrFail()->value);
+		$first->getBehavior('Ratable')->removeRating(1, 3);
+		$this->assertTrue($second->getBehavior('Ratable')->hasRated(1, 3));
+		$first->getBehavior('Ratable')->saveRating(1, 3, 4);
+
+		$first->deleteOrFail($firstPost);
+		$ratings = $second->getAssociation('Ratings')->getTarget();
+		$this->assertSame(0, $ratings->find()->where(['model' => 'FirstPosts'])->count());
+		$this->assertSame(1, $ratings->find()->where(['model' => 'SecondPosts'])->count());
+		$this->assertSame(1, $ratings->find()->where(['model' => 'Posts', 'foreign_key' => 1])->count());
+	}
+
+	public function testPluginQualifiedModelClassConfiguresReverseAssociation(): void {
+		$posts = TableRegistry::getTableLocator()->get('FeaturedPosts', ['className' => Table::class, 'table' => 'posts']);
+		$posts->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Posts', 'userField' => null]);
+		$posts->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$post = $posts->get(1, contain: ['Ratings']);
+		$this->assertCount(1, $post->ratings);
+		$this->assertSame('FeaturedPosts', $post->ratings[0]->model);
+		$ratings = $posts->getAssociation('Ratings')->getTarget();
+		$this->assertSame('Ratings.Posts', $ratings->getAssociation('Posts')->getClassName());
+		$this->assertSame('posts', $ratings->getAssociation('Posts')->getTarget()->getTable());
+		$rating = $ratings->get($post->ratings[0]->id, contain: ['Posts']);
+		$this->assertSame(1, $rating->post->id);
+	}
+
+	public function testCalculateRatingWithDifferentAliasAndPluginModelClass(): void {
+		$articles = TableRegistry::getTableLocator()->get('FeaturedArticles', ['className' => Table::class, 'table' => 'articles']);
+		$articles->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Articles', 'userField' => null]);
+		$result = $articles->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$this->assertEquals(4, $result->rating);
+		$this->assertSame('FeaturedArticles', $articles->get(1, contain: ['Ratings'])->ratings[0]->model);
+		$this->assertEquals(4, $articles->getBehavior('Ratable')->calculateRating(1, false));
 	}
 
 }
