@@ -633,11 +633,11 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertTrue($this->Posts->getBehavior('Ratable')->hasRated(1, 2));
 	}
 
-	public function testTwoAliasesOfTheSameTableKeepRatingsSeparate(): void {
+	public function testTwoAliasesOfTheSameTableKeepRatingRowsSeparate(): void {
 		$locator = TableRegistry::getTableLocator();
 		$first = $locator->get('FirstPosts', ['className' => Table::class, 'table' => 'posts']);
 		$second = $locator->get('SecondPosts', ['className' => Table::class, 'table' => 'posts']);
-		$first->addBehavior('Ratings.Ratable', ['userField' => null]);
+		$first->addBehavior('Ratings.Ratable', ['userField' => null, 'update' => true]);
 		$second->addBehavior('Ratings.Ratable', ['userField' => null]);
 
 		$first->getBehavior('Ratable')->saveRating(1, 3, 4);
@@ -651,6 +651,12 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals(4, $firstPost->ratings[0]->value);
 		$this->assertEquals(2, $secondPost->ratings[0]->value);
 
+		$first->getBehavior('Ratable')->saveRating(1, 3, 5);
+		$this->assertEquals(2, $second->getBehavior('Ratable')->isRatedBy(1, 3)->firstOrFail()->value);
+		$first->getBehavior('Ratable')->removeRating(1, 3);
+		$this->assertTrue($second->getBehavior('Ratable')->hasRated(1, 3));
+		$first->getBehavior('Ratable')->saveRating(1, 3, 4);
+
 		$first->deleteOrFail($firstPost);
 		$ratings = $second->getAssociation('Ratings')->getTarget();
 		$this->assertSame(0, $ratings->find()->where(['model' => 'FirstPosts'])->count());
@@ -658,7 +664,7 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertSame(1, $ratings->find()->where(['model' => 'Posts', 'foreign_key' => 1])->count());
 	}
 
-	public function testPluginModelClassDoesNotReplaceTheStoredTableAlias(): void {
+	public function testPluginQualifiedModelClassConfiguresReverseAssociation(): void {
 		$posts = TableRegistry::getTableLocator()->get('FeaturedPosts', ['className' => Table::class, 'table' => 'posts']);
 		$posts->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Posts', 'userField' => null]);
 		$posts->getBehavior('Ratable')->saveRating(1, 3, 4);
@@ -670,6 +676,15 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertSame('posts', $ratings->getAssociation('Posts')->getTarget()->getTable());
 		$rating = $ratings->get($post->ratings[0]->id, contain: ['Posts']);
 		$this->assertSame(1, $rating->post->id);
+	}
+
+	public function testCalculateRatingWithDifferentAliasAndPluginModelClass(): void {
+		$articles = TableRegistry::getTableLocator()->get('FeaturedArticles', ['className' => Table::class, 'table' => 'articles']);
+		$articles->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Articles', 'userField' => null]);
+		$result = $articles->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$this->assertEquals(4, $result->rating);
+		$this->assertSame('FeaturedArticles', $articles->get(1, contain: ['Ratings'])->ratings[0]->model);
+		$this->assertEquals(4, $articles->getBehavior('Ratable')->calculateRating(1, false));
 	}
 
 }

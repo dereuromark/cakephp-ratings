@@ -53,3 +53,9 @@ The default schema and validation do not impose a five-star maximum. Validate yo
 Table methods `beforeRate(array $data)` and `afterRate(array $data)` receive the operation type (`saveRating` or `removeRating`), record key, user ID and update information. The after callback also receives the result and previous vote. The removal after callback has no new `value`; read `oldRating->value`. The before callback has no `oldRating` and also runs when the operation later makes no change.
 
 Call `cacheRatingStatistics($data)` from `afterRate()` when your table contains histogram columns such as `rating_1`, `rating_2` or `rating_neg1`. `getNewRating()` returns the last aggregate recorded by the calculation or increment path.
+
+## Table aliases and shared records
+
+Rating rows store the rated table's `getAlias()` value. Two TableLocator aliases for the same physical table keep their rating rows separate during writes, association loading, updates and deletion. `modelClass` selects the reverse association target; it does not replace the stored alias.
+
+Those aliases still share the same physical rated record. Its aggregate cache columns are shared unless each alias uses distinct `field`, `fieldSummary` and `fieldCounter` columns. To calculate each alias's aggregate without writing shared fields, disable the summary/counter columns and set `saveToField` to false.
