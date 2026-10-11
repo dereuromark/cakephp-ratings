@@ -33,6 +33,8 @@ Load these assets before the layout's script block, and include that block:
 
 The widget enhances the rating input; the Rate button still submits the normal form. Its generated initialization uses whole-star steps. For a different widget, keep `js` false and initialize your chosen library yourself.
 
+The legacy `link`, `redirect` and `precision` helper configuration keys do not change `control()` output. Use the component redirect settings for submission behavior and the method arguments for percentage precision.
+
 ## Other output
 
 `bar($value, $total)` renders a percentage bar; supply application CSS for its classes. `percentage()` returns an integer percentage, and `round()` rounds within a configured minimum and maximum using a positive number of steps. The bar method also accepts a custom element and passes `value`, `percentage` and `total` to it.
