@@ -11,6 +11,7 @@
 
 namespace Ratings\Test\TestCase\Model\Behavior;
 
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use InvalidArgumentException;
@@ -634,8 +635,8 @@ class RatableBehaviorTest extends TestCase {
 
 	public function testTwoAliasesOfTheSameTableKeepRatingsSeparate(): void {
 		$locator = TableRegistry::getTableLocator();
-		$first = $locator->get('FirstPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
-		$second = $locator->get('SecondPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
+		$first = $locator->get('FirstPosts', ['className' => Table::class, 'table' => 'posts']);
+		$second = $locator->get('SecondPosts', ['className' => Table::class, 'table' => 'posts']);
 		$first->addBehavior('Ratings.Ratable', ['userField' => null]);
 		$second->addBehavior('Ratings.Ratable', ['userField' => null]);
 
@@ -658,7 +659,7 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	public function testPluginModelClassDoesNotReplaceTheStoredTableAlias(): void {
-		$posts = TableRegistry::getTableLocator()->get('FeaturedPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
+		$posts = TableRegistry::getTableLocator()->get('FeaturedPosts', ['className' => Table::class, 'table' => 'posts']);
 		$posts->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Posts', 'userField' => null]);
 		$posts->getBehavior('Ratable')->saveRating(1, 3, 4);
 		$post = $posts->get(1, contain: ['Ratings']);
