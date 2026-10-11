@@ -33,7 +33,7 @@ export default defineConfig({
     sidebar,
     socialLinks: [{ icon: 'github', link: 'https://github.com/dereuromark/cakephp-ratings' }],
     search: { provider: 'local' },
-    editLink: { pattern: 'https://github.com/dereuromark/cakephp-ratings/edit/master/docs/:path' },
+    editLink: { pattern: 'https://github.com/dereuromark/cakephp-ratings/edit/cake6/docs/:path' },
     footer: { message: 'Released under the MIT License.', copyright: 'Copyright Mark Scherer' },
   },
 })

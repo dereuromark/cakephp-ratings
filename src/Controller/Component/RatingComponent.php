@@ -39,7 +39,7 @@ class RatingComponent extends Component {
 	/**
 	 * @var array<string, mixed>
 	 */
-	protected array $_defaultConfig = [
+	protected array $defaultConfig = [
 		'actions' => [], // Empty: all
 		'modelName' => null, // Empty: auto-detect
 		'params' => ['rate' => null, 'rating' => null, 'redirect' => true],
@@ -85,7 +85,7 @@ class RatingComponent extends Component {
 			$model = null;
 		}
 		if ($model && !$model->behaviors()->has('Ratable')) {
-			$model->behaviors()->load('Ratable', ['className' => 'Ratings.Ratable'] + $this->_config);
+			$model->behaviors()->load('Ratable', ['className' => 'Ratings.Ratable'] + $this->config);
 		}
 		$this->Controller->viewBuilder()->addHelper('Ratings.Rating');
 
@@ -94,7 +94,7 @@ class RatingComponent extends Component {
 		}
 
 		$requestParams = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery();
-		$params = $requestParams + (array)$this->_config['params'];
+		$params = $requestParams + (array)$this->config['params'];
 
 		if (method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			return;
@@ -109,7 +109,7 @@ class RatingComponent extends Component {
 			if ($redirect === null) {
 				throw new BadRequestException('The redirect request parameter must be boolean.');
 			}
-			$configuredRedirect = $this->_config['params']['redirect'] ?? true;
+			$configuredRedirect = $this->config['params']['redirect'] ?? true;
 			$params['redirect'] = $redirect && (is_string($configuredRedirect) || is_array($configuredRedirect))
 				? $configuredRedirect
 				: $redirect;
@@ -270,7 +270,7 @@ class RatingComponent extends Component {
 		];
 		$params = array_merge($params, $this->Controller->getRequest()->getParam('pass'));
 
-		$ratingParams = array_keys($this->_config['params']);
+		$ratingParams = array_keys($this->config['params']);
 		foreach ((array)$this->Controller->getRequest()->getQuery() as $name => $value) {
 			if (!in_array($name, $ratingParams, true)) {
 				$params['?'][$name] = $value;

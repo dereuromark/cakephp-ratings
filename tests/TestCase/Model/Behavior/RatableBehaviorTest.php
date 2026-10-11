@@ -159,7 +159,7 @@ class RatableBehaviorTest extends TestCase {
 	}
 
 	/**
-	 * Regression: when the rated entity locks fields via `$_accessible = ['*' => false]`,
+	 * Regression: when the rated entity locks fields via `$patchable = ['*' => false]`,
 	 * patchEntity used to silently drop the rating cache columns and the saved row
 	 * stayed at its pre-rating values. The behavior must force-bypass mass-assignment
 	 * guarding for the rating-cache columns since it owns those writes.

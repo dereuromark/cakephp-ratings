@@ -147,7 +147,7 @@ class RatingHelper extends Helper {
 		}
 
 		$defaults = [
-			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $options['stars']),
+			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->config), $options['stars']),
 		];
 		$attributes += $defaults;
 
@@ -209,7 +209,7 @@ class RatingHelper extends Helper {
 		}
 
 		$defaults = [
-			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->_config), $stars),
+			'title' => __d('ratings', '{0} of {1} stars', $this->Number->format($roundedValue, $this->config), $stars),
 		];
 		$attributes += $defaults;
 
@@ -242,11 +242,11 @@ class RatingHelper extends Helper {
 		$roundedValue = $value <= 0 ? 0 : round($value * $options['steps']) / $options['steps'];
 		$percent = $this->percentage($roundedValue, $options['stars']);
 
-		$title = __d('ratings', '{0} of {1} stars', $this->Number->format(min($roundedValue, $options['stars']), $this->_config), $options['stars']);
+		$title = __d('ratings', '{0} of {1} stars', $this->Number->format(min($roundedValue, $options['stars']), $this->config), $options['stars']);
 
 		$attrContent = [
 			'class' => 'rating-stars',
-			'data-content' => str_repeat((string)$options['data-symbol'], $options['stars']),
+			'data-content' => str_repeat(html_entity_decode((string)$options['data-symbol'], ENT_QUOTES | ENT_HTML5, 'UTF-8'), $options['stars']),
 			'escape' => $options['escape'],
 			'style' => 'width: ' . $percent . '%',
 		];
@@ -257,7 +257,7 @@ class RatingHelper extends Helper {
 		//</div>
 
 		$attributes += ['title' => $title];
-		$attributes = ['data-content' => str_repeat((string)$options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
+		$attributes = ['data-content' => str_repeat(html_entity_decode((string)$options['data-symbol'], ENT_QUOTES | ENT_HTML5, 'UTF-8'), $options['stars']), 'escape' => $options['escape']] + $attributes;
 
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
 	}
@@ -290,7 +290,7 @@ class RatingHelper extends Helper {
 
 		if (empty($options['url'])) {
 			$options['url']['?']['redirect'] = true;
-			$passedParams = $this->_View->getRequest()->getParam('pass');
+			$passedParams = $this->View->getRequest()->getParam('pass');
 			foreach ($passedParams as $passedParam) {
 				$options['url'][] = $passedParam;
 			}
@@ -360,7 +360,7 @@ class RatingHelper extends Helper {
 })(jQuery);
 </script>
 HTML;
-				$this->_View->append('script', $script);
+				$this->View->append('script', $script);
 			}
 		}
 
@@ -389,7 +389,7 @@ HTML;
 		$percentage = $this->percentage($value, $total);
 
 		if (!empty($options['element'])) {
-			return $this->_View->element($options['element'], [
+			return $this->View->element($options['element'], [
 				'value' => $value,
 				'percentage' => $percentage,
 				'total' => $total,
@@ -397,7 +397,7 @@ HTML;
 		}
 
 		$options['innerOptions']['style'] = 'width: ' . $percentage . '%';
-		$innerContent = (string)str_replace('%value%', $this->Number->format($value, $this->_config), $options['innerHtml']);
+		$innerContent = (string)str_replace('%value%', $this->Number->format($value, $this->config), $options['innerHtml']);
 		$innerContent = (string)str_replace('%percentage%', (string)$percentage, $innerContent);
 		$inner = $this->Html->div($options['innerClass'], $innerContent, $options['innerOptions']);
 

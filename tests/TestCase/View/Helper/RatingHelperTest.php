@@ -216,7 +216,7 @@ class RatingHelperTest extends TestCase {
 	public function testImage() {
 		$result = $this->Rating->image(3.11);
 		$expected = '<div data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" title="3 of 5 stars" class="rating-container rating-fa"><div class="rating-stars" data-content="&#xf005;&#xf005;&#xf005;&#xf005;&#xf005;" style="width: 60%"></div></div>';
-		$this->assertEquals($expected, $result);
+		$this->assertEquals(str_replace('&#xf005;', "\u{f005}", $expected), $result);
 	}
 
 	/**
