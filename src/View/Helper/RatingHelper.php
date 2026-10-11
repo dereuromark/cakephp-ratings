@@ -260,62 +260,6 @@ class RatingHelper extends Helper {
 		$attributes = ['data-content' => str_repeat((string)$options['data-symbol'], $options['stars']), 'escape' => $options['escape']] + $attributes;
 
 		return $this->Html->div('rating-container ' . $options['data-rating-class'], $content, $attributes);
-
-		/*
-		// TODO: Remove deprecated pixel-based implementation in next major version
-		// The following code is kept for reference but should not be used
-		$size = !empty($options['size']) ? $options['size'] : '';
-		if (!empty($size)) {
-			$options['pixels'] = $this->sizes[$size];
-		}
-		$pixels = !empty($options['pixels']) ? $options['pixels'] : 16;
-		$steps = !empty($options['steps']) ? $options['steps'] : 4;
-		if ($value <= 0) {
-			$roundedValue = 0;
-		} else {
-			$roundedValue = round($value * $steps) / $steps;
-		}
-		$stars = !empty($options['stars']) ? $options['stars'] : 5;
-
-		$array = [
-			0 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-on" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
-			1 => '<div class="ui-stars-star' . ($size ? '-' . $size : '') . ' ui-stars-star' . ($size ? '-' . $size : '') . '-disabled" style="cursor: default; width: {width}px;"><a style="margin-left: {margin}px;">#</a></div>',
-		];
-
-		$res = '';
-		$disable = 0;
-		for ($i = 0; $i < $stars; $i++) {
-			for ($j = 0; $j < $steps; $j++) {
-				if (!$disable && ($i + $j * (1 / $steps)) >= $roundedValue) {
-					$disable = 1;
-				}
-				$v = $array[$disable];
-
-				if ($j === 0) {
-					# try to use a single image if possible
-					if ($i < floor($roundedValue) || $i >= ceil($roundedValue) || $i === 0 && $roundedValue >= 1) {
-						$res .= Text::insert($v, ['margin' => 0, 'width' => $pixels], ['before' => '{', 'after' => '}']);
-						break;
-					}
-				}
-
-				$margin = 0 - ($pixels / $steps) * $j;
-				$res .= Text::insert($v, ['margin' => $margin, 'width' => $pixels / $steps], ['before' => '{', 'after' => '}']);
-			}
-		}
-
-		$precision = 2;
-		if ((int)$roundedValue == $roundedValue) {
-			$precision = 0;
-		} elseif ((int)(2 * $roundedValue) == 2 * $roundedValue) {
-			$precision = 1;
-		}
-		$defaults = [
-			'title' => number_format(min($roundedValue, $stars), $precision, ',', '.') . ' ' . __('von') . ' ' . $stars . ' ' . __('Sternen'),
-		];
-		$attributes += $defaults;
-		return $this->Html->div('ratingStars clearfix', $res, $attributes);
-		*/
 	}
 
 	/**
@@ -382,9 +326,11 @@ class RatingHelper extends Helper {
 		}
 		$inputOptions += $htmlAttributes;
 
-		$result .= '<div id="star_' . $id . '" class="' . (!empty($options['class']) ? $options['class'] : 'rating') . '">';
-		$result .= $this->Form->control($inputField, $inputOptions);
-		$result .= '</div>';
+		$result .= $this->Html->div(
+			!empty($options['class']) ? $options['class'] : 'rating',
+			$this->Form->control($inputField, $inputOptions),
+			['id' => 'star_' . $id],
+		);
 		if ($options['createForm']) {
 			if (!empty($options['target']) && !empty($options['createForm']['url']) && !empty($options['createForm']['ajaxOptions'])) {
 				//$result .= $this->Js->submit(__d('ratings', 'Rate!'), array_merge(['url' => $options['createForm']['url']], $options['createForm']['ajaxOptions'])) . "\n";
@@ -393,25 +339,23 @@ class RatingHelper extends Helper {
 			}
 			$result .= $this->Form->end() . "\n";
 
-			$disabled = empty($options['editable']) ? false : 'disabled';
-			$split = $disabled ? 4 : 1;
-
 			if ($options['js']) {
+				$inputId = json_encode('starelement_' . $id, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+				$stars = (int)$options['stars'];
 				$script = <<<HTML
 <script>
 ;(function($) {
 	$(function() {
-		$('#star_$id').rating({
+		$(document.getElementById($inputId)).rating({
 			filledStar: '<i class="fa fa-star"></i>',
 			emptyStar: '<i class="fa fa-star-o"></i>',
 			showClear: false,
 			showCaption: false,
 			size:'xs',
+			stars: $stars,
+			max: $stars,
 			step: 1
 		});
-		$('#star_$id').on('rating:change', function(event, value, caption) {
-			$('#starelement_$id').val(value);
-		}).hide();
 	});
 })(jQuery);
 </script>
@@ -470,7 +414,7 @@ HTML;
 	 */
 	public function percentage($value, int $total, int $precision = 2): int {
 		if ($total > 0) {
-			return (int)(round($value / $total, $precision) * 100);
+			return (int)round(round($value / $total * 100, $precision));
 		}
 
 		return 0;

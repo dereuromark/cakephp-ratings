@@ -98,6 +98,7 @@ class RatableBehavior extends Behavior {
 			'foreignKey' => $this->_config['foreignKey'],
 			'unique' => true,
 			'dependent' => true,
+			'conditions' => ['Ratings.model' => $this->_table->getAlias()],
 		]);
 
 		$this->ratingsTable()->belongsTo(
@@ -431,7 +432,10 @@ class RatableBehavior extends Behavior {
 
 		$rating = $this->_table->find()->where([$key => $foreignKey])->firstOrFail();
 
-		$rating = $this->_table->patchEntity($rating, $data, ['validate' => $this->_config['modelValidate']]);
+		$rating = $this->_table->patchEntity($rating, $data, [
+			'validate' => $this->_config['modelValidate'],
+			'accessibleFields' => [$saveToField => true],
+		]);
 
 		/** @var \Ratings\Model\Entity\Rating $rating */
 		$rating = $this->_table->saveOrFail($rating, [
@@ -536,7 +540,7 @@ class RatableBehavior extends Behavior {
 			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 		}
 
-		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating])) {
+		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating]) !== false) {
 			return true;
 		}
 

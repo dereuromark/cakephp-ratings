@@ -4,7 +4,7 @@
  * Ratings Example Configuration
  *
  * Merge the keys below into your application's config/app.php (or
- * config/app_local.php) — do not replace the whole file, since this snippet
+ * config/app_local.php); do not replace the whole file, since this snippet
  * only contains this plugin's configuration. When copying entries that
  * reference imported classes, use fully-qualified class names or move the
  * `use` imports to the top of the target file. Customize the values as needed.

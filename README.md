@@ -4,33 +4,21 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/dereuromark/cakephp-ratings/master.svg)](https://codecov.io/github/dereuromark/cakephp-ratings/branch/master)
 [![PHPStan](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)](https://phpstan.org/)
 [![Latest Stable Version](https://poser.pugx.org/dereuromark/cakephp-ratings/v/stable.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
-[![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.2-8892BF.svg)](https://php.net/)
 [![License](https://poser.pugx.org/dereuromark/cakephp-ratings/license.svg)](LICENSE)
 [![Total Downloads](https://poser.pugx.org/dereuromark/cakephp-ratings/d/total.svg)](https://packagist.org/packages/dereuromark/cakephp-ratings)
 [![Coding Standards](https://img.shields.io/badge/cs-PSR--2--R-purple.svg?style=flat-square)](https://github.com/php-fig-rectified/fig-rectified-standards)
 
-The **Ratings** plugin will allow you by simply adding the ratings component to your controller to rate anything. The component will auto load a helper and behavior.
-
-The core part of this plugin is the Ratable behavior that is attached to your models.
-In most cases you don't need to attach it yourself, because the Rating component will take care of it.
-
-Note: This branch is for **CakePHP 5.1+**. For details see [version map](https://github.com/dereuromark/cakephp-ratings/wiki#cakephp-version-map).
-
-### Recommended
-
-To have a nice star rating to chose from, it ships with the possibility to include JS.
-The default JS tool in use is:
-
-* https://github.com/kartik-v/bootstrap-star-rating
-
-It should, however, be customizable to any other JS library and templating framework.
-
-## Demo
-https://sandbox.dereuromark.de/sandbox/ratings
+The Ratings plugin stores user votes for CakePHP records. Its behavior calculates averages or sums; a component handles form submissions and loads the rating helper.
 
 ## Documentation
 
-For documentation, as well as tutorials, see the [docs](docs/) directory of this repository.
+[Open the documentation website](https://dereuromark.github.io/cakephp-ratings/). Start with [installation](https://dereuromark.github.io/cakephp-ratings/guide/installation), then [your first rating form](https://dereuromark.github.io/cakephp-ratings/guide/getting-started).
+
+The beginner form works without JavaScript. Optional star widgets and read-only displays need the assets described in the helper guide.
+
+## Demo
+
+[Try the sandbox](https://sandbox.dereuromark.de/sandbox/ratings).
 
 ## Support
 

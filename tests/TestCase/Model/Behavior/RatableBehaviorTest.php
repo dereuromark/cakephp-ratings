@@ -602,4 +602,34 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals($result['rating_3'], 0);
 	}
 
+	public function testRatingsAssociationSeparatesModelsWithTheSamePrimaryKey(): void {
+		$this->Posts->addBehavior('Ratings.Ratable');
+		$post = $this->Posts->get(1, contain: ['Ratings']);
+		$this->assertCount(1, $post->ratings);
+		$this->assertSame('Posts', $post->ratings[0]->model);
+	}
+
+	public function testDeletingPostPreservesRatingsForAnotherModel(): void {
+		$this->Posts->addBehavior('Ratings.Ratable');
+		$this->Posts->deleteOrFail($this->Posts->get(1));
+		$ratings = $this->Posts->getAssociation('Ratings')->getTarget();
+		$this->assertSame(1, $ratings->find()->where(['model' => 'Articles', 'foreign_key' => 1])->count());
+		$this->assertSame(0, $ratings->find()->where(['model' => 'Posts', 'foreign_key' => 1])->count());
+	}
+
+	public function testCalculateRatingBypassesEntityAccessibleGuard(): void {
+		$this->Posts->setEntityClass(LockedPost::class);
+		$this->Posts->addBehavior('Ratings.Ratable');
+		$this->Posts->updateAll(['rating' => 0], ['id' => 2]);
+		$result = $this->Posts->getBehavior('Ratable')->calculateRating(2);
+		$this->assertEquals(3.0, $result->get('rating'));
+		$this->assertEquals(3.0, $this->Posts->get(2)->get('rating'));
+	}
+
+	public function testSymbolicVoteSucceedsWhenResultingSumIsZero(): void {
+		$this->Posts->addBehavior('Ratings.Ratable', ['calculation' => 'sum', 'saveToField' => false]);
+		$this->assertTrue($this->Posts->getBehavior('Ratable')->rate(1, 2, 'down'));
+		$this->assertTrue($this->Posts->getBehavior('Ratable')->hasRated(1, 2));
+	}
+
 }

@@ -13,6 +13,7 @@ namespace Ratings\Test\TestCase\Controller\Component;
 
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Route\DashedRoute;
@@ -335,6 +336,97 @@ class RatingComponentTest extends TestCase {
 		$event = new Event('startup', $this->Controller);
 
 		return $this->Controller->Rating->startup($event) ?: $this->Controller->getResponse();
+	}
+
+	public function testJsonRedirectSerializesRatingWithoutATemplate(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]]);
+		$this->Controller->setRequest($this->Controller->getRequest()->withParam('isJson', true));
+		$this->Controller->set(['status' => 'success', 'message' => 'Rated', 'rating' => 4]);
+		$response = $this->Controller->Rating->redirect('/articles/view/1');
+		$this->assertSame('application/json', $response->getType());
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame(['status' => 'success', 'message' => 'Rated', 'rating' => 4], $data);
+	}
+
+	public function testJsonAuthMessageProducesAnErrorResponse(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]]);
+		$this->Controller->setRequest($this->Controller->getRequest()->withParam('isJson', true));
+		$this->Controller->set('authMessage', 'Sign in first');
+		$response = $this->Controller->Rating->redirect('/articles/view/1');
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame('error', $data['status']);
+		$this->assertSame('Sign in first', $data['message']);
+	}
+
+	public function testStartupPreservesControllerHelpers(): void {
+		$this->Controller->viewBuilder()->addHelper('Text');
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]]);
+		$this->assertArrayHasKey('Text', $this->Controller->viewBuilder()->getHelpers());
+		$this->assertArrayHasKey('Rating', $this->Controller->viewBuilder()->getHelpers());
+	}
+
+	public function testNumericSavedAggregateIsASuccess(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]], ['saveToField' => false]);
+		$this->Controller->Rating->rate(1, 4, 2);
+		$this->assertSame('success', $this->Controller->viewBuilder()->getVar('status'));
+		$this->assertSame(3.0, $this->Controller->viewBuilder()->getVar('rating'));
+	}
+
+	public function testRequestCannotSupplyAnExternalRedirect(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
+		$this->expectException(BadRequestException::class);
+		$this->_initControllerAndRatings([
+			'controller' => 'Articles',
+			'action' => 'view',
+			'pass' => [1],
+			'?' => ['rate' => 1, 'rating' => 4, 'redirect' => 'https://example.org/'],
+		], ['userId' => 2]);
+	}
+
+	public function testConfiguredRedirectTargetStillWorks(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
+		$this->_initControllerAndRatings([
+			'controller' => 'Articles',
+			'action' => 'view',
+			'pass' => [1],
+			'?' => ['rate' => 1, 'rating' => 4, 'redirect' => '1'],
+		], ['userId' => 2, 'params' => ['redirect' => '/ratings/thanks']]);
+		$this->assertSame('/ratings/thanks', $this->Controller->getResponse()->getHeaderLine('Location'));
+	}
+
+	public function testComponentUsesConfiguredResultField(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]], ['saveToField' => 'title']);
+		$this->Controller->Rating->rate(1, 4, 2);
+		$this->assertSame('success', $this->Controller->viewBuilder()->getVar('status'));
+		$this->assertSame(3.0, $this->Controller->viewBuilder()->getVar('rating'));
+	}
+
+	public function testComponentUsesTheTablePrimaryKey(): void {
+		$this->Controller->getTableLocator()->get('Articles')->setPrimaryKey('user_id');
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [5]]);
+		$this->Controller->Rating->rate(5, 4, 2);
+		$this->assertSame('success', $this->Controller->viewBuilder()->getVar('status'));
+		$this->assertSame(4.0, $this->Controller->viewBuilder()->getVar('rating'));
+	}
+
+	public function testUnrelatedPostDoesNotValidateTheRedirect(): void {
+		$this->Controller->setRequest($this->Controller->getRequest()->withMethod('POST'));
+		$this->_initControllerAndRatings([
+			'controller' => 'Articles',
+			'action' => 'view',
+			'pass' => [1],
+			'?' => ['redirect' => '/posts/view/1'],
+		]);
+		$this->assertSame(200, $this->Controller->getResponse()->getStatusCode());
+	}
+
+	public function testAnonymousRateDoesNotRequireTableResolution(): void {
+		$this->Controller->components()->unload('Rating');
+		$this->Controller->loadComponent('Ratings.Rating');
+		$this->Controller->Rating->startup(new Event('startup', $this->Controller));
+		$this->Controller->Rating->setConfig('modelName', null);
+		$this->Controller->Rating->rate(1, 4, null);
+		$this->assertSame('Not logged in', $this->Controller->viewBuilder()->getVar('message'));
 	}
 
 }

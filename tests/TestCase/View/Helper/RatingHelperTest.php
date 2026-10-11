@@ -64,6 +64,10 @@ class RatingHelperTest extends TestCase {
 		$this->assertSame(40, $this->Rating->percentage(2, 5));
 		$this->assertSame(0, $this->Rating->percentage(0, 0));
 		$this->assertSame(100, $this->Rating->percentage(6, 6));
+		$this->assertSame(29, $this->Rating->percentage(29, 100));
+		$this->assertSame(57, $this->Rating->percentage(57, 100));
+		$this->assertSame(25, $this->Rating->percentage(1, 4, 0));
+		$this->assertSame(25, $this->Rating->percentage(1, 4, 1));
 	}
 
 	/**
@@ -223,6 +227,22 @@ class RatingHelperTest extends TestCase {
 	public function tearDown(): void {
 		parent::tearDown();
 		unset($this->Rating);
+	}
+
+	public function testJavascriptInitializesTheRatingInput(): void {
+		$this->Rating->control(['item' => 3, 'js' => true, 'stars' => 7, 'url' => '/articles/view/3']);
+		$script = $this->View->fetch('script');
+		$this->assertStringContainsString('document.getElementById("starelement_3")', $script);
+		$this->assertStringNotContainsString('.hide()', $script);
+		$this->assertStringContainsString('stars: 7', $script);
+		$this->assertStringContainsString('max: 7', $script);
+	}
+
+	public function testControlEscapesContainerAttributesAndJavascriptIdentifiers(): void {
+		$html = $this->Rating->control(['item' => 'x" onclick="alert(1)', 'class' => 'x" onclick="alert(1)', 'js' => true, 'url' => '/articles/view/3']);
+		$this->assertStringNotContainsString(' onclick="alert(1)', $html);
+		$this->assertStringContainsString('&quot;', $html);
+		$this->assertStringNotContainsString('document.getElementById("starelement_x"', $this->View->fetch('script'));
 	}
 
 }

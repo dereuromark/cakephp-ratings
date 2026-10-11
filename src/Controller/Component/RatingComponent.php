@@ -14,8 +14,10 @@ namespace Ratings\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\ORM\Exception\MissingTableClassException;
+use Cake\View\JsonView;
 use LogicException;
 use ReflectionClass;
 
@@ -85,19 +87,32 @@ class RatingComponent extends Component {
 		if ($model && !$model->behaviors()->has('Ratable')) {
 			$model->behaviors()->load('Ratable', ['className' => 'Ratings.Ratable'] + $this->_config);
 		}
-		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
+		$this->Controller->viewBuilder()->addHelper('Ratings.Rating');
 
 		if (!$this->Controller->getRequest()->is('post')) {
 			return;
 		}
 
-		$params = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery() + (array)$this->_config['params'];
+		$requestParams = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery();
+		$params = $requestParams + (array)$this->_config['params'];
+
 		if (method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			return;
 		}
 
 		if (!isset($params['rate']) || !isset($params['rating'])) {
 			return;
+		}
+
+		if (array_key_exists('redirect', $requestParams)) {
+			$redirect = filter_var($requestParams['redirect'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+			if ($redirect === null) {
+				throw new BadRequestException('The redirect request parameter must be boolean.');
+			}
+			$configuredRedirect = $this->_config['params']['redirect'] ?? true;
+			$params['redirect'] = $redirect && (is_string($configuredRedirect) || is_array($configuredRedirect))
+				? $configuredRedirect
+				: $redirect;
 		}
 
 		$userId = $this->resolveUserId();
@@ -173,6 +188,15 @@ class RatingComponent extends Component {
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
+		$table = null;
+		$primaryKey = null;
+		if ($rating && $user) {
+			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+			$primaryKey = $table->getPrimaryKey();
+			if (!is_string($primaryKey)) {
+				throw new LogicException('Ratings require a single-column primary key.');
+			}
+		}
 
 		if (!$rating) {
 			$message = __d('ratings', 'No rating selected');
@@ -180,8 +204,7 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
-			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+		} elseif ($table && $table->find()->where([$primaryKey => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $behavior */
 			$behavior = $table->getBehavior('Ratable');
 			try {
@@ -202,8 +225,12 @@ class RatingComponent extends Component {
 
 				return null;
 			}
-			if ($newRating instanceof EntityInterface) {
-				$rating = round((float)$newRating->get('rating'));
+			if ($newRating !== false) {
+				$resultField = $behavior->getConfig('saveToField');
+				$resultField = is_string($resultField) ? $resultField : $behavior->getConfig('field');
+				$rating = round((float)($newRating instanceof EntityInterface
+					? $newRating->get($resultField)
+					: $newRating));
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
 			} else {
@@ -263,21 +290,19 @@ class RatingComponent extends Component {
 	 */
 	public function redirect($url, int $status = 302): ?Response {
 		if ($this->Controller->viewBuilder()->getVar('authMessage') && $this->Controller->getRequest()->getParam('isJson')) {
-			// TODO: Implement proper JSON rendering without deprecated RequestHandler
-			// Previously: $this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
-			return $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
+			return $this->renderJson();
 		}
 
 		if ($this->Controller->viewBuilder()->getVar('authMessage')) {
 			$this->Flash->error($this->Controller->viewBuilder()->getVar('authMessage'));
 		}
-		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
-			// TODO: Re-evaluate if setAction() is needed for rated response
-			// Previously: $this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
-
+		if ($this->Controller->getRequest()->getParam('isJson')) {
+			return $this->renderJson();
+		}
+		if ($this->Controller->getRequest()->getParam('isAjax')) {
 			return $this->Controller->render('rated');
 		}
 		if ($this->Controller->viewBuilder()->getVar('status') !== null && $this->Controller->viewBuilder()->getVar('message') !== null) {
@@ -286,6 +311,17 @@ class RatingComponent extends Component {
 		}
 
 		return $this->Controller->redirect($url, $status ?: 302);
+	}
+
+	/**
+	 * @return \Cake\Http\Response
+	 */
+	protected function renderJson(): Response {
+		$this->Controller->viewBuilder()
+			->setClassName(JsonView::class)
+			->setOption('serialize', ['status', 'message', 'rating']);
+
+		return $this->Controller->render();
 	}
 
 }
