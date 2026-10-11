@@ -80,10 +80,10 @@ class RatableBehaviorTest extends TestCase {
 	public function testCalculateRating() {
 		$this->Articles->addBehavior('Ratings.Ratable', []);
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1);
-		$this->assertEquals('1.0000', $result['rating']);
+		$this->assertEquals(1.0, (float)$result['rating']);
 
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1, false);
-		$this->assertEquals('1.0000', $result);
+		$this->assertEquals(1.0, (float)$result);
 
 		$result = $this->Articles->getBehavior('Ratable')->calculateRating(1, 'title');
 		$this->assertSame('1', $result['title']);
