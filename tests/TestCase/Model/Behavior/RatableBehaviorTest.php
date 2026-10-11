@@ -632,4 +632,43 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertTrue($this->Posts->getBehavior('Ratable')->hasRated(1, 2));
 	}
 
+	public function testTwoAliasesOfTheSameTableKeepRatingsSeparate(): void {
+		$locator = TableRegistry::getTableLocator();
+		$first = $locator->get('FirstPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
+		$second = $locator->get('SecondPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
+		$first->addBehavior('Ratings.Ratable', ['userField' => null]);
+		$second->addBehavior('Ratings.Ratable', ['userField' => null]);
+
+		$first->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$second->getBehavior('Ratable')->saveRating(1, 3, 2);
+		$firstPost = $first->get(1, contain: ['Ratings']);
+		$secondPost = $second->get(1, contain: ['Ratings']);
+		$this->assertCount(1, $firstPost->ratings);
+		$this->assertCount(1, $secondPost->ratings);
+		$this->assertSame('FirstPosts', $firstPost->ratings[0]->model);
+		$this->assertSame('SecondPosts', $secondPost->ratings[0]->model);
+		$this->assertEquals(4, $firstPost->ratings[0]->value);
+		$this->assertEquals(2, $secondPost->ratings[0]->value);
+
+		$first->deleteOrFail($firstPost);
+		$ratings = $second->getAssociation('Ratings')->getTarget();
+		$this->assertSame(0, $ratings->find()->where(['model' => 'FirstPosts'])->count());
+		$this->assertSame(1, $ratings->find()->where(['model' => 'SecondPosts'])->count());
+		$this->assertSame(1, $ratings->find()->where(['model' => 'Posts', 'foreign_key' => 1])->count());
+	}
+
+	public function testPluginModelClassDoesNotReplaceTheStoredTableAlias(): void {
+		$posts = TableRegistry::getTableLocator()->get('FeaturedPosts', ['className' => \Cake\ORM\Table::class, 'table' => 'posts']);
+		$posts->addBehavior('Ratings.Ratable', ['modelClass' => 'Ratings.Posts', 'userField' => null]);
+		$posts->getBehavior('Ratable')->saveRating(1, 3, 4);
+		$post = $posts->get(1, contain: ['Ratings']);
+		$this->assertCount(1, $post->ratings);
+		$this->assertSame('FeaturedPosts', $post->ratings[0]->model);
+		$ratings = $posts->getAssociation('Ratings')->getTarget();
+		$this->assertSame('Ratings.Posts', $ratings->getAssociation('Posts')->getClassName());
+		$this->assertSame('posts', $ratings->getAssociation('Posts')->getTarget()->getTable());
+		$rating = $ratings->get($post->ratings[0]->id, contain: ['Posts']);
+		$this->assertSame(1, $rating->post->id);
+	}
+
 }
