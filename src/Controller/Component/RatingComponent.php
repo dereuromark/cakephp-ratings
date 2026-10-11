@@ -16,6 +16,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\ORM\Exception\MissingTableClassException;
+use Cake\View\JsonView;
 use LogicException;
 use ReflectionClass;
 
@@ -263,21 +264,19 @@ class RatingComponent extends Component {
 	 */
 	public function redirect($url, int $status = 302): ?Response {
 		if ($this->Controller->viewBuilder()->getVar('authMessage') && $this->Controller->getRequest()->getParam('isJson')) {
-			// TODO: Implement proper JSON rendering without deprecated RequestHandler
-			// Previously: $this->RequestHandler->renderAs($this->Controller, 'json');
 			$this->Controller->set('message', $this->Controller->viewBuilder()->getVar('authMessage'));
 			$this->Controller->set('status', 'error');
 
-			return $this->Controller->getResponse()->withStringBody($this->Controller->render('rate'));
+			return $this->renderJson();
 		}
 
 		if ($this->Controller->viewBuilder()->getVar('authMessage')) {
 			$this->Flash->error($this->Controller->viewBuilder()->getVar('authMessage'));
 		}
-		if ($this->Controller->getRequest()->getParam('isAjax') || $this->Controller->getRequest()->getParam('isJson')) {
-			// TODO: Re-evaluate if setAction() is needed for rated response
-			// Previously: $this->Controller->setAction('rated', $this->Controller->getRequest()->getData('rate'));
-
+		if ($this->Controller->getRequest()->getParam('isJson')) {
+			return $this->renderJson();
+		}
+		if ($this->Controller->getRequest()->getParam('isAjax')) {
 			return $this->Controller->render('rated');
 		}
 		if ($this->Controller->viewBuilder()->getVar('status') !== null && $this->Controller->viewBuilder()->getVar('message') !== null) {
@@ -286,6 +285,17 @@ class RatingComponent extends Component {
 		}
 
 		return $this->Controller->redirect($url, $status ?: 302);
+	}
+
+	/**
+	 * @return \Cake\Http\Response
+	 */
+	protected function renderJson(): Response {
+		$this->Controller->viewBuilder()
+			->setClassName(JsonView::class)
+			->setOption('serialize', ['status', 'message', 'rating']);
+
+		return $this->Controller->render();
 	}
 
 }

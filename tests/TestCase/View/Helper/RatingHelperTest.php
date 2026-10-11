@@ -225,4 +225,20 @@ class RatingHelperTest extends TestCase {
 		unset($this->Rating);
 	}
 
+	public function testJavascriptInitializesTheRatingInput(): void {
+		$this->Rating->control(['item' => 3, 'js' => true, 'stars' => 7, 'url' => '/articles/view/3']);
+		$script = $this->View->fetch('script');
+		$this->assertStringContainsString('document.getElementById("starelement_3")', $script);
+		$this->assertStringNotContainsString('.hide()', $script);
+		$this->assertStringContainsString('stars: 7', $script);
+		$this->assertStringContainsString('max: 7', $script);
+	}
+
+	public function testControlEscapesContainerAttributesAndJavascriptIdentifiers(): void {
+		$html = $this->Rating->control(['item' => 'x" onclick="alert(1)', 'class' => 'x" onclick="alert(1)', 'js' => true, 'url' => '/articles/view/3']);
+		$this->assertStringNotContainsString(' onclick="alert(1)', $html);
+		$this->assertStringContainsString('&quot;', $html);
+		$this->assertStringNotContainsString('document.getElementById("starelement_x"', $this->View->fetch('script'));
+	}
+
 }

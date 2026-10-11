@@ -337,4 +337,24 @@ class RatingComponentTest extends TestCase {
 		return $this->Controller->Rating->startup($event) ?: $this->Controller->getResponse();
 	}
 
+	public function testJsonRedirectSerializesRatingWithoutATemplate(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]]);
+		$this->Controller->setRequest($this->Controller->getRequest()->withParam('isJson', true));
+		$this->Controller->set(['status' => 'success', 'message' => 'Rated', 'rating' => 4]);
+		$response = $this->Controller->Rating->redirect('/articles/view/1');
+		$this->assertSame('application/json', $response->getType());
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame(['status' => 'success', 'message' => 'Rated', 'rating' => 4], $data);
+	}
+
+	public function testJsonAuthMessageProducesAnErrorResponse(): void {
+		$this->_initControllerAndRatings(['controller' => 'Articles', 'action' => 'view', 'pass' => [1]]);
+		$this->Controller->setRequest($this->Controller->getRequest()->withParam('isJson', true));
+		$this->Controller->set('authMessage', 'Sign in first');
+		$response = $this->Controller->Rating->redirect('/articles/view/1');
+		$data = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+		$this->assertSame('error', $data['status']);
+		$this->assertSame('Sign in first', $data['message']);
+	}
+
 }
