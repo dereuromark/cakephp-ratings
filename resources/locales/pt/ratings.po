@@ -34,10 +34,6 @@ msgstr "Você já classificou."
 msgid "Invalid rate."
 msgstr "Classificação inválida."
 
-#: /models/behaviors/ratable.php:208;265;326
-msgid "Invalid rating mode %s."
-msgstr "Modo de classificação inválido %s."
-
 #: /models/behaviors/ratable.php:429
 msgid "Invalid Rating"
 msgstr "Classificação inválida"
@@ -54,11 +50,18 @@ msgstr "Você não pode votar em seus próprios registros"
 msgid "You have already rated this record"
 msgstr "Você já classificou esse registro"
 
-#: /views/helpers/rating.php:63;154
-msgid "You must set the id of the item you want to rate."
-msgstr "Você precisa definir o id do item que você deseja classificar."
-
 #: /views/helpers/rating.php:169
 msgid "Rate!"
 msgstr "Classifique!"
 
+msgid "No rating selected"
+msgstr ""
+
+msgid "Not logged in"
+msgstr ""
+
+msgid "No rating available yet."
+msgstr ""
+
+msgid "{0} of {1} stars"
+msgstr ""

@@ -23,10 +23,6 @@ msgstr "Вы уже проголосовали."
 msgid "Invalid rate."
 msgstr "Недопустимое значение рейтинга"
 
-#: /models/behaviors/ratable.php:208;265;326
-msgid "Invalid rating mode %s."
-msgstr "Недопустимое режим рейтинга: %s."
-
 #: /models/behaviors/ratable.php:429
 msgid "Invalid Rating"
 msgstr "Недопустимое значение рейтинга"
@@ -43,11 +39,18 @@ msgstr "Запрещено голосовать за собственный ко
 msgid "You have already rated this record"
 msgstr "Вы уже проголосовали."
 
-#: /views/helpers/rating.php:63;154
-msgid "You must set the id of the item you want to rate."
-msgstr "Необходимо указать идентификатор записи по которой выполняется голосование."
-
 #: /views/helpers/rating.php:169
 msgid "Rate!"
 msgstr "Голосовать!"
 
+msgid "No rating selected"
+msgstr ""
+
+msgid "Not logged in"
+msgstr ""
+
+msgid "No rating available yet."
+msgstr ""
+
+msgid "{0} of {1} stars"
+msgstr ""
