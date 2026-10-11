@@ -26,8 +26,8 @@ class ArticlesController extends Controller {
 	/**
 	 * Components used
 	 *
-	 * @var array|null
+	 * @var array
 	 */
-	protected ?array $components = ['Ratings.Rating', 'Flash'];
+	protected array $legacyComponents = ['Ratings.Rating', 'Flash'];
 
 }

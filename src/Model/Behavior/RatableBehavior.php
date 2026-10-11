@@ -20,7 +20,7 @@ use OutOfBoundsException;
 use RuntimeException;
 
 /**
- * @property \Cake\ORM\Table<array{Ratings: \Ratings\Model\Behavior\RatableBehavior}> $_table
+ * @property \Cake\ORM\Table<array{Ratings: \Ratings\Model\Behavior\RatableBehavior}> $table
  */
 class RatableBehavior extends Behavior {
 
@@ -44,7 +44,7 @@ class RatableBehavior extends Behavior {
 	 *
 	 * @var array<string, mixed>
 	 */
-	protected array $_defaultConfig = [
+	protected array $defaultConfig = [
 		'modelClass' => null,
 		'rateClass' => 'Ratings.Ratings',
 		'foreignKey' => 'foreign_key',
@@ -89,24 +89,24 @@ class RatableBehavior extends Behavior {
 	 * @return void
 	 */
 	public function initialize(array $config): void {
-		if (empty($this->_config['modelClass'])) {
-			$this->_config['modelClass'] = $this->_table->getAlias();
+		if (empty($this->config['modelClass'])) {
+			$this->config['modelClass'] = $this->table->getAlias();
 		}
 
-		$this->_table->hasMany('Ratings', [
-			'className' => $this->_config['rateClass'],
-			'foreignKey' => $this->_config['foreignKey'],
+		$this->table->hasMany('Ratings', [
+			'className' => $this->config['rateClass'],
+			'foreignKey' => $this->config['foreignKey'],
 			'unique' => true,
 			'dependent' => true,
-			'conditions' => ['Ratings.model' => $this->_table->getAlias()],
+			'conditions' => ['Ratings.model' => $this->table->getAlias()],
 		]);
 
 		$this->ratingsTable()->belongsTo(
-			$this->_config['modelClass'],
+			$this->config['modelClass'],
 			[
-				'className' => $this->_config['modelClass'],
+				'className' => $this->config['modelClass'],
 				'foreignKey' => 'foreign_key',
-				'counterCache' => $this->_config['countRates'],
+				'counterCache' => $this->config['countRates'],
 			],
 		);
 	}
@@ -131,7 +131,7 @@ class RatableBehavior extends Behavior {
 		$this->assertNotSelfVote($foreignKey, $userId);
 
 		$type = 'saveRating';
-		$update = $this->_config['update'];
+		$update = $this->config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'value', 'update', 'type'));
 
 		// Wrap the entire isRatedBy → deleteAll → save → increment chain in a
@@ -153,7 +153,7 @@ class RatableBehavior extends Behavior {
 			if ($wasUpdate) {
 				$this->oldRating = $oldRating;
 				$this->ratingsTable()->deleteAll([
-					'Ratings.model' => $this->_table->getAlias(),
+					'Ratings.model' => $this->table->getAlias(),
 					'Ratings.foreign_key' => $foreignKey,
 					'Ratings.user_id' => $userId,
 				]);
@@ -163,7 +163,7 @@ class RatableBehavior extends Behavior {
 
 			$rating = $this->ratingsTable()->newEntity([
 				'foreign_key' => $foreignKey,
-				'model' => $this->_table->getAlias(),
+				'model' => $this->table->getAlias(),
 				'user_id' => $userId,
 				'value' => $value,
 			]);
@@ -171,12 +171,12 @@ class RatableBehavior extends Behavior {
 				return false;
 			}
 
-			$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
-			$fieldSummaryType = $this->_table->hasField($this->_config['fieldSummary']);
+			$fieldCounterType = $this->table->hasField($this->config['fieldCounter']);
+			$fieldSummaryType = $this->table->hasField($this->config['fieldSummary']);
 			if ($fieldCounterType && $fieldSummaryType) {
-				$result = $this->incrementRating($foreignKey, $value, $this->_config['saveToField'], $this->_config['calculation'], $wasUpdate);
+				$result = $this->incrementRating($foreignKey, $value, $this->config['saveToField'], $this->config['calculation'], $wasUpdate);
 			} else {
-				$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
+				$result = $this->calculateRating($foreignKey, $this->config['saveToField'], $this->config['calculation']);
 			}
 			$update = $wasUpdate;
 			$this->afterRateCallback(compact('foreignKey', 'userId', 'value', 'result', 'update', 'oldRating', 'type'));
@@ -202,7 +202,7 @@ class RatableBehavior extends Behavior {
 		}
 
 		$type = 'removeRating';
-		$update = $this->_config['update'];
+		$update = $this->config['update'];
 		$this->beforeRateCallback(compact('foreignKey', 'userId', 'update', 'type'));
 		/** @var \Ratings\Model\Entity\Rating|null $oldRating */
 		$oldRating = $this->isRatedBy($foreignKey, $userId)->first();
@@ -213,17 +213,17 @@ class RatableBehavior extends Behavior {
 		$this->oldRating = $oldRating;
 
 		$this->ratingsTable()->deleteAll([
-			'Ratings.model' => $this->_table->getAlias(),
+			'Ratings.model' => $this->table->getAlias(),
 			'Ratings.foreign_key' => $foreignKey,
 			'Ratings.user_id' => $userId,
 		]);
 
-		$fieldCounterType = $this->_table->hasField($this->_config['fieldCounter']);
-		$fieldSummaryType = $this->_table->hasField($this->_config['fieldSummary']);
+		$fieldCounterType = $this->table->hasField($this->config['fieldCounter']);
+		$fieldSummaryType = $this->table->hasField($this->config['fieldSummary']);
 		if ($fieldCounterType && $fieldSummaryType) {
-			$result = $this->decrementRating($foreignKey, $oldRating['value'], $this->_config['saveToField'], $this->_config['calculation']);
+			$result = $this->decrementRating($foreignKey, $oldRating['value'], $this->config['saveToField'], $this->config['calculation']);
 		} else {
-			$result = $this->calculateRating($foreignKey, $this->_config['saveToField'], $this->_config['calculation']);
+			$result = $this->calculateRating($foreignKey, $this->config['saveToField'], $this->config['calculation']);
 		}
 		$this->afterRateCallback(compact('foreignKey', 'userId', 'result', 'update', 'oldRating', 'type'));
 
@@ -250,15 +250,15 @@ class RatableBehavior extends Behavior {
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
-		$rating = $this->_table->find('all', ...[
+		$key = $this->table->getPrimaryKey();
+		$rating = $this->table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $id,
+				$this->table->getAlias() . '.' . $key => $id,
 			],
 		])->firstOrFail();
 
-		$fieldSummary = $this->_config['fieldSummary'];
-		$fieldCounter = $this->_config['fieldCounter'];
+		$fieldSummary = $this->config['fieldSummary'];
+		$fieldCounter = $this->config['fieldCounter'];
 
 		$ratingSumNew = $rating[$fieldSummary] - $value;
 		$ratingCountNew = $rating[$fieldCounter] - 1;
@@ -274,23 +274,23 @@ class RatableBehavior extends Behavior {
 			if (is_string($saveToField)) {
 				$save[$saveToField] = $ratingSum;
 			} else {
-				$save[$this->_config['field']] = $ratingSum;
+				$save[$this->config['field']] = $ratingSum;
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
 
 			// Force the rating-cache fields accessible. The rated entity may
-			// (correctly) lock these in $_accessible to keep them out of mass
+			// (correctly) lock these in $patchable to keep them out of mass
 			// assignment — but the behavior is the authoritative writer, so a
 			// table-level lockout would silently drop the cache update.
-			$rating = $this->_table->patchEntity($rating, $save, [
-				'validate' => $this->_config['modelValidate'],
-				'accessibleFields' => array_fill_keys(array_keys($save), true),
+			$rating = $this->table->patchEntity($rating, $save, [
+				'validate' => $this->config['modelValidate'],
+				'patchableFields' => array_fill_keys(array_keys($save), true),
 			]);
 
 			/** @var \Ratings\Model\Entity\Rating */
-			return $this->_table->save($rating, [
-				'callbacks' => $this->_config['modelCallbacks'],
+			return $this->table->save($rating, [
+				'callbacks' => $this->config['modelCallbacks'],
 			]);
 		}
 
@@ -318,15 +318,15 @@ class RatableBehavior extends Behavior {
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
-		$data = $this->_table->find('all', ...[
+		$key = $this->table->getPrimaryKey();
+		$data = $this->table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $id,
+				$this->table->getAlias() . '.' . $key => $id,
 			],
 		])->firstOrFail();
 
-		$fieldSummary = $this->_config['fieldSummary'];
-		$fieldCounter = $this->_config['fieldCounter'];
+		$fieldSummary = $this->config['fieldSummary'];
+		$fieldCounter = $this->config['fieldCounter'];
 
 		if ($update && $this->oldRating !== null) {
 			$ratingSumNew = $data[$fieldSummary] - $this->oldRating['value'] + $value;
@@ -346,20 +346,20 @@ class RatableBehavior extends Behavior {
 			if (is_string($saveToField)) {
 				$save[$saveToField] = $rating;
 			} else {
-				$save[$this->_config['field']] = $rating;
+				$save[$this->config['field']] = $rating;
 			}
 			$save[$fieldSummary] = $ratingSumNew;
 			$save[$fieldCounter] = $ratingCountNew;
 			// See note in decrementRating(): force the cache fields accessible
 			// so a locked-down entity definition can't silently drop the update.
-			$r = $this->_table->patchEntity($data, $save, [
-				'validate' => $this->_config['modelValidate'],
-				'accessibleFields' => array_fill_keys(array_keys($save), true),
+			$r = $this->table->patchEntity($data, $save, [
+				'validate' => $this->config['modelValidate'],
+				'patchableFields' => array_fill_keys(array_keys($save), true),
 			]);
 
 			/** @var \Ratings\Model\Entity\Rating */
-			return $this->_table->save($r, [
-				'callbacks' => $this->_config['modelCallbacks'],
+			return $this->table->save($r, [
+				'callbacks' => $this->config['modelCallbacks'],
 			]);
 		}
 
@@ -399,7 +399,7 @@ class RatableBehavior extends Behavior {
 			},
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
-				'Ratings.model' => $this->_table->getAlias(),
+				'Ratings.model' => $this->table->getAlias(),
 			],
 		];
 
@@ -415,30 +415,30 @@ class RatableBehavior extends Behavior {
 		}
 
 		if (!is_string($saveToField)) {
-			$saveToField = $this->_config['field'];
+			$saveToField = $this->config['field'];
 		}
 
-		if (!$this->_table->hasField($saveToField)) {
+		if (!$this->table->hasField($saveToField)) {
 			return $result[0]['rating'];
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
+		$key = $this->table->getPrimaryKey();
 		$data = [
 			$key => $foreignKey,
 			$saveToField => $result[0]['rating'],
 		];
 
-		$rating = $this->_table->find()->where([$key => $foreignKey])->firstOrFail();
+		$rating = $this->table->find()->where([$key => $foreignKey])->firstOrFail();
 
-		$rating = $this->_table->patchEntity($rating, $data, [
-			'validate' => $this->_config['modelValidate'],
-			'accessibleFields' => [$saveToField => true],
+		$rating = $this->table->patchEntity($rating, $data, [
+			'validate' => $this->config['modelValidate'],
+			'patchableFields' => [$saveToField => true],
 		]);
 
 		/** @var \Ratings\Model\Entity\Rating $rating */
-		$rating = $this->_table->saveOrFail($rating, [
-			'callbacks' => $this->_config['modelCallbacks'],
+		$rating = $this->table->saveOrFail($rating, [
+			'callbacks' => $this->config['modelCallbacks'],
 		]);
 
 		return $rating;
@@ -456,7 +456,7 @@ class RatableBehavior extends Behavior {
 			'conditions' => [
 				'Ratings.foreign_key' => $foreignKey,
 				'Ratings.user_id' => $userId,
-				'Ratings.model' => $this->_table->getAlias(),
+				'Ratings.model' => $this->table->getAlias(),
 			],
 		]);
 	}
@@ -478,8 +478,8 @@ class RatableBehavior extends Behavior {
 	 * @return void
 	 */
 	public function afterRateCallback($data = []): void {
-		if (method_exists($this->_table, 'afterRate')) {
-			$this->_table->afterRate($data);
+		if (method_exists($this->table, 'afterRate')) {
+			$this->table->afterRate($data);
 		}
 	}
 
@@ -490,8 +490,8 @@ class RatableBehavior extends Behavior {
 	 * @return void
 	 */
 	public function beforeRateCallback(array $data = []): void {
-		if (method_exists($this->_table, 'beforeRate')) {
-			$this->_table->beforeRate($data);
+		if (method_exists($this->table, 'beforeRate')) {
+			$this->table->beforeRate($data);
 		}
 	}
 
@@ -511,12 +511,12 @@ class RatableBehavior extends Behavior {
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
+		$key = $this->table->getPrimaryKey();
 		$options = array_merge([
 			'userField' => 'user_id',
 			'find' => [
 				'conditions' => [
-					$this->_table->getAlias() . '.' . $key => $foreignKey,
+					$this->table->getAlias() . '.' . $key => $foreignKey,
 				],
 			],
 			'values' => [
@@ -529,13 +529,13 @@ class RatableBehavior extends Behavior {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Rating'));
 		}
 
-		$record = $this->_table->find('all', ...$options['find'])->first();
+		$record = $this->table->find('all', ...$options['find'])->first();
 
 		if (empty($record)) {
 			throw new OutOfBoundsException(__d('ratings', 'Invalid Record'));
 		}
 
-		if ($options['userField'] && $this->_table->hasField($options['userField']) && (string)$record[$options['userField']] === (string)$userId) {
+		if ($options['userField'] && $this->table->hasField($options['userField']) && (string)$record[$options['userField']] === (string)$userId) {
 			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 		}
 
@@ -566,16 +566,16 @@ class RatableBehavior extends Behavior {
 			return;
 		}
 
-		$userField = $this->_config['userField'] ?? null;
-		if (!$userField || !$this->_table->hasField($userField)) {
+		$userField = $this->config['userField'] ?? null;
+		if (!$userField || !$this->table->hasField($userField)) {
 			return;
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
-		$record = $this->_table->find()
+		$key = $this->table->getPrimaryKey();
+		$record = $this->table->find()
 			->select([$userField])
-			->where([$this->_table->getAlias() . '.' . $key => $foreignKey])
+			->where([$this->table->getAlias() . '.' . $key => $foreignKey])
 			->first();
 
 		if (!$record) {
@@ -606,7 +606,7 @@ class RatableBehavior extends Behavior {
 			$data['value'] = $data['oldRating']['value'];
 		}
 
-		if (!$this->_table->hasField($this->_fieldName(round($data['value'], 0)))) {
+		if (!$this->table->hasField($this->_fieldName(round($data['value'], 0)))) {
 			return false;
 		}
 
@@ -615,11 +615,11 @@ class RatableBehavior extends Behavior {
 		}
 
 		/** @var string $key */
-		$key = $this->_table->getPrimaryKey();
+		$key = $this->table->getPrimaryKey();
 		/** @var \Ratings\Model\Entity\Rating $rating */
-		$rating = $this->_table->find('all', ...[
+		$rating = $this->table->find('all', ...[
 			'conditions' => [
-				$this->_table->getAlias() . '.' . $key => $data['foreignKey'],
+				$this->table->getAlias() . '.' . $key => $data['foreignKey'],
 			],
 		])->firstOrFail();
 
@@ -634,8 +634,8 @@ class RatableBehavior extends Behavior {
 		}
 
 		/** @var \Ratings\Model\Entity\Rating */
-		return $this->_table->save($rating, [
-			'callbacks' => $this->_config['modelCallbacks'],
+		return $this->table->save($rating, [
+			'callbacks' => $this->config['modelCallbacks'],
 		]);
 	}
 
@@ -660,7 +660,7 @@ class RatableBehavior extends Behavior {
 	 */
 	protected function ratingsTable() {
 		/** @var \Ratings\Model\Table\RatingsTable */
-		return $this->_table->getAssociation('Ratings')->getTarget();
+		return $this->table->getAssociation('Ratings')->getTarget();
 	}
 
 	/**

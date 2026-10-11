@@ -1,9 +1,11 @@
 # Installation
 
-Check [composer.json](https://github.com/dereuromark/cakephp-ratings/blob/master/composer.json) for supported PHP and CakePHP versions. This branch supports CakePHP 5.
+Check [composer.json](https://github.com/dereuromark/cakephp-ratings/blob/cake6/composer.json) for supported PHP and CakePHP versions. This development branch supports CakePHP 6.
+
+Before installing, allow development dependencies in your application's root `composer.json` with `"minimum-stability": "dev"` and `"prefer-stable": true`.
 
 ```sh
-composer require dereuromark/cakephp-ratings
+composer require dereuromark/cakephp-ratings:dev-cake6
 ```
 
 In your existing `Application::bootstrap()`, after the parent call:
@@ -17,7 +19,7 @@ $this->addPlugin('Ratings');
 The bundled migration creates `ratings`. If your application does not already use Migrations:
 
 ```sh
-composer require cakephp/migrations
+composer require cakephp/migrations:dev-fix/6.x-cakephp-compatibility
 ```
 
 Load `Migrations` in your application's bootstrap if it is not already loaded:
