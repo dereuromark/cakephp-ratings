@@ -58,3 +58,5 @@ class AddRatingCacheToPosts extends BaseMigration {
 ```
 
 Use a filename timestamp later than your existing migrations, then run `bin/cake migrations migrate`.
+
+For an existing installation with vote rows, backfill `rating_sum` and `rating_count` before enabling cached totals. Group ratings by `model` and `foreign_key`, use `SUM(value)` and `COUNT(*)`, and write the matching rated records' totals and average. Adding zero-filled cache fields to existing votes makes the next calculation incorrect; zero is appropriate only for records with no votes.

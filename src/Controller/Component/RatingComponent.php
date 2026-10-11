@@ -14,6 +14,7 @@ namespace Ratings\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\ORM\Exception\MissingTableClassException;
 use Cake\View\JsonView;
@@ -86,13 +87,21 @@ class RatingComponent extends Component {
 		if ($model && !$model->behaviors()->has('Ratable')) {
 			$model->behaviors()->load('Ratable', ['className' => 'Ratings.Ratable'] + $this->_config);
 		}
-		$this->Controller->viewBuilder()->setHelpers(['Ratings.Rating']);
+		$this->Controller->viewBuilder()->addHelper('Ratings.Rating');
 
 		if (!$this->Controller->getRequest()->is('post')) {
 			return;
 		}
 
-		$params = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery() + (array)$this->_config['params'];
+		$requestParams = (array)$this->Controller->getRequest()->getData() + (array)$this->Controller->getRequest()->getQuery();
+		$params = $requestParams + (array)$this->_config['params'];
+		if (array_key_exists('redirect', $requestParams)) {
+			$redirect = filter_var($requestParams['redirect'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+			if ($redirect === null) {
+				throw new BadRequestException('The redirect request parameter must be boolean.');
+			}
+			$params['redirect'] = $redirect;
+		}
 		if (method_exists($this->Controller, 'rate')) { // Should be $this->Controller->{$modelName} ?
 			return;
 		}
@@ -174,6 +183,11 @@ class RatingComponent extends Component {
 	 */
 	public function rate($rate, $rating, $user, $redirect = false) {
 		$Controller = $this->Controller;
+		$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+		$primaryKey = $table->getPrimaryKey();
+		if (!is_string($primaryKey)) {
+			throw new LogicException('Ratings require a single-column primary key.');
+		}
 
 		if (!$rating) {
 			$message = __d('ratings', 'No rating selected');
@@ -181,8 +195,7 @@ class RatingComponent extends Component {
 		} elseif (!$user) {
 			$message = __d('ratings', 'Not logged in');
 			$status = 'error';
-		} elseif ($Controller->getTableLocator()->get($this->getConfig('modelName'))->find()->where(['id' => $rate])->first()) {
-			$table = $Controller->getTableLocator()->get($this->getConfig('modelName'));
+		} elseif ($table->find()->where([$primaryKey => $rate])->first()) {
 			/** @var \Ratings\Model\Behavior\RatableBehavior $behavior */
 			$behavior = $table->getBehavior('Ratable');
 			try {
@@ -203,8 +216,12 @@ class RatingComponent extends Component {
 
 				return null;
 			}
-			if ($newRating instanceof EntityInterface) {
-				$rating = round((float)$newRating->get('rating'));
+			if ($newRating !== false) {
+				$resultField = $behavior->getConfig('saveToField');
+				$resultField = is_string($resultField) ? $resultField : $behavior->getConfig('field');
+				$rating = round((float)($newRating instanceof EntityInterface
+					? $newRating->get($resultField)
+					: $newRating));
 				$message = __d('ratings', 'Your rate was successful.');
 				$status = 'success';
 			} else {

@@ -17,7 +17,7 @@ $this->loadHelper('Ratings.Rating');
 ]) ?>
 ```
 
-`item` is required. `type` accepts `select` or `radio`; `stars` sets the positive integer maximum. The default submits to the current action and uses a post/redirect/get flow. `createForm` can contain FormHelper options. To embed the control in an existing form, provide your own hidden `rate` field and disable its generated form with an empty `url` and `createForm` false.
+`item` is required. `type` accepts `select` or `radio`; `stars` sets the positive integer maximum. The default submits to the current action and uses a post/redirect/get flow. `createForm` can contain FormHelper options. The helper creates and closes its own form; do not nest it inside another form. For a custom form, use FormHelper directly with a hidden `rate` field, a `rating` input and a submit button.
 
 `control()` does not emit a read-only rating. `display($value)` does, using Font Awesome 4 star classes by default. Include matching CSS in your application, or use plain text for the average. The legacy `ui` display mode requires jQuery UI star styles and `image()` is deprecated.
 

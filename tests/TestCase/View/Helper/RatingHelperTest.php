@@ -64,6 +64,8 @@ class RatingHelperTest extends TestCase {
 		$this->assertSame(40, $this->Rating->percentage(2, 5));
 		$this->assertSame(0, $this->Rating->percentage(0, 0));
 		$this->assertSame(100, $this->Rating->percentage(6, 6));
+		$this->assertSame(29, $this->Rating->percentage(29, 100));
+		$this->assertSame(57, $this->Rating->percentage(57, 100));
 	}
 
 	/**

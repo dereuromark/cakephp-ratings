@@ -414,7 +414,7 @@ HTML;
 	 */
 	public function percentage($value, int $total, int $precision = 2): int {
 		if ($total > 0) {
-			return (int)(round($value / $total, $precision) * 100);
+			return (int)round(round($value / $total, $precision) * 100);
 		}
 
 		return 0;

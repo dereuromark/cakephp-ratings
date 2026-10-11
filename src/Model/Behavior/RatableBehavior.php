@@ -540,7 +540,7 @@ class RatableBehavior extends Behavior {
 			throw new LogicException(__d('ratings', 'You can not vote on your own records'));
 		}
 
-		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating])) {
+		if ($this->saveRating($foreignKey, $userId, $options['values'][$rating]) !== false) {
 			return true;
 		}
 

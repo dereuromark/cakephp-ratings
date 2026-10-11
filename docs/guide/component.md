@@ -20,9 +20,9 @@ A controller method named `rate()` disables automatic POST processing so the app
 
 ## Redirects and responses
 
-The default `redirect` is true: the component removes rating query parameters and redirects to the current action. False leaves response variables (`status`, `message`, `rating`) for your action. An explicit URL or route array selects a redirect target; only accept targets your application permits.
+The default `redirect` is true: the component removes rating query parameters and redirects to the current action. False leaves response variables (`status`, `message`, `rating`) for your action. Request-supplied `redirect` values must be boolean, including form strings such as `1` or `0`; URL values are rejected. Set `params.redirect` in component configuration to select a trusted URL or route array. Direct application calls to `rate()` may also pass an explicit target.
 
-For a `.json` route, enable extension parsing in your own routes. The component returns those variables using CakePHP's JsonView, without requiring a template. A custom `isAjax` route parameter instead renders your application's `rated` template. The helper's optional star widget does not submit automatically or enable AJAX.
+For a `.json` route, enable extension parsing in your own routes. When the redirect flag is enabled, the component returns those variables using CakePHP's JsonView, without requiring a template. The JSON shape is `{status, message, rating}`; application errors use HTTP 200 with `status: error`. On success, `rating` is the rounded aggregate; on error it is the submitted value. With redirect disabled, your action handles those variables. A custom `isAjax` route parameter instead renders your application's `rated` template. The helper's optional star widget does not submit automatically or enable AJAX.
 
 ## Validate submitted values
 

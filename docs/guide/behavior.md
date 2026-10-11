@@ -50,6 +50,6 @@ The default schema and validation do not impose a five-star maximum. Validate yo
 
 ## Callbacks and statistics
 
-Table methods `beforeRate(array $data)` and `afterRate(array $data)` receive the operation type (`saveRating` or `removeRating`), record key, user ID and update information. The after callback also receives the result and previous vote. Removal callbacks do not receive a new `value`; read `oldRating->value`.
+Table methods `beforeRate(array $data)` and `afterRate(array $data)` receive the operation type (`saveRating` or `removeRating`), record key, user ID and update information. The after callback also receives the result and previous vote. The removal after callback has no new `value`; read `oldRating->value`. The before callback has no `oldRating` and also runs when the operation later makes no change.
 
 Call `cacheRatingStatistics($data)` from `afterRate()` when your table contains histogram columns such as `rating_1`, `rating_2` or `rating_neg1`. `getNewRating()` returns the last aggregate recorded by the calculation or increment path.

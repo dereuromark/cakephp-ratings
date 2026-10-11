@@ -626,4 +626,10 @@ class RatableBehaviorTest extends TestCase {
 		$this->assertEquals(3.0, $this->Posts->get(2)->get('rating'));
 	}
 
+	public function testSymbolicVoteSucceedsWhenResultingSumIsZero(): void {
+		$this->Posts->addBehavior('Ratings.Ratable', ['calculation' => 'sum', 'saveToField' => false]);
+		$this->assertTrue($this->Posts->getBehavior('Ratable')->rate(1, 2, 'down'));
+		$this->assertTrue($this->Posts->getBehavior('Ratable')->hasRated(1, 2));
+	}
+
 }
