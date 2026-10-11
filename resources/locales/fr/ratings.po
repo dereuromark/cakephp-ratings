@@ -22,10 +22,6 @@ msgstr "Vous avez déjà noté."
 msgid "Invalid rate."
 msgstr "Note invalide."
 
-#: /models/behaviors/ratable.php:208;265;326
-msgid "Invalid rating mode %s."
-msgstr "Mode de notation %s invalide."
-
 #: /models/behaviors/ratable.php:429
 msgid "Invalid Rating"
 msgstr "Note invalide"
@@ -42,11 +38,18 @@ msgstr "Vous ne pouvez pas noter vos propres contenus"
 msgid "You have already rated this record"
 msgstr "Vous avez déjà noté ce contenu"
 
-#: /views/helpers/rating.php:63;154
-msgid "You must set the id of the item you want to rate."
-msgstr "Vous devez définir l'id de l'objet que vous voulez noter."
-
 #: /views/helpers/rating.php:169
 msgid "Rate!"
 msgstr "Noter !"
 
+msgid "No rating selected"
+msgstr ""
+
+msgid "Not logged in"
+msgstr ""
+
+msgid "No rating available yet."
+msgstr ""
+
+msgid "{0} of {1} stars"
+msgstr ""

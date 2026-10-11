@@ -35,10 +35,6 @@ msgstr "Du hast bereits abgestimmt."
 msgid "Invalid rate."
 msgstr "Ungültiger Wert"
 
-#: /models/behaviors/ratable.php:208;265;326
-msgid "Invalid rating mode %s."
-msgstr "Ungültiger Bewertungsmodus %s"
-
 #: /models/behaviors/ratable.php:429
 msgid "Invalid Rating"
 msgstr "Ungültige Wertung"
@@ -55,11 +51,18 @@ msgstr "Du kannst nicht deinen eigenen Einträge bewerten"
 msgid "You have already rated this record"
 msgstr "Du hast diesen Eintrag bereits bewertet"
 
-#: /views/helpers/rating.php:63;154
-msgid "You must set the id of the item you want to rate."
-msgstr "Du musst die ID des Eintrags angeben, den du bewerten möchtest."
-
 #: /views/helpers/rating.php:169
 msgid "Rate!"
 msgstr "Abstimmen!"
 
+msgid "No rating selected"
+msgstr ""
+
+msgid "Not logged in"
+msgstr ""
+
+msgid "No rating available yet."
+msgstr ""
+
+msgid "{0} of {1} stars"
+msgstr ""
